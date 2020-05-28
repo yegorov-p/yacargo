@@ -1,12 +1,18 @@
 # -*- coding: utf-8 -*-
-from YaCargo.objects import *
+import logging
 from typing import List, Optional
+
+from YaCargo.objects import CargoItemMP, CargoItemSizes, CargoPointMP, \
+    ContactOnPoint, CargoPointAddress, HumanErrorMessage, ContactWithPhone, \
+    TaxiOffer, ClaimPricing, CurrencyRules, ClientRequirements, MatchedCar, \
+    ClaimWarning, PerformerInfo, C2CData, Event
 
 logger = logging.getLogger('YaCargo')
 
+
 class Base(object):
     def __init__(self, data):
-        if type(data) is dict:
+        if isinstance(data, dict):
             self.resp = data
             self.headers = {}
         else:
@@ -123,7 +129,7 @@ class SearchedClaimMP(Base):
                 external_order_id=item.get('external_order_id'),
                 pickup_code=item.get('pickup_code'),
                 visit_status=item.get('visit_status')
-            )
+                )
             )
 
         return result
@@ -661,4 +667,3 @@ class PerformerPositionResponse(Base):
         position = self.resp.get('position')
         if position:
             return position.get('direction')
-

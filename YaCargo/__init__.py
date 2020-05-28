@@ -14,7 +14,7 @@ from YaCargo.objects import validate_fields
 from YaCargo.response import *
 
 __title__ = 'yaCargo'
-__version__ = constants.VERSION
+__version__ = VERSION
 __author__ = 'Pasha Yegorov'
 __license__ = 'Apache 2.0'
 
@@ -58,7 +58,7 @@ class YCAPI:
             logger.debug('Requesting resource {}'.format(url))
             logger.debug('Requesting params {}'.format(params))
             logger.debug('Requesting body {}'.format(body))
-            r = self.session.request(
+            req = self.session.request(
                 method=method,
                 url=url,
                 params=params,
@@ -71,29 +71,29 @@ class YCAPI:
             raise NetworkAPIError()
         else:
 
-            headers = ["'{0}: {1}'".format(k, v) for k, v in r.request.headers.items()]
+            headers = ["'{0}: {1}'".format(k, v) for k, v in req.request.headers.items()]
             headers = " -H ".join(sorted(headers))
             command = "curl -H {headers} -d '{data}' '{uri}'".format(
-                data=r.request.body or "",
+                data=req.request.body or "",
                 headers=headers,
-                uri=r.request.url,
+                uri=req.request.url,
             )
             logger.debug('CURL: {}'.format(command))
-            logger.debug('Status code {}'.format(r.status_code))
-            logger.debug('Received headers: {}'.format(r.headers))
+            logger.debug('Status code {}'.format(req.status_code))
+            logger.debug('Received headers: {}'.format(req.headers))
 
             if filename:
-                with open(filename, 'wb') as f:
-                    f.write(r.content)
-                return (r.headers, True)
-            else:
-                data = r.json()
-                logger.debug('Received JSON: {}'.format(data))
+                with open(filename, 'wb') as file:
+                    file.write(req.content)
+                return (req.headers, True)
 
-                if r.status_code in (400, 401, 403, 404, 409):
-                    raise BaseAPIError(data)
+            data = req.json()
+            logger.debug('Received JSON: {}'.format(data))
 
-                return (r.headers, data)
+            if req.status_code in (400, 401, 403, 404, 409):
+                raise BaseAPIError(data)
+
+            return (req.headers, data)
 
     def claim_create(self,
                      items: List[CargoItemMP],
@@ -117,7 +117,8 @@ class YCAPI:
         :param ContactWithPhone emergency_contact: (Обязательный параметр)
         :param str shipping_document: Сопроводительные документы
         :param ClientRequirements client_requirements:
-        :param str callback_properties: Параметры уведомления сервера клиента о смене статуса заявки.
+        :param str callback_properties:
+            Параметры уведомления сервера клиента о смене статуса заявки.
             Уведомление представляет собой POST-запрос по указанному url, к
             которому будут добавлены информация о дате последнего изменения
             заявки и идентификатор заказа в системе b2b cargo в виде
@@ -456,37 +457,12 @@ class YCAPI:
 
         return VoiceforwardingResponse(self._request(resource='v1/driver-voiceforwarding', params=params, body={}))
 
-    def claim_document(self,
-                       claim_id: str,
-                       version: int,
-                       status: str,
-                       document_type: str = "act"):
-        """
-        Голосовой шлюз с водителем
-
-        :param str claim_id:  заявки cargo-claims (UUID)
-        :param str document_type: Тип документа
-        :param int version: version
-        :param str status: Статус заявки
-
-        :return: ???
-        :rtype: bool
-
-        """
-        params = {'claim_id': validate_fields('claim_id', claim_id, str),
-                  'document_type': validate_fields('document_type', document_type, str),
-                  'version': validate_fields('version', version, int),
-                  'status': validate_fields('status', status, str)
-                  }
-
-        return self._request(resource='v1/claims/document', params=params, body={}, filename='asd.pdf')
-
     def claim_journal(self,
-                      curson: str) -> ClaimsJournalResponse:
+                      cursor: str) -> ClaimsJournalResponse:
         """
         Subscription to journal of claims change events
 
-        :param str curson: Cursor points to last consumed event in journal. Handler returns all
+        :param str cursor: Cursor points to last consumed event in journal. Handler returns all
                     records registered after that event.
 
                     If skipped handler returns records start from first registred record
@@ -496,7 +472,7 @@ class YCAPI:
         :rtype: ClaimsJournalResponse
 
         """
-        body = {'curson': validate_fields('curson', curson, str)}
+        body = {'cursor': validate_fields('cursor', cursor, str)}
 
         return ClaimsJournalResponse(self._request(resource='v1/claims/journal', params={}, body=body))
 
@@ -506,7 +482,7 @@ class YCAPI:
                        status: str,
                        document_type: str = "act"):
         """
-        Голосовой шлюз с водителем
+        Получить накладную или акт приёма-передачи
 
         :param str claim_id:  заявки cargo-claims (UUID)
         :param str document_type: Тип документа
@@ -548,11 +524,10 @@ class YCAPI:
             'cancel_state': validate_fields('cancel_state', cancel_state, str),
         }
 
-        return CutClaimResponse(self._request(resource='v1/claims/journal', params=params, body=body))
+        return CutClaimResponse(self._request(resource='v1/claims/cancel', params=params, body=body))
 
-
-    def claim_cancel(self,
-                     claim_id: str) -> PerformerPositionResponse:
+    def performer_position(self,
+                           claim_id: str) -> PerformerPositionResponse:
         """
         Получение координаты исполнителя заказа
 

@@ -3,19 +3,26 @@ from typing import List, Optional
 
 from typeguard import check_type
 
-from YaCargo.exceptions import *
+from YaCargo.exceptions import InputParamError
 
 
 def validate_fields(field_name, field, field_type):
+    """
+    Валидатор полей на соответствие ожидаемому типу
+
+    :param field_name: Название поля, передается для ошибки
+    :param field: Поле
+    :param field_type: Тип поля
+    :return: Объект в виде json
+    """
     try:
         check_type(field_name, field, field_type)
-    except TypeError as e:
-        raise InputParamError(e)
+    except TypeError as exc:
+        raise InputParamError(exc)
     else:
         if isinstance(field, list):
             return [i if isinstance(i, (bool, str, int, float, tuple, list, dict)) else i.json() for i in field]
-        else:
-            return field if isinstance(field, (bool, str, int, float, tuple, list, dict)) else field.json()
+        return field if isinstance(field, (bool, str, int, float, tuple, list, dict)) else field.json()
 
 
 class YCBase(object):
@@ -808,7 +815,7 @@ class CargoPointMP(YCBase):
         """
 
         :return: ???
-        :rtypeЖ ContactOnPoint
+        :rtype: ContactOnPoint
         """
         contact = self.body.get('contact')
         return ContactOnPoint(name=contact.get('name'),
@@ -877,8 +884,7 @@ class CargoPointMP(YCBase):
                                                                            phone=customer.get('phone')),
                                             tax_system_code=result.get('tax_system_code')
                                             )
-        else:
-            return None
+        return None
 
     @property
     def external_order_id(self) -> Optional[str]:

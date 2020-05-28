@@ -17,7 +17,9 @@ RESOURCES = [
     'v2/claims/search/active',
     'v2/claims/bulk_info',
     'v1/claims/accept',
+    'v1/driver-voiceforwarding',
     'v1/claims/journal',
+    'v1/claims/document',
     'v1/claims/cancel',
     'v1/claims/performer-position'
 ]
