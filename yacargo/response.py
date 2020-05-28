@@ -2,12 +2,12 @@
 import logging
 from typing import List, Optional
 
-from YaCargo.objects import CargoItemMP, CargoItemSizes, CargoPointMP, \
+from yacargo.objects import CargoItemMP, CargoItemSizes, CargoPointMP, \
     ContactOnPoint, CargoPointAddress, HumanErrorMessage, ContactWithPhone, \
     TaxiOffer, ClaimPricing, CurrencyRules, ClientRequirements, MatchedCar, \
     ClaimWarning, PerformerInfo, C2CData, Event
 
-logger = logging.getLogger('YaCargo')
+logger = logging.getLogger('yacargo')
 
 
 class Base():

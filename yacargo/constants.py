@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
 
-USER_AGENT = 'yaCargo'
+USER_AGENT = 'yacargo'
 
-VERSION = '0.0.1'
+VERSION = '0.0.2'
 
 PROTOCOL = 'https'
 
-DOMAIN = 'b2b.taxi.tst.yandex.net'
+DOMAIN = 'b2b.taxi.yandex.net'
 
 RESOURCES = [
     'v2/claims/create',

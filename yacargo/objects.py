@@ -3,7 +3,7 @@ from typing import List, Optional
 
 from typeguard import check_type
 
-from YaCargo.exceptions import InputParamError
+from yacargo.exceptions import InputParamError
 
 
 def validate_fields(field_name, field, field_type):

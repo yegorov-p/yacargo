@@ -7,11 +7,11 @@ from typing import List
 import requests
 from requests.exceptions import ReadTimeout, SSLError
 
-from YaCargo.constants import *
-from YaCargo.exceptions import *
-from YaCargo.objects import *
-from YaCargo.objects import validate_fields
-from YaCargo.response import *
+from yacargo.constants import *
+from yacargo.exceptions import *
+from yacargo.objects import *
+from yacargo.objects import validate_fields
+from yacargo.response import *
 
 __title__ = 'yaCargo'
 __version__ = VERSION

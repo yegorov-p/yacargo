@@ -21,11 +21,11 @@ source_suffix = '.rst'
 
 master_doc = 'index'
 
-project = 'YaCargo'
+project = 'yacargo'
 copyright = '2020, Pasha Yegorov'
 author = 'Pasha Yegorov'
 
-from YaCargo import constants
+from yacargo import constants
 
 version = constants.VERSION
 release = ''
@@ -72,16 +72,16 @@ latex_elements = {
 }
 
 latex_documents = [
-    (master_doc, 'YaCargo.tex', 'YaCargo Documentation',
+    (master_doc, 'yacargo.tex', 'yacargo Documentation',
      'Pavel Yegorov', 'manual'),
 ]
 
 man_pages = [
-    (master_doc, 'yacargo', 'YaCargo Documentation',
+    (master_doc, 'yacargo', 'yacargo Documentation',
      [author], 1)
 ]
 texinfo_documents = [
-    (master_doc, 'YaCargo', 'YaCargo Documentation',
-     author, 'YaCargo', 'One line description of project.',
+    (master_doc, 'yacargo', 'yacargo Documentation',
+     author, 'yacargo', 'One line description of project.',
      'Miscellaneous'),
 ]

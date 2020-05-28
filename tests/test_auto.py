@@ -9,8 +9,8 @@ from unittest import TestCase, skip
 
 import typing_inspect
 
-from YaCargo import YCAPI, response
-from YaCargo.objects import *
+from yacargo import YCAPI, response
+from yacargo.objects import *
 
 api = YCAPI(os.environ['TOKEN'])
 LOGGING = {
@@ -32,7 +32,7 @@ LOGGING = {
 
     },
     'loggers': {
-        'YaCargo': {
+        'yacargo': {
             'handlers': ['console'],
             'level': 'INFO',
         },
@@ -41,7 +41,7 @@ LOGGING = {
 logging.config.dictConfig(LOGGING)
 
 OBJECT_LIST = []
-for name, obj in inspect.getmembers(sys.modules['YaCargo.objects']):
+for name, obj in inspect.getmembers(sys.modules['yacargo.objects']):
     if inspect.isclass(obj):
         OBJECT_LIST.append(obj.__name__)
 
@@ -110,10 +110,10 @@ class TestYaCargoAPI(TestCase):
                                                                                       ),
                                                             point_type='destination')],
                                  emergency_contact=ContactWithPhone(name='name', phone='+7823'),
-                                 # client_requirements=YaCargo.ClientRequirements(),
+                                 # client_requirements=yacargo.ClientRequirements(),
                                  # due='123',
                                  # comment='asd',
-                                 # c2c_data=YaCargo.C2CData()
+                                 # c2c_data=yacargo.C2CData()
                                  )
         self.__class__.created_claim = claim.claim_id
         print(claim.claim_id)
