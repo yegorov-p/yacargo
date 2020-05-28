@@ -1173,7 +1173,7 @@ class TaxiOffer(YCBase):
 
 class CurrencyRules(YCBase):
     """
-    правила отображения валюты
+        правила отображения валюты
 
         :param str code:  ("RUB")
 
@@ -1315,7 +1315,7 @@ class ClaimPricing(YCBase):
 
 class MatchedCar(YCBase):
     """
-    Информация о подобранной машине
+        Информация о подобранной машине
 
         :param str taxi_class: Класс такси (обязательный параметр)
 
