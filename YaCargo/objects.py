@@ -25,7 +25,7 @@ def validate_fields(field_name, field, field_type):
         return field if isinstance(field, (bool, str, int, float, tuple, list, dict)) else field.json()
 
 
-class YCBase(object):
+class YCBase():
     def __init__(self):
         self.body = {}
 

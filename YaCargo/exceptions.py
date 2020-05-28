@@ -48,8 +48,8 @@ class BaseAPIError(BaseException):
                              'invalid_cursor',
                              'inappropriate_point',
                              'external_order_id_not_allowed'):
-            logging.error('Unknown server status: {}'.format(self.code))
-        logging.error('Server error: {}'.format(self.message))
+            logging.error('Unknown server status: %s', self.code)
+        logging.error('Server error: %s', self.message)
 
 
 class FieldsParamError(BaseException):

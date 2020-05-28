@@ -55,9 +55,9 @@ class YCAPI:
         url = '{}://{}/b2b/cargo/integration/{}'.format(PROTOCOL, DOMAIN, resource)
 
         try:
-            logger.debug('Requesting resource {}'.format(url))
-            logger.debug('Requesting params {}'.format(params))
-            logger.debug('Requesting body {}'.format(body))
+            logger.debug('Requesting resource %s', url)
+            logger.debug('Requesting params %s', params)
+            logger.debug('Requesting body %s', body)
             req = self.session.request(
                 method=method,
                 url=url,
@@ -78,9 +78,9 @@ class YCAPI:
                 headers=headers,
                 uri=req.request.url,
             )
-            logger.debug('CURL: {}'.format(command))
-            logger.debug('Status code {}'.format(req.status_code))
-            logger.debug('Received headers: {}'.format(req.headers))
+            logger.debug('CURL: %s', command)
+            logger.debug('Status code %d', req.status_code)
+            logger.debug('Received headers: %s', req.headers)
 
             if filename:
                 with open(filename, 'wb') as file:
@@ -88,7 +88,7 @@ class YCAPI:
                 return (req.headers, True)
 
             data = req.json()
-            logger.debug('Received JSON: {}'.format(data))
+            logger.debug('Received JSON: %s', data)
 
             if req.status_code in (400, 401, 403, 404, 409):
                 raise BaseAPIError(data)
@@ -223,7 +223,7 @@ class YCAPI:
         :param ContactWithPhone emergency_contact: (Обязательный параметр)
 
         :param str shipping_document: Сопроводительные документы
-        
+
         :param ClientRequirements client_requirements:
 
         :param str callback_properties: Параметры уведомления сервера клиента о смене статуса заявки.

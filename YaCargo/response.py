@@ -10,7 +10,7 @@ from YaCargo.objects import CargoItemMP, CargoItemSizes, CargoPointMP, \
 logger = logging.getLogger('YaCargo')
 
 
-class Base(object):
+class Base():
     def __init__(self, data):
         if isinstance(data, dict):
             self.resp = data
@@ -131,7 +131,6 @@ class SearchedClaimMP(Base):
                 visit_status=item.get('visit_status')
                 )
             )
-
         return result
 
     @property
