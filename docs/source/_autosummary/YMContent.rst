@@ -1,7 +1,7 @@
-YaCargo
+yacargo
 =========
 
-.. automodule:: YaCargo
+.. automodule:: yacargo
 
    
    

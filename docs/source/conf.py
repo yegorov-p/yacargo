@@ -51,7 +51,7 @@ html_sidebars = {
     ]
 }
 
-htmlhelp_basename = 'YaCargodoc'
+htmlhelp_basename = 'yacargodoc'
 
 latex_elements = {
     # The paper size ('letterpaper' or 'a4paper').

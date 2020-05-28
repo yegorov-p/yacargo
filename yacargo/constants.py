@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-
-
 USER_AGENT = 'yacargo'
 
 VERSION = '0.0.2'
@@ -8,6 +6,7 @@ VERSION = '0.0.2'
 PROTOCOL = 'https'
 
 DOMAIN = 'b2b.taxi.yandex.net'
+DOMAIN_TEST = 'b2b.taxi.tst.yandex.net'
 
 RESOURCES = [
     'v2/claims/create',

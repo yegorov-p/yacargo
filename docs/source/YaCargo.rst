@@ -1,30 +1,30 @@
-YaCargo package
+yacargo package
 =================
 
 Submodules
 ----------
 
 
-YaCargo\.objects module
+yacargo\.objects module
 -------------------------
 
-.. automodule:: YaCargo.objects
+.. automodule:: yacargo.objects
     :members:
     :undoc-members:
     :show-inheritance:
 
-YaCargo\.response module
+yacargo\.response module
 --------------------------
 
-.. automodule:: YaCargo.response
+.. automodule:: yacargo.response
     :members:
     :undoc-members:
     :show-inheritance:
 
-YaCargo\.exceptions module
+yacargo\.exceptions module
 --------------------------
 
-.. automodule:: YaCargo.exceptions
+.. automodule:: yacargo.exceptions
     :members:
     :undoc-members:
     :show-inheritance:
@@ -33,7 +33,7 @@ YaCargo\.exceptions module
 Module contents
 ---------------
 
-.. automodule:: YaCargo
+.. automodule:: yacargo
     :members:
     :undoc-members:
     :show-inheritance:

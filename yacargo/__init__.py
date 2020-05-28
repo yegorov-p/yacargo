@@ -25,15 +25,17 @@ class YCAPI:
     """
 
     :param str authorization_key: Авторизационный ключ
+    :param bool test_server: Использовать ли тестовый сервер?
     """
 
-    def __init__(self, authorization_key=None):
+    def __init__(self, authorization_key=None, test_server=False):
         if not authorization_key:
             raise NotAuthorized(
                 "You must provide authorization key to access cargo API!")
+        self.test_server = test_server
         self.session = requests.Session()
         self.session.headers = {
-            'Host': DOMAIN,
+            'Host': DOMAIN_TEST if self.test_server else DOMAIN,
             'Authorization': 'Bearer {}'.format(authorization_key),
             'User-agent': USER_AGENT,
             'Accept-Language': 'ru'
@@ -52,7 +54,7 @@ class YCAPI:
         if resource not in RESOURCES:
             raise Exception('Resource "%s" unsupported' % resource)
 
-        url = '{}://{}/b2b/cargo/integration/{}'.format(PROTOCOL, DOMAIN, resource)
+        url = '{}://{}/b2b/cargo/integration/{}'.format(PROTOCOL, DOMAIN_TEST if self.test_server else DOMAIN, resource)
 
         try:
             logger.debug('Requesting resource %s', url)
@@ -91,7 +93,7 @@ class YCAPI:
             logger.debug('Received JSON: %s', data)
 
             if req.status_code in (400, 401, 403, 404, 409):
-                raise BaseAPIError(data)
+                raise NotAuthorized(data)
 
             return (req.headers, data)
 

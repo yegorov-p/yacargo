@@ -12,7 +12,7 @@ import typing_inspect
 from yacargo import YCAPI, response
 from yacargo.objects import *
 
-api = YCAPI(os.environ['TOKEN'])
+api = YCAPI(os.environ['TOKEN'], test_server=True)
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': True,
@@ -62,7 +62,7 @@ def getmembers(test_object):
     return [k[0] for k in inspect.getmembers(test_object, lambda x: isinstance(x, property))]
 
 
-class TestYaCargoAPI(TestCase):
+class TestyacargoAPI(TestCase):
     created_claim = None
     def insp(self, data, tab=0):
         tabulate = ' ' * tab * 4
