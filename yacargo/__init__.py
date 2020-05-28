@@ -120,6 +120,7 @@ class YCAPI:
         :param str shipping_document: Сопроводительные документы
         :param ClientRequirements client_requirements:
         :param str callback_properties:
+
             Параметры уведомления сервера клиента о смене статуса заявки.
             Уведомление представляет собой POST-запрос по указанному url, к
             которому будут добавлены информация о дате последнего изменения
@@ -160,7 +161,6 @@ class YCAPI:
         :rtype: SearchedClaimMP
 
         :raises InputParamError: неверное значение параметра
-
         """
         params = {'request_id': uuid.uuid4().hex}
         body = {'items': validate_fields('items', items, List[CargoItemMP]),
@@ -212,22 +212,15 @@ class YCAPI:
                    comment: str = None,
                    c2c_data: C2CData = None,
                    ) -> SearchedClaimMP:
-
         """
         Изменение параметров заявки с мультиточками. Метод доступен только на начальных статусах - до принятия офера клиентом
 
         :param str claim_id: Uuid id (cargo_id в базе) (Обязательный параметр)
-
         :param List[CargoItemMP] items: Перечисление коробок к отправлению (минимум 1) (Обязательный параметр)
-
         :param List[CargoPointMP] route_points:         минимум 2 (Обязательный параметр)
-
         :param ContactWithPhone emergency_contact: (Обязательный параметр)
-
         :param str shipping_document: Сопроводительные документы
-
         :param ClientRequirements client_requirements:
-
         :param str callback_properties: Параметры уведомления сервера клиента о смене статуса заявки.
 
             Уведомление представляет собой POST-запрос по указанному url, к
@@ -259,22 +252,15 @@ class YCAPI:
 
 
         :param bool skip_door_to_door: Выключить опцию "От двери до двери"
-
         :param bool skip_client_notify: Не отправлять нотификации получателю
-
         :param bool skip_emergency_notify: Не отправлять нотификации emergency контакту
-
         :param bool optional_return: Водитель не возвращает товары в случае отмены заказа.
-
         :param str eta: Время, к которому нужно подать машину date-time
-
         :param str comment: Общий комментарий к заказу
-
         :param C2CData c2c_data:
 
         :return: ???
         :rtype: SearchedClaimMP
-
         """
         params = {'claim_id': validate_fields('claim_id', claim_id, str)}
         body = {'items': validate_fields('items', items, List[CargoItemMP]),
@@ -317,7 +303,6 @@ class YCAPI:
 
         :return: ???
         :rtype: SearchedClaimMP
-
         """
         params = {'claim_id': validate_fields('claim_id', claim_id, str)}
         return SearchedClaimMP(self._request(resource='v2/claims/info', params=params, body={}))
@@ -334,48 +319,43 @@ class YCAPI:
         Поиск по заявкам
 
         :param str claim_id: Uuid id (cargo_id в базе) (Обязательный параметр)
-
         :param int offset: Смещение (пагинация)   минимум 0 (Обязательный параметр)
-
         :param int limit: Лимит (пагинация) 1 -1000 (Обязательный параметр)
-
         :param str status: Статус заявки (список будет расширяться):
-          * **new** - ???
-          * **estimating** - ???
-          * **estimating_failed** - ???
-          * **ready_for_approval** - ???
-          * **accepted** - ???
-          * **performer_lookup** - ???
-          * **performer_draft** - ???
-          * **performer_found** - ???
-          * **performer_not_found** - ???
-          * **cancelled** - ???
-          * **pickup_arrived** - ???
-          * **ready_for_pickup_confirmation** - ???
-          * **pickuped** - ???
-          * **delivery_arrived** - ???
-          * **ready_for_delivery_confirmation** - ???
-          * **delivered** - ???
-          * **pay_waiting** - ???
-          * **delivered_finish** - ???
-          * **returning** - ???
-          * **return_arrived** - ???
-          * **ready_for_return_confirmation** - ???
-          * **returned** - ???
-          * **returned_finish** - ???
-          * **failed** - ???
-          * **cancelled_with_payment** - ???
-          * **cancelled_by_taxi** - ???
-          * **cancelled_with_items_on_hands** - ???
+
+            * **new** - ???
+            * **estimating** - ???
+            * **estimating_failed** - ???
+            * **ready_for_approval** - ???
+            * **accepted** - ???
+            * **performer_lookup** - ???
+            * **performer_draft** - ???
+            * **performer_found** - ???
+            * **performer_not_found** - ???
+            * **cancelled** - ???
+            * **pickup_arrived** - ???
+            * **ready_for_pickup_confirmation** - ???
+            * **pickuped** - ???
+            * **delivery_arrived** - ???
+            * **ready_for_delivery_confirmation** - ???
+            * **delivered** - ???
+            * **pay_waiting** - ???
+            * **delivered_finish** - ???
+            * **returning** - ???
+            * **return_arrived** - ???
+            * **ready_for_return_confirmation** - ???
+            * **returned** - ???
+            * **returned_finish** - ???
+            * **failed** - ???
+            * **cancelled_with_payment** - ???
+            * **cancelled_by_taxi** - ???
+            * **cancelled_with_items_on_hands** - ???
 
         :param str created_from: Начало периода поиска (isoformat) date-time
-
         :param str created_to: Окончание периода поиска (isoformat) date-time
 
         :return: ???
         :rtype: SearchClaimsResponseMP
-
-
         """
         params = {'claim_id': validate_fields('claim_id', claim_id, str)}
         body = {'offset': validate_fields('offset', offset, int),
@@ -395,7 +375,6 @@ class YCAPI:
         Тело запроса поиска активных заявок
 
         :param int offset: Смещение (пагинация)   минимум 0  (Обязательный параметр)
-
         :param int limit: Лимит (пагинация) 1 -1000  (Обязательный параметр)
 
         :return: ???
@@ -433,7 +412,6 @@ class YCAPI:
         :param str claim_id: claim_id заявки cargo-claims (UUID)
         :param int version: Версия, для которой меняем статус
 
-
         :return: ???
         :rtype: CutClaimResponse
 
@@ -449,7 +427,6 @@ class YCAPI:
         Голосовой шлюз с водителем
 
         :param str claim_id: claim_id заявки cargo-claims (UUID)
-
 
         :return: ???
         :rtype: VoiceforwardingResponse
@@ -513,12 +490,12 @@ class YCAPI:
         :param str claim_id: claim_id заявки cargo-claims (UUID)
         :param int version: Версия, для которой меняем статус
         :param str cancel_state: Статус отмены (платная или бесплатная):
-                    - free
-                    - paid
+
+            * **free** - ???
+            * **paid** - ???
 
         :return: ???
         :rtype: CutClaimResponse
-
         """
         params = {'claim_id': validate_fields('claim_id', claim_id, str)}
         body = {
@@ -535,10 +512,8 @@ class YCAPI:
 
         :param str claim_id: claim_id заявки cargo-claims (UUID)
 
-
         :return: ???
         :rtype: PerformerPositionResponse
-
         """
         params = {'claim_id': validate_fields('claim_id', claim_id, str)}
 

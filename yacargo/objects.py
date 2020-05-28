@@ -728,6 +728,7 @@ class CargoPointMP(YCBase):
         :param CargoPointAddress address:  (Обязательный параметр)
 
         :param str point_type: Тип точки:  (Обязательный параметр)
+
             * **source** — ???
             * **destination** — ???
             * **return** — ???
@@ -784,10 +785,12 @@ class CargoPointMP(YCBase):
         """
 
         :return: Статус посещения данной точки
+
               * **pending** - ???
               * **arrived** - ???
               * **visited** - ???
               * **skipped** - ???
+
         :rtype: str
         """
         return self._visit_status
@@ -850,9 +853,11 @@ class CargoPointMP(YCBase):
         """
 
         :return: Тип точки:  (Обязательный параметр)
+
             * **source** — ???
             * **destination** — ???
             * **return** — ???
+
         :rtype: str
         """
         return self.body.get('type')
@@ -1478,12 +1483,14 @@ class ClaimWarning(YCBase):
 
 
         :param str source: Откуда пришло предупреждение (обязательный параметр)
-            - client_requirements
-            - taxi_requirements
+
+            * **client_requirements** - ???
+            * **taxi_requirements** - ???
 
         :param str code: Машино-понятный код ошибки  (обязательный параметр)
-          - not_fit_in_car
-          - requirement_unavailable
+
+            * **not_fit_in_car** - ???
+            * **requirement_unavailable** - ??
 
         :param str message: Локализованная информация с причиной предупреждение
 
@@ -1508,8 +1515,10 @@ class ClaimWarning(YCBase):
         """
 
         :return: source: Откуда пришло предупреждение (обязательный параметр)
-            - client_requirements
-            - taxi_requirements
+
+            * **client_requirements** - ???
+            * **taxi_requirements** - ???
+
         :rtype: str
         """
         return self.body.get('source')
@@ -1519,8 +1528,10 @@ class ClaimWarning(YCBase):
         """
 
         :return: Машино-понятный код ошибки  (обязательный параметр)
-          - not_fit_in_car
-          - requirement_unavailable
+
+            * **not_fit_in_car** - ???
+            * **requirement_unavailable** - ???
+
         :rtype: str
         """
         return self.body.get('code')

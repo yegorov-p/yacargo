@@ -296,8 +296,10 @@ class SearchedClaimMP(Base):
         """
 
         :return: Актуальный статус возможности отмены заказа
-            - free
-            - paid
+
+            * **free** - ???
+            * **paid** - ???
+
         :rtype: Optional[str]
         """
         return self.resp.get('available_cancel_state')
@@ -476,33 +478,34 @@ class CutClaimResponse(Base):
         """
 
         :return: Статус заявки (список будет расширяться):
-          - new
-          - estimating
-          - estimating_failed
-          - ready_for_approval
-          - accepted
-          - performer_lookup
-          - performer_draft
-          - performer_found
-          - performer_not_found
-          - cancelled
-          - pickup_arrived
-          - ready_for_pickup_confirmation
-          - pickuped
-          - delivery_arrived
-          - ready_for_delivery_confirmation
-          - delivered
-          - pay_waiting
-          - delivered_finish
-          - returning
-          - return_arrived
-          - ready_for_return_confirmation
-          - returned
-          - returned_finish
-          - failed
-          - cancelled_with_payment
-          - cancelled_by_taxi
-          - cancelled_with_items_on_hands
+
+            * **new** - ???
+            * **estimating** - ???
+            * **estimating_failed** - ???
+            * **ready_for_approval** - ???
+            * **accepted** - ???
+            * **performer_lookup** - ???
+            * **performer_draft** - ???
+            * **performer_found** - ???
+            * **performer_not_found** - ???
+            * **cancelled** - ???
+            * **pickup_arrived** - ???
+            * **ready_for_pickup_confirmation** - ???
+            * **pickuped** - ???
+            * **delivery_arrived** - ???
+            * **ready_for_delivery_confirmation** - ???
+            * **delivered** - ???
+            * **pay_waiting** - ???
+            * **delivered_finish** - ???
+            * **returning** - ???
+            * **return_arrived** - ???
+            * **ready_for_return_confirmation** - ???
+            * **returned** - ???
+            * **returned_finish** - ???
+            * **failed** - ???
+            * **cancelled_with_payment** - ???
+            * **cancelled_by_taxi** - ???
+            * **cancelled_with_items_on_hands** - ???
 
         :rtype: str
         """
