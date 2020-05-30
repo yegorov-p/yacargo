@@ -257,6 +257,7 @@ class SearchedClaimMP(Base):
             return TaxiOffer(offer_id=data.get('offer_id'),
                              price_raw=data.get('price_raw'),
                              price=data.get('price'))
+        return None
 
     @property
     def pricing(self) -> Optional[ClaimPricing]:
@@ -288,6 +289,7 @@ class SearchedClaimMP(Base):
                                 currency=data.get('currency'),
                                 currency_rules=currency_rules,
                                 final_price=data.get('final_price'))
+        return None
 
     @property
     def available_cancel_state(self) -> Optional[str]:
@@ -314,6 +316,8 @@ class SearchedClaimMP(Base):
             return ClientRequirements(taxi_class=data.get('taxi_class'),
                                       cargo_type=data.get('cargo_type'),
                                       cargo_loaders=data.get('cargo_loaders'))
+        return None
+
 
     @property
     def matched_cars(self) -> Optional[List[MatchedCar]]:
@@ -334,6 +338,7 @@ class SearchedClaimMP(Base):
                                          cargo_points_field=data.get('cargo_points_field'))
                               )
             return result
+        return None
 
     @property
     def warnings(self) -> Optional[List[ClaimWarning]]:
@@ -350,6 +355,7 @@ class SearchedClaimMP(Base):
                                            message=data.get('message'))
                               )
             return result
+        return None
 
     @property
     def performer_info(self) -> Optional[PerformerInfo]:
@@ -364,6 +370,7 @@ class SearchedClaimMP(Base):
                                  legal_name=data.get('legal_name'),
                                  car_model=data.get('car_model'),
                                  car_number=data.get('car_number'))
+        return None
 
     @property
     def callback_properties(self) -> Optional[str]:
@@ -439,6 +446,7 @@ class SearchedClaimMP(Base):
         if data:
             return C2CData(payment_type=data.get('payment_type'),
                            payment_method_id=data.get('payment_method_id'))
+        return None
 
 
 class SearchClaimsResponseMP(Base):
@@ -622,6 +630,7 @@ class PerformerPositionResponse(Base):
         position = self.resp.get('position')
         if position:
             return position.get('lat')
+        return None
 
     @property
     def lon(self) -> float:
@@ -633,6 +642,7 @@ class PerformerPositionResponse(Base):
         position = self.resp.get('position')
         if position:
             return position.get('lon')
+        return None
 
     @property
     def timestamp(self) -> int:
@@ -644,6 +654,7 @@ class PerformerPositionResponse(Base):
         position = self.resp.get('position')
         if position:
             return position.get('timestamp')
+        return None
 
     @property
     def speed(self) -> float:
@@ -655,6 +666,7 @@ class PerformerPositionResponse(Base):
         position = self.resp.get('position')
         if position:
             return position.get('speed')
+        return None
 
     @property
     def direction(self) -> float:
@@ -666,3 +678,4 @@ class PerformerPositionResponse(Base):
         position = self.resp.get('position')
         if position:
             return position.get('direction')
+        return None

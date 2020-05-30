@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import logging
 import socket
 import ssl
 import uuid
@@ -7,11 +8,12 @@ from typing import List
 import requests
 from requests.exceptions import ReadTimeout, SSLError
 
-from yacargo.constants import *
-from yacargo.exceptions import *
-from yacargo.objects import *
+from yacargo.constants import VERSION, DOMAIN_TEST, DOMAIN, USER_AGENT, RESOURCES, PROTOCOL, CLAIM_STATUS, CANCEL_STATE
+from yacargo.exceptions import NotAuthorized, NetworkAPIError, InputParamError
 from yacargo.objects import validate_fields
-from yacargo.response import *
+from yacargo.response import CargoItemMP, CargoPointMP, ContactWithPhone, ClientRequirements, \
+    C2CData, SearchedClaimMP, SearchClaimsResponseMP, CutClaimResponse, VoiceforwardingResponse, \
+    ClaimsJournalResponse, PerformerPositionResponse
 
 __title__ = 'yaCargo'
 __version__ = VERSION
@@ -87,7 +89,7 @@ class YCAPI:
             if filename:
                 with open(filename, 'wb') as file:
                     file.write(req.content)
-                return (req.headers, True)
+                return req.headers, True
 
             data = req.json()
             logger.debug('Received JSON: %s', data)
@@ -95,7 +97,7 @@ class YCAPI:
             if req.status_code in (400, 401, 403, 404, 409):
                 raise NotAuthorized(data)
 
-            return (req.headers, data)
+            return req.headers, data
 
     def claim_create(self,
                      items: List[CargoItemMP],
@@ -112,55 +114,55 @@ class YCAPI:
                      comment: str = None,
                      c2c_data: C2CData = None) -> SearchedClaimMP:
         """
-        Создание заявки с мультиточками
+            Создание заявки с мультиточками
 
-        :param List[CargoItemMP] items: Перечисление коробок к отправлению (Обязательный параметр)
-        :param List[CargoPointMP] route_points: ??? (Обязательный параметр, минимум 2)
-        :param ContactWithPhone emergency_contact: (Обязательный параметр)
-        :param str shipping_document: Сопроводительные документы
-        :param ClientRequirements client_requirements:
-        :param str callback_properties:
+            :param List[CargoItemMP] items: Перечисление коробок к отправлению *(Обязательный параметр)*
+            :param List[CargoPointMP] route_points: Точки маршрута *(Обязательный параметр, минимум 2)*
+            :param ContactWithPhone emergency_contact: *(Обязательный параметр)*
+            :param str shipping_document: Сопроводительные документы
+            :param ClientRequirements client_requirements:
+            :param str callback_properties:
 
-            Параметры уведомления сервера клиента о смене статуса заявки.
-            Уведомление представляет собой POST-запрос по указанному url, к
-            которому будут добавлены информация о дате последнего изменения
-            заявки и идентификатор заказа в системе b2b cargo в виде
-            'updated_ts=<ISO-8601>&claim_id=<id заказа>', то есть url вида
-            'https://example.com/?my_order_id=123&' будет расширен до
-            'https://example.com/?my_order_id=123&updated_ts=...&claim_id=...'.
+                Параметры уведомления сервера клиента о смене статуса заявки.
+                Уведомление представляет собой POST-запрос по указанному url, к
+                которому будут добавлены информация о дате последнего изменения
+                заявки и идентификатор заказа в системе b2b cargo в виде
+                'updated_ts=<ISO-8601>&claim_id=<id заказа>', то есть url вида
+                'https://example.com/?my_order_id=123&' будет расширен до
+                'https://example.com/?my_order_id=123&updated_ts=...&claim_id=...'.
 
-            Важно! Параметры добавляются конкатенацией к callback_url, то есть
-            url вида 'https://example.com' превратится в невалидный
-            'https://example.comupdated_ts=...&claim_id=...'.
+                Важно! Параметры добавляются конкатенацией к callback_url, то есть
+                url вида 'https://example.com' превратится в невалидный
+                'https://example.comupdated_ts=...&claim_id=...'.
 
 
-            Поддерживаются только http и https. При https ssl-сертификат должен
-            быть выдан известным серверу центром сертификации.
+                Поддерживаются только http и https. При https ssl-сертификат должен
+                быть выдан известным серверу центром сертификации.
 
-            К уведомлениям следует относиться как к push ahead of polling, как
-            к ускорению получения информации о смене статусов. Сервер ожидает
-            ответ 200, при таймаутах или любом другом ответе какое-то время
-            будет пытаться доставить уведомление, после чего прекратит попытки.
-            То есть, для надёжного получения статуса по заявке клиенту
-            необходимо запрашивать информацию из ручки v1/claims/info.
+                К уведомлениям следует относиться как к push ahead of polling, как
+                к ускорению получения информации о смене статусов. Сервер ожидает
+                ответ 200, при таймаутах или любом другом ответе какое-то время
+                будет пытаться доставить уведомление, после чего прекратит попытки.
+                То есть, для надёжного получения статуса по заявке клиенту
+                необходимо запрашивать информацию из ручки v1/claims/info.
 
-            Клиенту следует учесть, что ответ ручки v1/claims/info может
-            содержать более старое состояние заявки (надо ориентироваться на
-            значение поля updated_ts). В этом случает необходимо повторить
-            вызов ручки через некоторое время (от 5 до 30 секунд).
+                Клиенту следует учесть, что ответ ручки v1/claims/info может
+                содержать более старое состояние заявки (надо ориентироваться на
+                значение поля updated_ts). В этом случает необходимо повторить
+                вызов ручки через некоторое время (от 5 до 30 секунд).
 
-        :param bool skip_door_to_door: Выключить опцию "От двери до двери"
-        :param bool skip_client_notify: Не отправлять нотификации получателю
-        :param bool skip_emergency_notify: Не отправлять нотификации emergency контакту
-        :param bool optional_return: Водитель не возвращает товары в случае отмены заказа.
-        :param str due: Время, к которому нужно подать машину date-time
-        :param str comment: Общий комментарий к заказу
-        :param C2CData c2c_data: ???
+            :param bool skip_door_to_door: Выключить опцию "От двери до двери"
+            :param bool skip_client_notify: Не отправлять нотификации получателю
+            :param bool skip_emergency_notify: Не отправлять нотификации emergency контакту
+            :param bool optional_return: Водитель не возвращает товары в случае отмены заказа.
+            :param str due: Время, к которому нужно подать машину date-time
+            :param str comment: Общий комментарий к заказу
+            :param C2CData c2c_data: ???
 
-        :return:  ???
-        :rtype: SearchedClaimMP
+            :return: Найденная заявка
+            :rtype: SearchedClaimMP
 
-        :raises InputParamError: неверное значение параметра
+            :raises InputParamError: неверное значение параметра
         """
         params = {'request_id': uuid.uuid4().hex}
         body = {'items': validate_fields('items', items, List[CargoItemMP]),
@@ -213,54 +215,54 @@ class YCAPI:
                    c2c_data: C2CData = None,
                    ) -> SearchedClaimMP:
         """
-        Изменение параметров заявки с мультиточками. Метод доступен только на начальных статусах - до принятия офера клиентом
+            Изменение параметров заявки с мультиточками. Метод доступен только на начальных статусах - до принятия офера клиентом
 
-        :param str claim_id: Uuid id (cargo_id в базе) (Обязательный параметр)
-        :param List[CargoItemMP] items: Перечисление коробок к отправлению (минимум 1) (Обязательный параметр)
-        :param List[CargoPointMP] route_points:         минимум 2 (Обязательный параметр)
-        :param ContactWithPhone emergency_contact: (Обязательный параметр)
-        :param str shipping_document: Сопроводительные документы
-        :param ClientRequirements client_requirements:
-        :param str callback_properties: Параметры уведомления сервера клиента о смене статуса заявки.
+            :param str claim_id: Uuid id (cargo_id в базе) *(Обязательный параметр)*
+            :param List[CargoItemMP] items: Перечисление коробок к отправлению (минимум 1) *(Обязательный параметр)*
+            :param List[CargoPointMP] route_points: точки маршрута *(Обязательный параметр)*
+            :param ContactWithPhone emergency_contact: *(Обязательный параметр)*
+            :param str shipping_document: Сопроводительные документы
+            :param ClientRequirements client_requirements:
+            :param str callback_properties: Параметры уведомления сервера клиента о смене статуса заявки.
 
-            Уведомление представляет собой POST-запрос по указанному url, к
-            которому будут добавлены информация о дате последнего изменения
-            заявки и идентификатор заказа в системе b2b cargo в виде
-            'updated_ts=<ISO-8601>&claim_id=<id заказа>', то есть url вида
-            'https://example.com/?my_order_id=123&' будет расширен до
-            'https://example.com/?my_order_id=123&updated_ts=...&claim_id=...'.
+                Уведомление представляет собой POST-запрос по указанному url, к
+                которому будут добавлены информация о дате последнего изменения
+                заявки и идентификатор заказа в системе b2b cargo в виде
+                'updated_ts=<ISO-8601>&claim_id=<id заказа>', то есть url вида
+                'https://example.com/?my_order_id=123&' будет расширен до
+                'https://example.com/?my_order_id=123&updated_ts=...&claim_id=...'.
 
-            Важно! Параметры добавляются конкатенацией к callback_url, то есть
-            url вида 'https://example.com' превратится в невалидный
-            'https://example.comupdated_ts=...&claim_id=...'.
-
-
-            Поддерживаются только http и https. При https ssl-сертификат должен
-            быть выдан известным серверу центром сертификации.
-
-            К уведомлениям следует относиться как к push ahead of polling, как
-            к ускорению получения информации о смене статусов. Сервер ожидает
-            ответ 200, при таймаутах или любом другом ответе какое-то время
-            будет пытаться доставить уведомление, после чего прекратит попытки.
-            То есть, для надёжного получения статуса по заявке клиенту
-            необходимо запрашивать информацию из ручки v1/claims/info.
-
-            Клиенту следует учесть, что ответ ручки v1/claims/info может
-            содержать более старое состояние заявки (надо ориентироваться на
-            значение поля updated_ts). В этом случает необходимо повторить
-            вызов ручки через некоторое время (от 5 до 30 секунд).
+                Важно! Параметры добавляются конкатенацией к callback_url, то есть
+                url вида 'https://example.com' превратится в невалидный
+                'https://example.comupdated_ts=...&claim_id=...'.
 
 
-        :param bool skip_door_to_door: Выключить опцию "От двери до двери"
-        :param bool skip_client_notify: Не отправлять нотификации получателю
-        :param bool skip_emergency_notify: Не отправлять нотификации emergency контакту
-        :param bool optional_return: Водитель не возвращает товары в случае отмены заказа.
-        :param str eta: Время, к которому нужно подать машину date-time
-        :param str comment: Общий комментарий к заказу
-        :param C2CData c2c_data:
+                Поддерживаются только http и https. При https ssl-сертификат должен
+                быть выдан известным серверу центром сертификации.
 
-        :return: ???
-        :rtype: SearchedClaimMP
+                К уведомлениям следует относиться как к push ahead of polling, как
+                к ускорению получения информации о смене статусов. Сервер ожидает
+                ответ 200, при таймаутах или любом другом ответе какое-то время
+                будет пытаться доставить уведомление, после чего прекратит попытки.
+                То есть, для надёжного получения статуса по заявке клиенту
+                необходимо запрашивать информацию из ручки v1/claims/info.
+
+                Клиенту следует учесть, что ответ ручки v1/claims/info может
+                содержать более старое состояние заявки (надо ориентироваться на
+                значение поля updated_ts). В этом случает необходимо повторить
+                вызов ручки через некоторое время (от 5 до 30 секунд).
+
+
+            :param bool skip_door_to_door: Выключить опцию "От двери до двери"
+            :param bool skip_client_notify: Не отправлять нотификации получателю
+            :param bool skip_emergency_notify: Не отправлять нотификации emergency контакту
+            :param bool optional_return: Водитель не возвращает товары в случае отмены заказа.
+            :param str eta: Время, к которому нужно подать машину date-time
+            :param str comment: Общий комментарий к заказу
+            :param C2CData c2c_data:
+
+            :return: Найденная заявка
+            :rtype: SearchedClaimMP
         """
         params = {'claim_id': validate_fields('claim_id', claim_id, str)}
         body = {'items': validate_fields('items', items, List[CargoItemMP]),
@@ -299,10 +301,10 @@ class YCAPI:
         """
             Получение полной информации о заявке
 
-        :param str claim_id: Uuid id (cargo_id в базе) (Обязательный параметр)
+            :param str claim_id: Uuid id (cargo_id в базе) *(Обязательный параметр)*
 
-        :return: ???
-        :rtype: SearchedClaimMP
+            :return: Найденная заявка
+            :rtype: SearchedClaimMP
         """
         params = {'claim_id': validate_fields('claim_id', claim_id, str)}
         return SearchedClaimMP(self._request(resource='v2/claims/info', params=params, body={}))
@@ -316,52 +318,55 @@ class YCAPI:
                      created_to: str = None,
                      ) -> SearchClaimsResponseMP:
         """
-        Поиск по заявкам
+            Поиск по заявкам
 
-        :param str claim_id: Uuid id (cargo_id в базе) (Обязательный параметр)
-        :param int offset: Смещение (пагинация)   минимум 0 (Обязательный параметр)
-        :param int limit: Лимит (пагинация) 1 -1000 (Обязательный параметр)
-        :param str status: Статус заявки (список будет расширяться):
+            :param str claim_id: Uuid id (cargo_id в базе) *(Обязательный параметр)*
+            :param int offset: Смещение (пагинация), минимум 0 *(Обязательный параметр)*
+            :param int limit: Лимит (пагинация) 1 -1000 *(Обязательный параметр)*
+            :param str status: Статус заявки (список будет расширяться):
 
-            * **new** - ???
-            * **estimating** - ???
-            * **estimating_failed** - ???
-            * **ready_for_approval** - ???
-            * **accepted** - ???
-            * **performer_lookup** - ???
-            * **performer_draft** - ???
-            * **performer_found** - ???
-            * **performer_not_found** - ???
-            * **cancelled** - ???
-            * **pickup_arrived** - ???
-            * **ready_for_pickup_confirmation** - ???
-            * **pickuped** - ???
-            * **delivery_arrived** - ???
-            * **ready_for_delivery_confirmation** - ???
-            * **delivered** - ???
-            * **pay_waiting** - ???
-            * **delivered_finish** - ???
-            * **returning** - ???
-            * **return_arrived** - ???
-            * **ready_for_return_confirmation** - ???
-            * **returned** - ???
-            * **returned_finish** - ???
-            * **failed** - ???
-            * **cancelled_with_payment** - ???
-            * **cancelled_by_taxi** - ???
-            * **cancelled_with_items_on_hands** - ???
+                * **new** - новая заявка
+                * **estimating** - идет процесс оценки заявки (подбор типа автомобиля по параметрам груза и расчет стоимости)
+                * **estimating_failed** - не удалось оценить заявку. Причину можно увидеть в error_messages в ответе ручки /info
+                * **ready_for_approval** - заявка успешно оценена и ожидает подтверждения от клиента
+                * **accepted** - заявка подтверждена клиентом
+                * **performer_lookup** - заявка взята в обработку. Промежуточный статус перед созданием заказа
+                * **performer_draft** - идет поиск водителя
+                * **performer_found** - водитель найден и едет в точку А
+                * **performer_not_found** - не удалось найти водителя. Можно попробовать снова через некоторое время
+                * **cancelled** - заказ был отменен клиентом бесплатно
+                * **pickup_arrived** - водитель приехал на точку А
+                * **ready_for_pickup_confirmation** - водитель ждет, когда отправитель назовет ему код подтверждения
+                * **pickuped** - водитель успешно забрал груз
+                * **delivery_arrived** - водитель приехал на точку Б
+                * **ready_for_delivery_confirmation** - водитель ждет, когда получатель назовет ему код подтверждения
+                * **delivered** - водитель успешно доставил груз (ввел смс код). Код приходит после оплаты, если была оплата при получении.
+                * **pay_waiting** - заказ ожидает оплаты (актуально для оплаты при получении)
+                * **delivered_finish** - заказ завершен
+                * **returning** -  водителю пришлось вернуть груз и он едет в точку возврата
+                * **return_arrived** - водитель приехал на точку возврата
+                * **ready_for_return_confirmation** - водитель в точке возврата ожидает, когда ему назовут код подтверждения
+                * **returned** - водитель успешно вернул груз (ввел смс код)
+                * **returned_finish** - заказ завершен
+                * **failed** - терминальный статус, не удалось начать выполнение заказа
+                * **cancelled_with_payment** - заказ был отменен клиентом платно (водитель уже приехал)
+                * **cancelled_by_taxi** - водитель отменил заказ (до получения груза)
+                * **cancelled_with_items_on_hands** - клиент платно отменил заявку без необходимости возврата груза (заявка была создана с флагом optional_return)
 
-        :param str created_from: Начало периода поиска (isoformat) date-time
-        :param str created_to: Окончание периода поиска (isoformat) date-time
+            :param str created_from: Начало периода поиска (isoformat) date-time
+            :param str created_to: Окончание периода поиска (isoformat) date-time
 
-        :return: ???
-        :rtype: SearchClaimsResponseMP
+            :return: Найденные заявки
+            :rtype: SearchClaimsResponseMP
         """
         params = {'claim_id': validate_fields('claim_id', claim_id, str)}
         body = {'offset': validate_fields('offset', offset, int),
                 'limit': validate_fields('limit', limit, int)}
         if status:
             body['status'] = validate_fields('status', status, str)
+            if body['status'] not in CLAIM_STATUS:
+                raise InputParamError('"status" should be {}'.format(', '.join(CLAIM_STATUS)))
+
         if created_from:
             body['created_from'] = validate_fields('created_from', created_from, str)
         if created_to:
@@ -372,15 +377,13 @@ class YCAPI:
                       offset: int = 0,
                       limit: int = 100) -> SearchClaimsResponseMP:
         """
-        Тело запроса поиска активных заявок
+            Тело запроса поиска активных заявок
 
-        :param int offset: Смещение (пагинация)   минимум 0  (Обязательный параметр)
-        :param int limit: Лимит (пагинация) 1 -1000  (Обязательный параметр)
+            :param int offset: Смещение (пагинация), минимум 0 *(Обязательный параметр)*
+            :param int limit: Лимит (пагинация) 1-1000 *(Обязательный параметр)*
 
-        :return: ???
-        :rtype: SearchClaimsResponseMP
-
-
+            :return: Найденные заявки
+            :rtype: SearchClaimsResponseMP
         """
 
         body = {'offset': validate_fields('offset', offset, int),
@@ -391,13 +394,12 @@ class YCAPI:
     def claim_bulk(self,
                    claim_ids: List[str]) -> SearchClaimsResponseMP:
         """
-        Поиск по заявкам
+            Поиск по заявкам
 
-        :param List[str] claim_ids: Массив claim_id, для которых нужно отдать info 1-1000 (Обязательный параметр)
+            :param List[str] claim_ids: Массив claim_id, для которых нужно отдать сведения 1-1000 *(Обязательный параметр)*
 
-        :return: ???
-        :rtype: SearchClaimsResponseMP
-
+            :return: Найденные заявки
+            :rtype: SearchClaimsResponseMP
         """
         body = {'claim_ids': validate_fields('claim_ids', claim_ids, List[str])}
 
@@ -407,14 +409,13 @@ class YCAPI:
                      claim_id: str,
                      version: int) -> CutClaimResponse:
         """
-        Пометка заявки как подтвержденной
+            Пометка заявки как подтвержденной
 
-        :param str claim_id: claim_id заявки cargo-claims (UUID)
-        :param int version: Версия, для которой меняем статус
+            :param str claim_id: claim_id заявки cargo-claims (UUID)
+            :param int version: Версия, для которой меняем статус
 
-        :return: ???
-        :rtype: CutClaimResponse
-
+            :return: ???
+            :rtype: CutClaimResponse
         """
         params = {'claim_ids': validate_fields('claim_id', claim_id, str)}
         body = {'version': validate_fields('version', version, int)}
@@ -428,7 +429,7 @@ class YCAPI:
 
         :param str claim_id: claim_id заявки cargo-claims (UUID)
 
-        :return: ???
+        :return: Информация о временном телефонном номере
         :rtype: VoiceforwardingResponse
 
         """
@@ -439,17 +440,12 @@ class YCAPI:
     def claim_journal(self,
                       cursor: str) -> ClaimsJournalResponse:
         """
-        Subscription to journal of claims change events
+            Subscription to journal of claims change events
 
-        :param str cursor: Cursor points to last consumed event in journal. Handler returns all
-                    records registered after that event.
+            :param str cursor: Позиция курсора, с которой должен быть передан журнал
 
-                    If skipped handler returns records start from first registred record
-                    in journal.
-
-        :return: ???
-        :rtype: ClaimsJournalResponse
-
+            :return: ???
+            :rtype: ClaimsJournalResponse
         """
         body = {'cursor': validate_fields('cursor', cursor, str)}
 
@@ -461,16 +457,15 @@ class YCAPI:
                        status: str,
                        document_type: str = "act"):
         """
-        Получить накладную или акт приёма-передачи
+            Получить накладную или акт приёма-передачи
 
-        :param str claim_id:  заявки cargo-claims (UUID)
-        :param str document_type: Тип документа
-        :param int version: version
-        :param str status: Статус заявки
+            :param str claim_id:  заявки cargo-claims (UUID)
+            :param str document_type: Тип документа
+            :param int version: version
+            :param str status: Статус заявки
 
-        :return: ???
-        :rtype: bool
-
+            :return: ???
+            :rtype: bool
         """
         params = {'claim_id': validate_fields('claim_id', claim_id, str),
                   'document_type': validate_fields('document_type', document_type, str),
@@ -485,35 +480,39 @@ class YCAPI:
                      version: int,
                      cancel_state: str) -> CutClaimResponse:
         """
-        Пометка заявки как отмененной
+            Пометка заявки как отмененной
 
-        :param str claim_id: claim_id заявки cargo-claims (UUID)
-        :param int version: Версия, для которой меняем статус
-        :param str cancel_state: Статус отмены (платная или бесплатная):
+            :param str claim_id: claim_id заявки cargo-claims (UUID)
+            :param int version: Версия, для которой меняем статус
+            :param str cancel_state: Статус отмены:
 
-            * **free** - ???
-            * **paid** - ???
+                * **free** - бесплатная отмена
+                * **paid** - платная отмена
 
-        :return: ???
-        :rtype: CutClaimResponse
+            :return: ???
+            :rtype: CutClaimResponse
         """
         params = {'claim_id': validate_fields('claim_id', claim_id, str)}
+
         body = {
             'version': validate_fields('version', version, int),
             'cancel_state': validate_fields('cancel_state', cancel_state, str),
         }
+
+        if cancel_state not in CANCEL_STATE:
+            raise InputParamError('"cancel_state" should be {}'.format(', '.join(CANCEL_STATE)))
 
         return CutClaimResponse(self._request(resource='v1/claims/cancel', params=params, body=body))
 
     def performer_position(self,
                            claim_id: str) -> PerformerPositionResponse:
         """
-        Получение координаты исполнителя заказа
+            Получение координаты исполнителя заказа
 
-        :param str claim_id: claim_id заявки cargo-claims (UUID)
+            :param str claim_id: claim_id заявки cargo-claims (UUID)
 
-        :return: ???
-        :rtype: PerformerPositionResponse
+            :return: Позиция исполнителя
+            :rtype: PerformerPositionResponse
         """
         params = {'claim_id': validate_fields('claim_id', claim_id, str)}
 

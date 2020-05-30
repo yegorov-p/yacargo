@@ -30,7 +30,7 @@ def validate_fields(field_name, field, field_type):
         return field if isinstance(field, (bool, str, int, float, tuple, list, dict)) else field.json()
 
 
-class YCBase():
+class YCBase:
     """
         Базовый класс
     """
@@ -819,6 +819,7 @@ class CargoItemMP(YCBase):
             return CargoItemSizes(length=size.get('length'),
                                   width=size.get('width'),
                                   height=size.get('height'))
+        return None
 
     @property
     def weight(self) -> Optional[float]:

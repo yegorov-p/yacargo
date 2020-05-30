@@ -3,17 +3,12 @@
 import mock
 import os
 import sys
+import sphinx_rtd_theme
 
 sys.path.insert(0, os.path.abspath('../..'))
-# -- General configuration ------------------------------------------------
-#
-# import mock, sys
-# MOCK_MODULES = ['typeguard']
-# for mod_name in MOCK_MODULES:
-#     sys.modules[mod_name] = mock.Mock()
+from yacargo.constants import VERSION
 
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.autosummary']
-
+extensions = ['sphinx.ext.autodoc', 'sphinx.ext.autosummary', "sphinx_rtd_theme"]
 
 templates_path = ['_templates']
 
@@ -25,9 +20,8 @@ project = 'yacargo'
 copyright = '2020, Pasha Yegorov'
 author = 'Pasha Yegorov'
 
-from yacargo import constants
 
-version = constants.VERSION
+version = VERSION
 release = ''
 
 language = 'ru'
@@ -36,7 +30,7 @@ pygments_style = 'sphinx'
 
 todo_include_todos = True
 
-html_theme = 'alabaster'
+html_theme = "sphinx_rtd_theme"
 # html_theme_options = {}
 html_static_path = ['_static']
 
