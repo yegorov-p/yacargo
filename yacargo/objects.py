@@ -1,8 +1,10 @@
 # # -*- coding: utf-8 -*-
+import re
 from typing import List, Optional
 
 from typeguard import check_type
 
+from yacargo.constants import VAT_CODE, PAYMENT_SUBJECT, PAYMENT_MODE, COUNTRY_OF_ORIGIN_CODE, TAX_SYSTEM_CODE, TAXI_CLASS, CARGO_TYPE
 from yacargo.exceptions import InputParamError
 
 
@@ -11,8 +13,11 @@ def validate_fields(field_name, field, field_type):
     Валидатор полей на соответствие ожидаемому типу
 
     :param field_name: Название поля, передается для ошибки
+
     :param field: Поле
+
     :param field_type: Тип поля
+
     :return: Объект в виде json
     """
     try:
@@ -26,6 +31,9 @@ def validate_fields(field_name, field, field_type):
 
 
 class YCBase():
+    """
+        Базовый класс
+    """
     def __init__(self):
         self.body = {}
 
@@ -42,14 +50,14 @@ class CargoItemSizes(YCBase):
     """
         Линейные размеры одного предмета в метрах
 
-        :param float length: (Обязательный параметр)
+        :param float length: глубина в метрах *(Обязательный параметр)*
 
-        :param float width: (Обязательный параметр)
+        :param float width: ширина в метрах *(Обязательный параметр)*
 
-        :param float height: (Обязательный параметр)
+        :param float height: высота в метрах *(Обязательный параметр)*
     """
 
-    def __init__(self, length=None, width=None, height=None):
+    def __init__(self, length, width, height):
         super().__init__()
         self.body['length'] = validate_fields('length', length, float)
         self.body['width'] = validate_fields('width', width, float)
@@ -62,7 +70,7 @@ class CargoItemSizes(YCBase):
     def length(self) -> float:
         """
 
-        :return: ???
+        :return: глубина в метрах
         :rtype: float
         """
         return self.body.get('length')
@@ -71,7 +79,7 @@ class CargoItemSizes(YCBase):
     def width(self) -> float:
         """
 
-        :return: ???
+        :return: ширина в метрах
         :rtype: float
         """
         return self.body.get('width')
@@ -80,7 +88,7 @@ class CargoItemSizes(YCBase):
     def height(self) -> float:
         """
 
-        :return: ???
+        :return: высота в метрах
         :rtype: float
         """
         return self.body.get('height')
@@ -88,24 +96,61 @@ class CargoItemSizes(YCBase):
 
 class ItemFiscalization(YCBase):
     """
-
         Детализация по товару для фискализации
 
-        :param int vat_code: Ставка НДС (Обязательный параметр)
+        :param int vat_code: Ставка НДС *(Обязательный параметр)*
 
-        :param str payment_subject: Признак предмета расчета (Обязательный параметр)
+            * **1** - Без НДС
+            * **2** - НДС по ставке 0%
+            * **3** - НДС по ставке 10%
+            * **4** - НДС чека по ставке 20%
+            * **5**	- НДС чека по расчетной ставке 10/110
+            * **6** - НДС чека по расчетной ставке 20/120
 
-        :param str payment_mode: Признак способа расчета (Обязательный параметр)
+        :param str payment_subject: Признак предмета расчета *(Обязательный параметр)*
 
-        :param str product_code: Уникальный номер, присваивается при маркировке
+            * **commodity** - Товар
+            * **excise** - Подакцизный товар
+            * **job** - Работа
+            * **service** - Услуга
+            * **gambling_bet** - Ставка в азартной игре
+            * **gambling_prize** - Выигрыш в азартной игре
+            * **lottery** - Лотерейный билет
+            * **lottery_prize** - Выигрыш в лотерею
+            * **intellectual_activity** - Результаты интеллектуальной деятельности
+            * **payment** - Платеж
+            * **agent_commission** - Агентское вознаграждение
+            * **property_right** - Имущественные права
+            * **non_operating_gain** - Внереализационный доход
+            * **insurance_premium** - Страховой сбор
+            * **sales_tax** - Торговый сбор
+            * **resort_fee** - Курортный сбор
+            * **composite** - Несколько вариантов
+            * **another** - Другое
 
-        :param str country_of_origin_code: НКод страны по общероссийскому классификатору стран мира
+        :param str payment_mode: Признак способа расчета *(Обязательный параметр)*
 
-        :param str customs_declaration_number: Номер таможенной декларации
+            * **full_prepayment** - Полная предоплата
+            * **partial_prepayment** - Частичная предоплата
+            * **advance** - Аванс
+            * **full_payment** - Полный расчет
+            * **partial_payment** - Частичный расчет и кредит
+            * **credit** - Кредит
+            * **credit_payment** - Выплата по кредиту
 
-        :param float excise: Сумма акциза товара с учетом копеек (18, 4)
+        :param str product_code: Уникальный номер, который присваивается экземпляру товара при `маркировке <http://docs.cntd.ru/document/902192509>`__
 
+                                Формат: число в шестнадцатеричном представлении с пробелами. Максимальная длина — 32 байта.
 
+                                Пример: *00 00 00 01 00 21 FA 41 00 23 05 41 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 12 00 AB 00*.
+
+                                Обязательный параметр, если товар нужно `маркировке <http://docs.cntd.ru/document/557297080>`__.
+
+        :param str country_of_origin_code: Код страны происхождения товара по `общероссийскому классификатору стран мира <http://docs.cntd.ru/document/842501280>`__. Пример: RU.
+
+        :param str customs_declaration_number: Номер таможенной декларации (от 1 до 32 символов).
+
+        :param float excise: Сумма акциза товара с учетом копеек. Десятичное число с точностью до 2 символов после точки.
     """
 
     def __init__(self,
@@ -119,14 +164,32 @@ class ItemFiscalization(YCBase):
         super().__init__()
 
         self.body['vat_code'] = validate_fields('vat_code', vat_code, int)
+        if self.body['vat_code'] not in VAT_CODE:
+            raise InputParamError('"vat_code" should be {}'.format(', '.join(VAT_CODE)))
+
         self.body['payment_subject'] = validate_fields('payment_subject', payment_subject, str)
+        if self.body['payment_subject'] not in PAYMENT_SUBJECT:
+            raise InputParamError('"payment_subject" should be {}'.format(', '.join(PAYMENT_SUBJECT)))
+
         self.body['payment_mode'] = validate_fields('payment_mode', payment_mode, str)
+        if self.body['payment_mode'] not in PAYMENT_MODE:
+            raise InputParamError('"payment_mode" should be {}'.format(', '.join(PAYMENT_MODE)))
+
         if product_code:
             self.body['product_code'] = validate_fields('product_code', product_code, str)
+            if not re.match('([0-9A-F]{2} ){31}[0-9A-F]{2}', self.body['product_code']):
+                raise InputParamError('"product_code" is in a wrong format')
+
         if country_of_origin_code:
             self.body['country_of_origin_code'] = validate_fields('country_of_origin_code', country_of_origin_code, str)
+            if self.body['country_of_origin_code'] not in COUNTRY_OF_ORIGIN_CODE:
+                raise InputParamError('"country_of_origin_code" should be {}'.format(', '.join(COUNTRY_OF_ORIGIN_CODE)))
+
         if customs_declaration_number:
             self.body['customs_declaration_number'] = validate_fields('customs_declaration_number', customs_declaration_number, str)
+            if len(self.body['customs_declaration_number']) > 32:
+                raise InputParamError('"customs_declaration_number" should be shorter than 32 symbols')
+
         if excise:
             self.body['excise'] = validate_fields('excise', excise, float)
 
@@ -138,6 +201,14 @@ class ItemFiscalization(YCBase):
         """
 
         :return: Ставка НДС
+
+            * **1** - Без НДС
+            * **2** - НДС по ставке 0%
+            * **3** - НДС по ставке 10%
+            * **4** - НДС чека по ставке 20%
+            * **5**	- НДС чека по расчетной ставке 10/110
+            * **6** - НДС чека по расчетной ставке 20/120
+
         :rtype: int
         """
         return self.body.get('vat_code')
@@ -147,6 +218,26 @@ class ItemFiscalization(YCBase):
         """
 
         :return: Признак предмета расчета
+
+            * **commodity** - Товар
+            * **excise** - Подакцизный товар
+            * **job** - Работа
+            * **service** - Услуга
+            * **gambling_bet** - Ставка в азартной игре
+            * **gambling_prize** - Выигрыш в азартной игре
+            * **lottery** - Лотерейный билет
+            * **lottery_prize** - Выигрыш в лотерею
+            * **intellectual_activity** - Результаты интеллектуальной деятельности
+            * **payment** - Платеж
+            * **agent_commission** - Агентское вознаграждение
+            * **property_right** - Имущественные права
+            * **non_operating_gain** - Внереализационный доход
+            * **insurance_premium** - Страховой сбор
+            * **sales_tax** - Торговый сбор
+            * **resort_fee** - Курортный сбор
+            * **composite** - Несколько вариантов
+            * **another** - Другое
+
         :rtype: str
         """
         return self.body.get('payment_subject')
@@ -156,6 +247,15 @@ class ItemFiscalization(YCBase):
         """
 
         :return: Признак способа расчета
+
+            * **full_prepayment** - Полная предоплата
+            * **partial_prepayment** - Частичная предоплата
+            * **advance** - Аванс
+            * **full_payment** - Полный расчет
+            * **partial_payment** - Частичный расчет и кредит
+            * **credit** - Кредит
+            * **credit_payment** - Выплата по кредиту
+
         :rtype: str
         """
         return self.body.get('payment_mode')
@@ -164,7 +264,14 @@ class ItemFiscalization(YCBase):
     def product_code(self) -> str:
         """
 
-        :return: Уникальный номер, присваивается при маркировке
+        :return: Уникальный номер, который присваивается экземпляру товара при `маркировке <http://docs.cntd.ru/document/902192509>`__
+
+                Формат: число в шестнадцатеричном представлении с пробелами. Максимальная длина — 32 байта.
+
+                Пример: *00 00 00 01 00 21 FA 41 00 23 05 41 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 12 00 AB 00*.
+
+                Обязательный параметр, если товар нужно `маркировке <http://docs.cntd.ru/document/557297080>`__.
+
         :rtype: str
         """
         return self.body.get('product_code')
@@ -172,7 +279,7 @@ class ItemFiscalization(YCBase):
     def country_of_origin_code(self) -> str:
         """
 
-        :return: НКод страны по общероссийскому классификатору стран мира
+        :return: Код страны происхождения товара по `общероссийскому классификатору стран мира <http://docs.cntd.ru/document/842501280>`__. Пример: RU.
         :rtype: str
         """
         return self.body.get('country_of_origin_code')
@@ -180,7 +287,7 @@ class ItemFiscalization(YCBase):
     def customs_declaration_number(self) -> str:
         """
 
-        :return Номер таможенной декларации
+        :return Номер таможенной декларации (от 1 до 32 символов).
         :rtype: str
         """
         return self.body.get('customs_declaration_number')
@@ -188,7 +295,7 @@ class ItemFiscalization(YCBase):
     def excise(self) -> float:
         """
 
-        :return Сумма акциза товара с учетом копеек (18, 4)
+        :return Сумма акциза товара с учетом копеек. Десятичное число с точностью до 2 символов после точки.
         :rtype: float
         """
         return self.body.get('excise')
@@ -196,14 +303,13 @@ class ItemFiscalization(YCBase):
 
 class ContactOnPoint(YCBase):
     """
-        ????
+        Контактные данные
 
+        :param str name: Имя контактного лица *(Обязательный параметр)*
 
-        :param str name: Имя контактного лица (Обязательный параметр)
+        :param str phone: Телефон контактного лица *(Обязательный параметр)*
 
-        :param str phone: Телефон контактного лица (Обязательный параметр)
-
-        :param str email: Email контактного лица (Обязательный параметр для точек source и return)
+        :param str email: Email контактного лица *(Обязательный параметр для точек source и return)*
 
     """
 
@@ -252,11 +358,11 @@ class ContactOnPoint(YCBase):
 
 class CargoPointAddress(YCBase):
     """
-        ????
+        Адрес точки маршрута
 
-        :param str fullname: Человеко-понятное название (Садовническая набережная, БЦ Аврора) (обязательный параметр)
+        :param str fullname: Человеко-понятное название *(Обязательный параметр)* (Садовническая набережная, БЦ Аврора)
 
-        :param List[float] coordinates: Координаты [долгота, широта] (обязательный параметр)
+        :param List[float] coordinates: Координаты [долгота, широта] *(Обязательный параметр)*
 
         :param str country: Страна
 
@@ -266,7 +372,7 @@ class CargoPointAddress(YCBase):
 
         :param str building: Номер дома/строение
 
-        :param str porch: Номер подъезда (может быть A)
+        :param str porch: Номер подъезда
 
         :param str sfloor: Номер этажа
 
@@ -432,7 +538,7 @@ class CargoPointAddress(YCBase):
 
 class CustomerFiscalization(YCBase):
     """
-        Параметры оплаты при получение ?????
+        Параметры оплаты при получении
 
         :param str full_name: Название организации или ФИО
 
@@ -455,6 +561,8 @@ class CustomerFiscalization(YCBase):
 
         if inn:
             self.body['inn'] = validate_fields('inn', inn, str)
+            if len(self.body['inn']) not in (10, 12):
+                raise InputParamError('Wrong INN format')
 
         if email:
             self.body['email'] = validate_fields('email', email, str)
@@ -504,15 +612,22 @@ class CustomerFiscalization(YCBase):
 
 class RequestPaymentOnDelivery(YCBase):
     """
-        Параметры оплаты при получение
+        Параметры оплаты при получении (актуально для оплаты при получении только для destination точек)
 
-        :param str client_order_id: id заказа клиента (обязательный параметр)
+        :param str client_order_id: id заказа клиента *(обязательный параметр)*
 
-        :param float cost: (18, 4) (обязательный параметр)
+        :param float cost: Сумма платежа в рублях *(обязательный параметр)*
 
-        :param CustomerFiscalization customer:
+        :param CustomerFiscalization customer: Информация о пользователе
 
-        :param int tax_system_code: Код системы налогообложения.
+        :param int tax_system_code: Код системы налогообложения:
+
+            * **1** - Общая система налогообложения
+            * **2** - Упрощенная (УСН, доходы)
+            * **3** - Упрощенная (УСН, доходы минус расходы)
+            * **4** - Единый налог на вмененный доход (ЕНВД)
+            * **5** - Единый сельскохозяйственный налог (ЕСН)
+            * **6** - Патентная система налогообложения
 
     """
 
@@ -529,6 +644,8 @@ class RequestPaymentOnDelivery(YCBase):
             self.body['customer'] = validate_fields('customer', customer, CustomerFiscalization)
         if tax_system_code:
             self.body['tax_system_code'] = validate_fields('tax_system_code', tax_system_code, int)
+            if self.body['tax_system_code'] not in TAX_SYSTEM_CODE:
+                raise InputParamError('"tax_system_code" should be {}'.format(', '.join(TAX_SYSTEM_CODE)))
 
     def __repr__(self):
         return '<{}>'.format(self.__class__.__name__)
@@ -544,7 +661,7 @@ class RequestPaymentOnDelivery(YCBase):
     def cost(self) -> float:
         """
 
-        :return: (18, 4)
+        :return: Сумма платежа в рублях
         :rtype: float
         """
         return self.body.get('cost')
@@ -552,7 +669,7 @@ class RequestPaymentOnDelivery(YCBase):
     def customer(self) -> CustomerFiscalization:
         """
 
-        :return: ???
+        :return: Информация о пользователе
         :rtype: CustomerFiscalization
         """
         return self.body.get('customer')
@@ -560,7 +677,15 @@ class RequestPaymentOnDelivery(YCBase):
     def tax_system_code(self) -> int:
         """
 
-        :return:  Код системы налогообложения
+        :return: Код системы налогообложения:
+
+            * **1** - Общая система налогообложения
+            * **2** - Упрощенная (УСН, доходы)
+            * **3** - Упрощенная (УСН, доходы минус расходы)
+            * **4** - Единый налог на вмененный доход (ЕНВД)
+            * **5** - Единый сельскохозяйственный налог (ЕСН)
+            * **6** - Патентная система налогообложения
+
         :rtype: int
         """
         return self.body.get('tax_system_code')
@@ -570,17 +695,16 @@ class CargoItemMP(YCBase):
     """
         Коробка
 
-        :param int pickup_point: id точки, откуда нужно забрать товар (отличается от id в заявке) (обязательный параметр)
-        :param int droppof_point: id точки, куда нужно доставить товар (отличается от idв заявке) (обязательный параметр)
-        :param str title: Человекопонятное название (коробка конфет) (обязательный параметр)
-        :param str cost_value: Стоимость товара (для страховки) (обязательный параметр)
-        :param str cost_currency: Валюта стоимости товара в международном формате ISO 4217 (обязательный параметр)
-        :param int quantity: Количесто единиц товара (минимум 1) (обязательный параметр)
-
+        :param int pickup_point: id точки, откуда нужно забрать товар (отличается от id в заявке) *(обязательный параметр)*
+        :param int droppof_point: id точки, куда нужно доставить товар (отличается от id в заявке) *(обязательный параметр)*
+        :param str title: Именование единицы товара *(обязательный параметр)*
+        :param str cost_value: Стоимость товара (для страховки) *(обязательный параметр)*
+        :param str cost_currency: Валюта стоимости товара в международном формате ISO 4217 *(обязательный параметр)*
+        :param int quantity: Количесто единиц товара (минимум 1) *(обязательный параметр)*
         :param str extra_id: Краткий уникальный идентификатор item'а (в рамках заявки) (БП-208)
-        :param CargoItemSizes size:
+        :param CargoItemSizes size: Размеры товара
         :param float weight: Вес в кг
-        :param ItemFiscalization fiscalization:
+        :param ItemFiscalization fiscalization: Информация по фискализации (актуально для оплаты при получении)
 
     """
 
@@ -588,7 +712,7 @@ class CargoItemMP(YCBase):
                  pickup_point: int,
                  droppof_point: int,
                  title: str,
-                 cost_value: str,
+                 cost_value: float,
                  cost_currency: str,
                  quantity: int,
                  extra_id: str = None,
@@ -603,7 +727,7 @@ class CargoItemMP(YCBase):
         if pickup_point == droppof_point:
             raise InputParamError('"pickup_point" and "droppof_point" cannot be equal')
         self.body['title'] = validate_fields('title', title, str)
-        self.body['cost_value'] = validate_fields('cost_value', cost_value, str)
+        self.body['cost_value'] = validate_fields('cost_value', cost_value, float)
         self.body['cost_currency'] = validate_fields('cost_currency', cost_currency, str)
         self.body['quantity'] = validate_fields('quantity', quantity, int)
 
@@ -614,7 +738,7 @@ class CargoItemMP(YCBase):
         if weight:
             self.body['weight'] = validate_fields('weight', weight, float)
         if quantity < 1:
-            raise InputParamError('"quantity" should is less than 1')
+            raise InputParamError('"quantity" should is more or equal 1')
         if fiscalization:
             self.body['fiscalization'] = validate_fields('fiscalization', fiscalization, ItemFiscalization)
 
@@ -634,7 +758,7 @@ class CargoItemMP(YCBase):
     def droppof_point(self) -> int:
         """
 
-        :return: id точки, куда нужно доставить товар (отличается от idв заявке)
+        :return: id точки, куда нужно доставить товар (отличается от id в заявке)
         :rtype: int
         """
         return self.body.get('droppof_point')
@@ -643,17 +767,17 @@ class CargoItemMP(YCBase):
     def title(self) -> str:
         """
 
-        :return: Человекопонятное название (коробка конфет)
+        :return: Именование единицы товара
         :rtype: str
         """
         return self.body.get('title')
 
     @property
-    def cost_value(self) -> str:
+    def cost_value(self) -> float:
         """
 
         :return: Стоимость товара (для страховки)
-        :rtype: str
+        :rtype: float
         """
         return self.body.get('cost_value')
 
@@ -670,7 +794,7 @@ class CargoItemMP(YCBase):
     def quantity(self) -> int:
         """
 
-        :return int: quantity: Количесто единиц товара (минимум 1)
+        :return int: quantity: Количесто единиц товара
         """
         return self.body.get('quantity')
 
@@ -678,7 +802,7 @@ class CargoItemMP(YCBase):
     def extra_id(self) -> Optional[str]:
         """
 
-        :return: Краткий уникальный идентификатор item'а (в рамках заявки) (БП-208)
+        :return: Краткий уникальный идентификатор item'а (в рамках заявки)
         :rtype: Optional[str]
         """
         return self.body.get('extra_id')
@@ -687,7 +811,7 @@ class CargoItemMP(YCBase):
     def size(self) -> Optional[CargoItemSizes]:
         """
 
-        :return: CargoItemSizes
+        :return: Размеры товара
         :rtype: Optional[CargoItemSizes]
         """
         size = self.body.get('size')
@@ -709,8 +833,8 @@ class CargoItemMP(YCBase):
     def fiscalization(self) -> Optional[ItemFiscalization]:
         """
 
-        :return: ???
-        :rtype: Optional[ItemFiscalization]r
+        :return: Информация по фискализации
+        :rtype: Optional[ItemFiscalization]
         """
         return self.body.get('fiscalization')
 
@@ -719,23 +843,23 @@ class CargoPointMP(YCBase):
     """
         Описание точки в заявке с мультиточками
 
-        :param int point_id: Уникальный идентификатор точки (id в таблице claim_points) (Обязательный параметр)
+        :param int point_id: Уникальный идентификатор точки (id в таблице claim_points) *(Обязательный параметр)*
 
-        :param int visit_order: Порядок посещения (Обязательный параметр)
+        :param int visit_order: Порядок посещения точки *(Обязательный параметр)*
 
-        :param ContactOnPoint contact:  (Обязательный параметр)
+        :param ContactOnPoint contact: Контактные данные отправителя *(Обязательный параметр)*
 
-        :param CargoPointAddress address:  (Обязательный параметр)
+        :param CargoPointAddress address: Адрес точки *(Обязательный параметр)*
 
-        :param str point_type: Тип точки:  (Обязательный параметр)
+        :param str point_type: Тип точки: *(Обязательный параметр)*
 
-            * **source** — ???
-            * **destination** — ???
-            * **return** — ???
+            * **source** — точка получения отправления (ровно одна)
+            * **destination** — точка доставки отправления
+            * **return** — точка возврата части товаров, опциональная (не более одной)
 
-        :param bool skip_confirmation: В данной точке не требуется подтверждение через смс
+        :param bool skip_confirmation: Пропускать подтверждение через смс в данной точке
 
-        :param RequestPaymentOnDelivery payment_on_delivery:
+        :param RequestPaymentOnDelivery payment_on_delivery: Информация по оплате при получении (актуально для оплаты при получении только для destination точек)
 
         :param str external_order_id: Номер заказа клиента
 
@@ -786,10 +910,10 @@ class CargoPointMP(YCBase):
 
         :return: Статус посещения данной точки
 
-              * **pending** - ???
-              * **arrived** - ???
-              * **visited** - ???
-              * **skipped** - ???
+              * **pending** - ждет исполнения
+              * **arrived** - курьер прибыл на точку, но еще не передал/забрал товар
+              * **visited** - передали/забрали товар из точки
+              * **skipped** - возврат (то есть клиент в этой точке не принял посылку и ее повезут в точку возврата. не значит, что товар уже вернули на склад)
 
         :rtype: str
         """
@@ -799,7 +923,7 @@ class CargoPointMP(YCBase):
     def point_id(self) -> int:
         """
 
-        :return: Уникальный идентификатор точки (id в таблице claim_points)
+        :return: Уникальный идентификатор точки
         :rtype: int
         """
         return self.body.get('point_id')
@@ -817,7 +941,7 @@ class CargoPointMP(YCBase):
     def contact(self) -> ContactOnPoint:
         """
 
-        :return: ???
+        :return: Контактные данные отправителя
         :rtype: ContactOnPoint
         """
         contact = self.body.get('contact')
@@ -830,7 +954,7 @@ class CargoPointMP(YCBase):
     def address(self) -> CargoPointAddress:
         """
 
-        :return: ???
+        :return: Адрес точки
         :rtype: CargoPointAddress
         """
         address = self.body.get('address')
@@ -852,11 +976,11 @@ class CargoPointMP(YCBase):
     def point_type(self) -> str:
         """
 
-        :return: Тип точки:  (Обязательный параметр)
+        :return: Тип точки:
 
-            * **source** — ???
-            * **destination** — ???
-            * **return** — ???
+            * **source** — точка получения отправления
+            * **destination** — точка доставки отправления
+            * **return** — точка возврата части товаров
 
         :rtype: str
         """
@@ -866,7 +990,7 @@ class CargoPointMP(YCBase):
     def skip_confirmation(self) -> bool:
         """
 
-        :return: В данной точке не требуется подтверждение через смс
+        :return: Пропускать подтверждение через смс в данной точке
         :rtype: bool
         """
         return self.body.get('skip_confirmation', False)
@@ -875,7 +999,7 @@ class CargoPointMP(YCBase):
     def payment_on_delivery(self) -> Optional[RequestPaymentOnDelivery]:
         """
 
-        :return:
+        :return: Информация по оплате при получении
         :rtype: Optional[RequestPaymentOnDelivery]
         """
         result = self.body.get('payment_on_delivery')
@@ -913,7 +1037,7 @@ class CargoPointMP(YCBase):
 class C2CData(YCBase):
     """
 
-        :param str payment_type: (Обязательный параметр)
+        :param str payment_type: ??? *(Обязательный параметр)*
         :param str payment_method_id:
     """
 
@@ -950,13 +1074,11 @@ class C2CData(YCBase):
 
 class ContactWithPhone(YCBase):
     """
-        ????
+        Контакт с телефонным номером
 
+        :param str name: Имя контактного лица *(Обязательный параметр)*
 
-        :param str name: Имя контактного лица (Обязательный параметр)
-
-        :param str phone: Телефон контактного лица (Обязательный параметр)
-
+        :param str phone: Телефон контактного лица *(Обязательный параметр)*
     """
 
     def __init__(self,
@@ -975,7 +1097,7 @@ class ContactWithPhone(YCBase):
     def name(self) -> str:
         """
 
-        :return: Имя контактного лица (Обязательный параметр)
+        :return: Имя контактного лица
         :rtype: str
         """
         return self.body.get('name')
@@ -984,7 +1106,7 @@ class ContactWithPhone(YCBase):
     def phone(self) -> str:
         """
 
-        :return: Телефон контактного лица (Обязательный параметр)
+        :return: Телефон контактного лица
         :rtype: str
         """
         return self.body.get('phone')
@@ -992,16 +1114,21 @@ class ContactWithPhone(YCBase):
 
 class ClientRequirements(YCBase):
     """
-        ????
+        Требования от клиента
 
+        :param str taxi_class: Класс такси *(Обязательный параметр)*
 
-        :param str taxi_class: Класс такси (обязательный параметр)
+            * **express** - Легковое авто
+            * **courier** - Курьер
+            * **cargo** - Грузовое авто
 
         :param str cargo_type: Тип грузовика
 
+            * **van** - 190см в длину, 100 в шириру, 90 в высоту
+            * **lcv_m** - 260см в длину, 160 в ширину, 150 в высоту
+            * **lcv_l** - 400 см в длину, 190 в ширину, 200 в высоту
+
         :param str cargo_loaders: Количество грузчиков (минимум 0)
-
-
     """
 
     def __init__(self,
@@ -1012,8 +1139,14 @@ class ClientRequirements(YCBase):
 
         if taxi_class:
             self.body['taxi_class'] = validate_fields('taxi_class', taxi_class, str)
+            if self.body['taxi_class'] not in TAXI_CLASS:
+                raise InputParamError('"taxi_class" should be {}'.format(', '.join(TAXI_CLASS)))
+
         if cargo_type:
             self.body['cargo_type'] = validate_fields('cargo_type', cargo_type, str)
+            if self.body['cargo_type'] not in CARGO_TYPE:
+                raise InputParamError('"cargo_type" should be {}'.format(', '.join(CARGO_TYPE)))
+
         if cargo_loaders:
             self.body['cargo_loaders'] = validate_fields('cargo_loaders', cargo_loaders, str)
 
@@ -1025,6 +1158,11 @@ class ClientRequirements(YCBase):
         """
 
         :return: Класс такси
+
+            * **express** - Легковое авто
+            * **courier** - Курьер
+            * **cargo** - Грузовое авто
+
         :rtype: str
         """
         return self.body.get('taxi_class')
@@ -1034,6 +1172,11 @@ class ClientRequirements(YCBase):
         """
 
         :return: Тип грузовика
+
+            * **van** - 190см в длину, 100 в шириру, 90 в высоту
+            * **lcv_m** - 260см в длину, 160 в ширину, 150 в высоту
+            * **lcv_l** - 400 см в длину, 190 в ширину, 200 в высоту
+
         :rtype: str
         """
         return self.body.get('cargo_type')
@@ -1052,15 +1195,22 @@ class ResponsePaymentOnDelivery(YCBase):
     """
         Параметры оплаты при получение
 
-        :param str client_order_id: id заказа клиента (обязательный параметр)
+        :param str client_order_id: id заказа клиента *(Обязательный параметр)*
 
-        :param bool is_paid: Оплачен ли заказ (обязательный параметр)
+        :param bool is_paid: Оплачен ли заказ *(Обязательный параметр)*
 
-        :param float cost: (18, 4) (обязательный параметр)
+        :param float cost: Сумма платежа в рублях *(Обязательный параметр)*
 
-        :param CustomerFiscalization customer:
+        :param CustomerFiscalization customer: Информация о пользователе
 
-        :param int tax_system_code: Код системы налогообложения.
+        :param int tax_system_code: Код системы налогообложения:
+
+            * **1** - Общая система налогообложения
+            * **2** - Упрощенная (УСН, доходы)
+            * **3** - Упрощенная (УСН, доходы минус расходы)
+            * **4** - Единый налог на вмененный доход (ЕНВД)
+            * **5** - Единый сельскохозяйственный налог (ЕСН)
+            * **6** - Патентная система налогообложения
 
     """
 
@@ -1079,6 +1229,8 @@ class ResponsePaymentOnDelivery(YCBase):
             self.body['customer'] = validate_fields('customer', customer, CustomerFiscalization)
         if tax_system_code:
             self.body['tax_system_code'] = validate_fields('tax_system_code', tax_system_code, int)
+            if self.body['tax_system_code'] not in TAX_SYSTEM_CODE:
+                raise InputParamError('"tax_system_code" should be {}'.format(', '.join(TAX_SYSTEM_CODE)))
 
     def __repr__(self):
         return '<{}>'.format(self.__class__.__name__)
@@ -1087,7 +1239,7 @@ class ResponsePaymentOnDelivery(YCBase):
     def client_order_id(self) -> str:
         """
 
-        :return: id заказа клиента (обязательный параметр)
+        :return: id заказа клиента
         :rtype: str
         """
         return self.body.get('client_order_id')
@@ -1096,7 +1248,7 @@ class ResponsePaymentOnDelivery(YCBase):
     def is_paid(self) -> bool:
         """
 
-        :return: Оплачен ли заказ (обязательный параметр)
+        :return: Оплачен ли заказ
         :rtype: bool
         """
         return self.body.get('is_paid')
@@ -1105,7 +1257,7 @@ class ResponsePaymentOnDelivery(YCBase):
     def cost(self) -> float:
         """
 
-        :return: (18, 4) (обязательный параметр)
+        :return: Сумма платежа в рублях
         :rtype: float
         """
         return self.body.get('cost')
@@ -1114,7 +1266,7 @@ class ResponsePaymentOnDelivery(YCBase):
     def customer(self) -> CustomerFiscalization:
         """
 
-        :return:
+        :return: Информация о пользователе
         :rtype: CustomerFiscalization
         """
         return self.body.get('customer')
@@ -1123,7 +1275,15 @@ class ResponsePaymentOnDelivery(YCBase):
     def tax_system_code(self) -> int:
         """
 
-        :return: Код системы налогообложения
+        :return: Код системы налогообложения:
+
+            * **1** - Общая система налогообложения
+            * **2** - Упрощенная (УСН, доходы)
+            * **3** - Упрощенная (УСН, доходы минус расходы)
+            * **4** - Единый налог на вмененный доход (ЕНВД)
+            * **5** - Единый сельскохозяйственный налог (ЕСН)
+            * **6** - Патентная система налогообложения
+
         :rtype: int
         """
         return self.body.get('tax_system_code')
@@ -1133,11 +1293,11 @@ class TaxiOffer(YCBase):
     """
         Оффер в такси
 
-        :param str offer_id: Идентификатор оффера (обязательный параметр)
+        :param str offer_id: Идентификатор оффера *(Обязательный параметр)*
 
-        :param int price_raw: Цена по офферу (обязательный параметр)
+        :param int price_raw: Цена по офферу в валюте, указанной в договоре *(Обязательный параметр)*
 
-        :param str price: (18, 4) (обязательный параметр)
+        :param str price: Стоимость исполнения заявки *(Обязательный параметр)*
 
     """
 
@@ -1158,7 +1318,7 @@ class TaxiOffer(YCBase):
     def offer_id(self) -> str:
         """
 
-        :return: Идентификатор оффера (обязательный параметр)
+        :return: Идентификатор оффера
         :rtype: str
         """
         return self.body.get('offer_id')
@@ -1167,7 +1327,7 @@ class TaxiOffer(YCBase):
     def price_raw(self) -> int:
         """
 
-        :return: Цена по офферу (обязательный параметр)
+        :return: Цена по офферу в валюте, указанной в договоре
         :rtype: int
         """
         return self.body.get('price_raw')
@@ -1176,7 +1336,7 @@ class TaxiOffer(YCBase):
     def price(self) -> float:
         """
 
-        :return: (18, 4) (обязательный параметр)
+        :return: Стоимость исполнения заявки
         :rtype: float
         """
         return self.body.get('price')
@@ -1184,15 +1344,15 @@ class TaxiOffer(YCBase):
 
 class CurrencyRules(YCBase):
     """
-        правила отображения валюты
+        Правила отображения валюты
 
-        :param str code:  ("RUB")
+        :param str code: ??? ("RUB")
 
-        :param str text:  ("руб.")
+        :param str text: ??? ("руб.")
 
-        :param str template:  ("$VALUE$ $SIGN$$CURRENCY$")
+        :param str template: ??? ("$VALUE$ $SIGN$$CURRENCY$")
 
-        :param str sign:  ("₽")
+        :param str sign: ??? ("₽")
 
     """
 
@@ -1219,7 +1379,7 @@ class CurrencyRules(YCBase):
     def code(self) -> str:
         """
 
-        :return: ("RUB")
+        :return: ???
         :rtype: str
         """
         return self.body.get('code')
@@ -1228,7 +1388,7 @@ class CurrencyRules(YCBase):
     def text(self) -> str:
         """
 
-        :return: ("руб.")
+        :return: ???
         :rtype: str
         """
         return self.body.get('text')
@@ -1237,7 +1397,7 @@ class CurrencyRules(YCBase):
     def template(self) -> str:
         """
 
-        :return: ("$VALUE$ $SIGN$$CURRENCY$")
+        :return: ???
         :rtype: str
         """
         return self.body.get('template')
@@ -1246,7 +1406,7 @@ class CurrencyRules(YCBase):
     def sign(self) -> str:
         """
 
-        :return: ("₽")
+        :return: ???
         :rtype: str
         """
         return self.body.get('sign')
@@ -1257,11 +1417,11 @@ class ClaimPricing(YCBase):
 
         :param TaxiOffer offer: Идентификатор оффера
 
-        :param str currency:
+        :param str currency: ???
 
-        :param CurrencyRules currency_rules:
+        :param CurrencyRules currency_rules: ???
 
-        :param float final_price: (18, 4)
+        :param float final_price: ??? (18, 4)
 
     """
 
@@ -1300,7 +1460,7 @@ class ClaimPricing(YCBase):
     def currency(self) -> str:
         """
 
-        :return:
+        :return: ???
         :rtype: str
         """
         return self.body.get('currency')
@@ -1309,7 +1469,7 @@ class ClaimPricing(YCBase):
     def currency_rules(self) -> CurrencyRules:
         """
 
-        :return:
+        :return: ???
         :rtype: CurrencyRules
         """
         return self.body.get('currency_rules')
@@ -1318,7 +1478,7 @@ class ClaimPricing(YCBase):
     def final_price(self) -> float:
         """
 
-        :return: (18, 4)
+        :return: ???
         :rtype: float
         """
         return self.body.get('final_price')
@@ -1326,9 +1486,9 @@ class ClaimPricing(YCBase):
 
 class MatchedCar(YCBase):
     """
-        Информация о подобранной машине
+        Информация о подобранной машине ???
 
-        :param str taxi_class: Класс такси (обязательный параметр)
+        :param str taxi_class: Класс такси *(Обязательный параметр)*
 
         :param str client_taxi_class:  Подмененный тариф (e.g., cargo, хотя в cars cargocorp)
 
@@ -1375,7 +1535,7 @@ class MatchedCar(YCBase):
     def taxi_class(self) -> str:
         """
 
-        :return: Класс такси (обязательный параметр)
+        :return: Класс такси
         :rtype: str
         """
         return self.body.get('taxi_class')
@@ -1384,7 +1544,7 @@ class MatchedCar(YCBase):
     def client_taxi_class(self) -> str:
         """
 
-        :return: Подмененный тариф (e.g., cargo, хотя в cars cargocorp)
+        :return: Подмененный тариф
         :rtype: str
         """
         return self.body.get('client_taxi_class')
@@ -1437,12 +1597,11 @@ class MatchedCar(YCBase):
 
 class HumanErrorMessage(YCBase):
     """
-        ????
+        Ошибка
 
-        :param str code: Машино-понятный код ошибки (обязательный параметр)
+        :param str code: Машино-понятный код ошибки *(Обязательный параметр)*
 
-        :param str message: Локализованная информация с причиной предупреждение (обязательный параметр)
-
+        :param str message: Локализованная информация с причиной предупреждения *(Обязательный параметр)*
     """
 
     def __init__(self,
@@ -1479,21 +1638,19 @@ class HumanErrorMessage(YCBase):
 
 class ClaimWarning(YCBase):
     """
-        ?????
+        Предупреждение
 
+        :param str source: Откуда пришло предупреждение *(Обязательный параметр)*
 
-        :param str source: Откуда пришло предупреждение (обязательный параметр)
+            * **client_requirements** - Требования клиента
+            * **taxi_requirements** - Требования такси
 
-            * **client_requirements** - ???
-            * **taxi_requirements** - ???
+        :param str code: Машино-понятный код ошибки *(Обязательный параметр)*
 
-        :param str code: Машино-понятный код ошибки  (обязательный параметр)
+            * **not_fit_in_car** - Товар не помещается в заявленное транспортное средство
+            * **requirement_unavailable** - Некоторые из пожеланий недоступны на выбранном тарифе
 
-            * **not_fit_in_car** - ???
-            * **requirement_unavailable** - ??
-
-        :param str message: Локализованная информация с причиной предупреждение
-
+        :param str message: Локализованная информация с причиной предупреждения
     """
 
     def __init__(self,
@@ -1548,11 +1705,11 @@ class ClaimWarning(YCBase):
 
 class PerformerInfo(YCBase):
     """
-        ????
+        Информация об исполнителе
 
-        :param str courier_name: Имя курьера, доставляющего посылку (обязательный параметр)
+        :param str courier_name: Имя курьера, доставляющего посылку *(Обязательный параметр)*
 
-        :param str legal_name: Данные о юр. лице, осуществляющим доставку  (обязательный параметр)
+        :param str legal_name: Данные о юридическом лице, осуществляющим доставку *(Обязательный параметр)*
 
         :param str car_model: Модель машины
 
@@ -1618,12 +1775,12 @@ class Event(YCBase):
     """
         ????
 
-        :param str claim_id: (обязательный параметр)
-        :param str change_type: (обязательный параметр)
-        :param str updated_ts: date-time (обязательный параметр)
-        :param str new_status:
-        :param str new_price:
-        :param str new_currency:
+        :param str claim_id: ??? *(Обязательный параметр)*
+        :param str change_type: ??? *(Обязательный параметр)*
+        :param str updated_ts: ??? date-time *(Обязательный параметр)*
+        :param str new_status: ???
+        :param str new_price: ???
+        :param str new_currency: ???
 
     """
 
@@ -1655,7 +1812,7 @@ class Event(YCBase):
     def claim_id(self) -> str:
         """
 
-        :return:
+        :return: ???
         :rtype: str
         """
         return self.body.get('claim_id')
@@ -1664,7 +1821,7 @@ class Event(YCBase):
     def change_type(self) -> str:
         """
 
-        :return:
+        :return: ???
         :rtype: str
         """
         return self.body.get('change_type')
@@ -1673,7 +1830,7 @@ class Event(YCBase):
     def updated_ts(self) -> str:
         """
 
-        :return:
+        :return: ???
         :rtype: str
         """
         return self.body.get('updated_ts')
@@ -1682,7 +1839,7 @@ class Event(YCBase):
     def new_status(self) -> str:
         """
 
-        :return:
+        :return: ???
         :rtype: str
         """
         return self.body.get('new_status')
@@ -1691,7 +1848,7 @@ class Event(YCBase):
     def new_price(self) -> str:
         """
 
-        :return:
+        :return: ???
         :rtype: str
         """
         return self.body.get('new_price')
@@ -1700,7 +1857,7 @@ class Event(YCBase):
     def new_currency(self) -> str:
         """
 
-        :return:
+        :return: ???
         :rtype: str
         """
         return self.body.get('new_currency')

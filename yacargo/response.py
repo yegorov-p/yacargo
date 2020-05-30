@@ -29,8 +29,7 @@ class Base():
 
 class SearchedClaimMP(Base):
     """
-
-
+        Найденная заявка
     """
 
     def __repr__(self):
@@ -67,7 +66,7 @@ class SearchedClaimMP(Base):
     def items(self) -> List[CargoItemMP]:
         """
 
-        :return: Перечисление коробок к отправлению (vминимум 1 )
+        :return: Перечисление коробок к отправлению (минимум 1 )
         :rtype: List[CargoItemMP]
         """
         result = []
@@ -129,8 +128,7 @@ class SearchedClaimMP(Base):
                 external_order_id=item.get('external_order_id'),
                 pickup_code=item.get('pickup_code'),
                 visit_status=item.get('visit_status')
-                )
-            )
+                ))
         return result
 
     @property
@@ -146,7 +144,7 @@ class SearchedClaimMP(Base):
     def status(self) -> str:
         """
 
-        :return: ???
+        :return: Статус
         :rtype: str
         """
         return self.resp.get('status')
@@ -155,7 +153,7 @@ class SearchedClaimMP(Base):
     def version(self) -> int:
         """
 
-        :return: ???
+        :return: Версия
         :rtype: int
         """
         return self.resp.get('version')
@@ -164,7 +162,7 @@ class SearchedClaimMP(Base):
     def error_messages(self) -> List[HumanErrorMessage]:
         """
 
-        :return: ???
+        :return: Сообщения об ошибках
         :rtype: List[HumanErrorMessage]
         """
         result = []
@@ -177,7 +175,7 @@ class SearchedClaimMP(Base):
     def emergency_contact(self) -> ContactWithPhone:
         """
 
-        :return: ???
+        :return: Контакт для экстренной связи
         :rtype: ContactWithPhone
         """
         data = self.resp.get('emergency_contact')
@@ -297,8 +295,8 @@ class SearchedClaimMP(Base):
 
         :return: Актуальный статус возможности отмены заказа
 
-            * **free** - ???
-            * **paid** - ???
+            * **free** - бесплатная отмена
+            * **paid** - платная отмена
 
         :rtype: Optional[str]
         """
@@ -308,7 +306,7 @@ class SearchedClaimMP(Base):
     def client_requirements(self) -> Optional[ClientRequirements]:
         """
 
-        :return: ???
+        :return: Требования клиента
         :type: Optional[ClientRequirements]
         """
         data = self.resp.get('client_requirements')
@@ -384,7 +382,6 @@ class SearchedClaimMP(Base):
             url вида 'https://example.com' превратится в невалидный
             'https://example.comupdated_ts=...&claim_id=...'.
 
-
             Поддерживаются только http и https. При https ssl-сертификат должен
             быть выдан известным серверу центром сертификации.
 
@@ -399,6 +396,7 @@ class SearchedClaimMP(Base):
             содержать более старое состояние заявки (надо ориентироваться на
             значение поля updated_ts). В этом случает необходимо повторить
             вызов ручки через некоторое время (от 5 до 30 секунд).
+
         :rtype: Optional[str]
         """
         return self.resp.get('callback_properties')
@@ -444,23 +442,25 @@ class SearchedClaimMP(Base):
 
 
 class SearchClaimsResponseMP(Base):
+    """
+        Найденные заявки
+
+    """
     @property
     def claims(self) -> List[SearchedClaimMP]:
         """
 
-        :return: ???
+        :return: Найденные заявки
         :rtype: List[SearchedClaimMP]
         """
-
         return [SearchedClaimMP(claim) for claim in self.resp.get('claims')]
 
 
 class CutClaimResponse(Base):
     """
-
+        ???
 
     """
-
     def __repr__(self):
         return '<{} id={}>'.format(self.__class__.__name__, self.claim_id)
 
@@ -479,33 +479,33 @@ class CutClaimResponse(Base):
 
         :return: Статус заявки (список будет расширяться):
 
-            * **new** - ???
-            * **estimating** - ???
-            * **estimating_failed** - ???
-            * **ready_for_approval** - ???
-            * **accepted** - ???
-            * **performer_lookup** - ???
-            * **performer_draft** - ???
-            * **performer_found** - ???
-            * **performer_not_found** - ???
-            * **cancelled** - ???
-            * **pickup_arrived** - ???
-            * **ready_for_pickup_confirmation** - ???
-            * **pickuped** - ???
-            * **delivery_arrived** - ???
-            * **ready_for_delivery_confirmation** - ???
-            * **delivered** - ???
-            * **pay_waiting** - ???
-            * **delivered_finish** - ???
-            * **returning** - ???
-            * **return_arrived** - ???
-            * **ready_for_return_confirmation** - ???
-            * **returned** - ???
-            * **returned_finish** - ???
-            * **failed** - ???
-            * **cancelled_with_payment** - ???
-            * **cancelled_by_taxi** - ???
-            * **cancelled_with_items_on_hands** - ???
+            * **new** - новая заявка
+            * **estimating** - идет процесс оценки заявки (подбор типа автомобиля по параметрам груза и расчет стоимости)
+            * **estimating_failed** - не удалось оценить заявку. Причину можно увидеть в error_messages в ответе ручки /info
+            * **ready_for_approval** - заявка успешно оценена и ожидает подтверждения от клиента
+            * **accepted** - заявка подтверждена клиентом
+            * **performer_lookup** - заявка взята в обработку. Промежуточный статус перед созданием заказа
+            * **performer_draft** - идет поиск водителя
+            * **performer_found** - водитель найден и едет в точку А
+            * **performer_not_found** - не удалось найти водителя. Можно попробовать снова через некоторое время
+            * **cancelled** - заказ был отменен клиентом бесплатно
+            * **pickup_arrived** - водитель приехал на точку А
+            * **ready_for_pickup_confirmation** - водитель ждет, когда отправитель назовет ему код подтверждения
+            * **pickuped** - водитель успешно забрал груз
+            * **delivery_arrived** - водитель приехал на точку Б
+            * **ready_for_delivery_confirmation** - водитель ждет, когда получатель назовет ему код подтверждения
+            * **delivered** - водитель успешно доставил груз (ввел смс код). Код приходит после оплаты, если была оплата при получении.
+            * **pay_waiting** - заказ ожидает оплаты (актуально для оплаты при получении)
+            * **delivered_finish** - заказ завершен
+            * **returning** -  водителю пришлось вернуть груз и он едет в точку возврата
+            * **return_arrived** - водитель приехал на точку возврата
+            * **ready_for_return_confirmation** - водитель в точке возврата ожидает, когда ему назовут код подтверждения
+            * **returned** - водитель успешно вернул груз (ввел смс код)
+            * **returned_finish** - заказ завершен
+            * **failed** - терминальный статус, не удалось начать выполнение заказа
+            * **cancelled_with_payment** - заказ был отменен клиентом платно (водитель уже приехал)
+            * **cancelled_by_taxi** - водитель отменил заказ (до получения груза)
+            * **cancelled_with_items_on_hands** - клиент платно отменил заявку без необходимости возврата груза (заявка была создана с флагом optional_return)
 
         :rtype: str
         """
@@ -515,7 +515,7 @@ class CutClaimResponse(Base):
     def version(self) -> int:
         """
 
-        :return: ???
+        :return: Версия
         :rtype: int
         """
         return self.resp.get('version')
@@ -532,8 +532,7 @@ class CutClaimResponse(Base):
 
 class VoiceforwardingResponse(Base):
     """
-
-
+        Информация о временном телефонном номере
     """
 
     def __repr__(self):
@@ -569,7 +568,7 @@ class VoiceforwardingResponse(Base):
 
 class ClaimsJournalResponse(Base):
     """
-
+        ???
 
     """
 
@@ -580,9 +579,7 @@ class ClaimsJournalResponse(Base):
     def delay(self) -> str:
         """
 
-        :return: Delay in milliseconds client should wait before performing new
-                                request. Server can return 429 Too Often if client ignores
-                                polling-delay policy.
+        :return: Количество секунд, которое должно пройти до следующего запроса
         :rtype: int
         """
         return self.headers.get('X-Polling-Delay-Ms')
@@ -591,7 +588,7 @@ class ClaimsJournalResponse(Base):
     def cursor(self) -> str:
         """
 
-        :return: Номер телефона
+        :return: Позиция курсора, которая должна быть передана клиентом при следующем запросе
         :rtype: str
         """
         return self.resp.get('cursor')
@@ -600,7 +597,7 @@ class ClaimsJournalResponse(Base):
     def events(self) -> List[Event]:
         """
 
-        :return: New position which client must pass in next request.
+        :return: ???
         :rtype: List[Event]
         """
         return self.resp.get('events')
@@ -608,7 +605,7 @@ class ClaimsJournalResponse(Base):
 
 class PerformerPositionResponse(Base):
     """
-
+        Позиция исполнителя
 
     """
 
