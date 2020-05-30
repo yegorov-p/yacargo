@@ -712,7 +712,7 @@ class CargoItemMP(YCBase):
                  pickup_point: int,
                  droppof_point: int,
                  title: str,
-                 cost_value: float,
+                 cost_value: str,
                  cost_currency: str,
                  quantity: int,
                  extra_id: str = None,
@@ -727,7 +727,7 @@ class CargoItemMP(YCBase):
         if pickup_point == droppof_point:
             raise InputParamError('"pickup_point" and "droppof_point" cannot be equal')
         self.body['title'] = validate_fields('title', title, str)
-        self.body['cost_value'] = validate_fields('cost_value', cost_value, float)
+        self.body['cost_value'] = validate_fields('cost_value', cost_value, str)
         self.body['cost_currency'] = validate_fields('cost_currency', cost_currency, str)
         self.body['quantity'] = validate_fields('quantity', quantity, int)
 
@@ -773,11 +773,11 @@ class CargoItemMP(YCBase):
         return self.body.get('title')
 
     @property
-    def cost_value(self) -> float:
+    def cost_value(self) -> str:
         """
 
         :return: Стоимость товара (для страховки)
-        :rtype: float
+        :rtype: str
         """
         return self.body.get('cost_value')
 

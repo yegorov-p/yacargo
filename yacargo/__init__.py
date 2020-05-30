@@ -9,7 +9,7 @@ import requests
 from requests.exceptions import ReadTimeout, SSLError
 
 from yacargo.constants import VERSION, DOMAIN_TEST, DOMAIN, USER_AGENT, RESOURCES, PROTOCOL, CLAIM_STATUS, CANCEL_STATE
-from yacargo.exceptions import NotAuthorized, NetworkAPIError, InputParamError
+from yacargo.exceptions import NotAuthorized, NetworkAPIError, InputParamError, BaseAPIError
 from yacargo.objects import validate_fields
 from yacargo.response import CargoItemMP, CargoPointMP, ContactWithPhone, ClientRequirements, \
     C2CData, SearchedClaimMP, SearchClaimsResponseMP, CutClaimResponse, VoiceforwardingResponse, \
@@ -94,8 +94,11 @@ class YCAPI:
             data = req.json()
             logger.debug('Received JSON: %s', data)
 
-            if req.status_code in (400, 401, 403, 404, 409):
+            if req.status_code == 403:
                 raise NotAuthorized(data)
+
+            if req.status_code in (400, 401, 404, 409):
+                raise BaseAPIError(data)
 
             return req.headers, data
 
