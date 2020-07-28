@@ -169,8 +169,8 @@ class YCAPI:
                 :param Optional[int] version: Версия отменяемой заявки *(Обязательный параметр)* (1)
                 :param Optional[str] cancel_state: Статус отмены (платная или бесплатная) *(Обязательный параметр)* (free)
 
-                    * **free** - ???
-                    * **paid** - ???
+                    * **free** - бесплатная отмена
+                    * **paid** - платная отмена
 
         """
         params = {}
@@ -215,7 +215,7 @@ class YCAPI:
                 :param Optional[str] claim_id: id заявки, полученный на этапе создания заявки
                 :param str document_type: Тип документа
 
-                    * **act** - ???
+                    * **act** - акт
 
                 :param int version: Версия заявки
                 :param str status: Статус заявки
@@ -906,33 +906,33 @@ class YCAPI:
                 :param Optional[str] phone: Фильтр по номеру телефона (+79099999998)
                 :param str status: Статус заявки (new)
 
-                    * **new** - ???
-                    * **estimating** - ???
-                    * **estimating_failed** - ???
-                    * **ready_for_approval** - ???
-                    * **accepted** - ???
-                    * **performer_lookup** - ???
-                    * **performer_draft** - ???
-                    * **performer_found** - ???
-                    * **performer_not_found** - ???
-                    * **pickup_arrived** - ???
-                    * **ready_for_pickup_confirmation** - ???
-                    * **pickuped** - ???
-                    * **delivery_arrived** - ???
-                    * **ready_for_delivery_confirmation** - ???
-                    * **pay_waiting** - ???
-                    * **delivered** - ???
-                    * **delivered_finish** - ???
-                    * **returning** - ???
-                    * **return_arrived** - ???
-                    * **ready_for_return_confirmation** - ???
-                    * **returned** - ???
-                    * **returned_finish** - ???
-                    * **failed** - ???
-                    * **cancelled** - ???
-                    * **cancelled_with_payment** - ???
-                    * **cancelled_by_taxi** - ???
-                    * **cancelled_with_items_on_hands** - ???
+                    * **new** - новая заявка
+                    * **estimating** - идет процесс оценки заявки (подбор типа автомобиля по параметрам груза и расчет стоимости)
+                    * **estimating_failed** - не удалось оценить заявку. Причину можно увидеть в error_messages в ответе ручки /info
+                    * **ready_for_approval** - заявка успешно оценена и ожидает подтверждения от клиента
+                    * **accepted** - заявка подтверждена клиентом
+                    * **performer_lookup** - заявка взята в обработку. Промежуточный статус перед созданием заказа
+                    * **performer_draft** - идет поиск водителя
+                    * **performer_found** - водитель найден и едет в точку А
+                    * **performer_not_found** - не удалось найти водителя. Можно попробовать снова через некоторое время
+                    * **pickup_arrived** - водитель приехал на точку А
+                    * **ready_for_pickup_confirmation** - водитель ждет, когда отправитель назовет ему код подтверждения
+                    * **pickuped** - водитель успешно забрал груз
+                    * **delivery_arrived** - водитель приехал на точку Б
+                    * **ready_for_delivery_confirmation** - водитель ждет, когда получатель назовет ему код подтверждения
+                    * **pay_waiting** - заказ ожидает оплаты (актуально для оплаты при получении)
+                    * **delivered** - водитель успешно доставил груз (ввел смс код). Код приходит после оплаты, если была оплата при получении.
+                    * **delivered_finish** - заказ завершен
+                    * **returning** -  водителю пришлось вернуть груз и он едет в точку возврата
+                    * **return_arrived** - водитель приехал на точку возврата
+                    * **ready_for_return_confirmation** - водитель в точке возврата ожидает, когда ему назовут код подтверждения
+                    * **returned** - водитель успешно вернул груз (ввел смс код)
+                    * **returned_finish** - заказ завершен
+                    * **failed** - терминальный статус, не удалось начать выполнение заказа
+                    * **cancelled** - заказ был отменен клиентом бесплатно
+                    * **cancelled_with_payment** - заказ был отменен клиентом платно (водитель уже приехал)
+                    * **cancelled_by_taxi** - водитель отменил заказ (до получения груза)
+                    * **cancelled_with_items_on_hands** - клиент платно отменил заявку без необходимости возврата груза (заявка была создана с флагом optional_return)
 
                 :param Optional[str] created_from: Начало периода поиска (isoformat) (2020-01-01T00:00:00+00:00)
                 :param Optional[str] created_to: Окончание периода поиска (isoformat) (2020-01-02T00:00:00+00:00)

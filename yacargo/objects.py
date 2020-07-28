@@ -55,121 +55,274 @@ class YCBase:
         return self.body
 
 
-class CutClaimResponse(YCBase):
+class SearchClaimsResponseMP(YCBase):
     """
         ???
-        ???
+        Результат поиска
 
-            :param str id: id заявки, полученный на этапе создания заявки *(Обязательный параметр)* (741cedf82cd464fa6fa16d87155c636)
-            :param Optional[str] status: Статус заявки *(Обязательный параметр)* (new)
-
-                * **new** - ???
-                * **estimating** - ???
-                * **estimating_failed** - ???
-                * **ready_for_approval** - ???
-                * **accepted** - ???
-                * **performer_lookup** - ???
-                * **performer_draft** - ???
-                * **performer_found** - ???
-                * **performer_not_found** - ???
-                * **pickup_arrived** - ???
-                * **ready_for_pickup_confirmation** - ???
-                * **pickuped** - ???
-                * **delivery_arrived** - ???
-                * **ready_for_delivery_confirmation** - ???
-                * **pay_waiting** - ???
-                * **delivered** - ???
-                * **delivered_finish** - ???
-                * **returning** - ???
-                * **return_arrived** - ???
-                * **ready_for_return_confirmation** - ???
-                * **returned** - ???
-                * **returned_finish** - ???
-                * **failed** - ???
-                * **cancelled** - ???
-                * **cancelled_with_payment** - ???
-                * **cancelled_by_taxi** - ???
-                * **cancelled_with_items_on_hands** - ???
-
-            :param int version: Версия заявки из запроса *(Обязательный параметр)* (1)
-            :param Optional[str] taxi_order_id: taxi_order_id в такси (uuid) (33f95d1a73b84cbcaa06c9ad306dc459)
+            :param List['SearchedClaimMP'] claims: ??? *(Обязательный параметр)*
     """
 
     def __init__(self,
-                 id: str = None,
-                 status: Optional[str] = None,
-                 version: int = None,
-                 taxi_order_id: Optional[str] = None,
+                 claims: List['SearchedClaimMP'] = None,
                  ):
         self.body = collections.defaultdict(dict)
 
-        if id is not None:
-            self.body["id"] = validate_fields('id', id, str)
-            self.body['id'] = validate_fields('id', id, str)
-        if id is None:
-            raise InputParamError("<id> (=>id) of <CutClaimResponse> is a required parameter")
+        if claims is not None:
+            self.body["claims"] = validate_fields('claims', claims, List['SearchedClaimMP'])
+            self.body['claims'] = validate_fields('claims', claims, List['SearchedClaimMP'])
+        if claims is None:
+            raise InputParamError("<claims> (=>claims) of <SearchClaimsResponseMP> is a required parameter")
+
+    def __repr__(self):
+        return "<SearchClaimsResponseMP>"
+
+    @property
+    def claims(self) -> List['SearchedClaimMP']:
+        """
+
+        :return: ???
+        :rtype: List['SearchedClaimMP']
+        """
+        return [SearchedClaimMP(id=item.get("id", None),
+                                corp_client_id=item.get("corp_client_id", None),
+                                yandex_uid=item.get("yandex_uid", None),
+                                items=item.get("items", None),
+                                route_points=item.get("route_points", None),
+                                current_point_id=item.get("current_point_id", None),
+                                status=item.get("status", None),
+                                version=item.get("version", None),
+                                error_messages=item.get("error_messages", None),
+                                emergency_contact_name=item.get("emergency_contact", {}).get("name", None),
+                                emergency_contact_phone=item.get("emergency_contact", {}).get("phone", None),
+                                skip_door_to_door=item.get("skip_door_to_door", None),
+                                skip_client_notify=item.get("skip_client_notify", None),
+                                skip_emergency_notify=item.get("skip_emergency_notify", None),
+                                skip_act=item.get("skip_act", None),
+                                optional_return=item.get("optional_return", None),
+                                eta=item.get("eta", None),
+                                created_ts=item.get("created_ts", None),
+                                updated_ts=item.get("updated_ts", None),
+                                taxi_offer_offer_id=item.get("taxi_offer", {}).get("offer_id", None),
+                                taxi_offer_price_raw=item.get("taxi_offer", {}).get("price_raw", None),
+                                taxi_offer_price=item.get("taxi_offer", {}).get("price", None),
+                                pricing_offer_offer_id=item.get("pricing", {}).get("offer", {}).get("offer_id", None),
+                                pricing_offer_price_raw=item.get("pricing", {}).get("offer", {}).get("price_raw", None),
+                                pricing_offer_price=item.get("pricing", {}).get("offer", {}).get("price", None),
+                                pricing_currency=item.get("pricing", {}).get("currency", None),
+                                pricing_currency_rules_code=item.get("pricing", {}).get("currency_rules", {}).get("code", None),
+                                pricing_currency_rules_text=item.get("pricing", {}).get("currency_rules", {}).get("text", None),
+                                pricing_currency_rules_template=item.get("pricing", {}).get("currency_rules", {}).get("template", None),
+                                pricing_currency_rules_sign=item.get("pricing", {}).get("currency_rules", {}).get("sign", None),
+                                pricing_final_price=item.get("pricing", {}).get("final_price", None),
+                                available_cancel_state=item.get("available_cancel_state", None),
+                                client_requirements_taxi_class=item.get("client_requirements", {}).get("taxi_class", None),
+                                client_requirements_cargo_type=item.get("client_requirements", {}).get("cargo_type", None),
+                                client_requirements_cargo_loaders=item.get("client_requirements", {}).get("cargo_loaders", None),
+                                client_requirements_cargo_options=item.get("client_requirements", {}).get("cargo_options", None),
+                                matched_cars=item.get("matched_cars", None),
+                                warnings=item.get("warnings", None),
+                                performer_info_courier_name=item.get("performer_info", {}).get("courier_name", None),
+                                performer_info_legal_name=item.get("performer_info", {}).get("legal_name", None),
+                                performer_info_car_model=item.get("performer_info", {}).get("car_model", None),
+                                performer_info_car_number=item.get("performer_info", {}).get("car_number", None),
+                                callback_properties_callback_url=item.get("callback_properties", {}).get("callback_url", None),
+                                due=item.get("due", None),
+                                shipping_document=item.get("shipping_document", None),
+                                comment=item.get("comment", None),
+                                c2c_data_payment_method_id=item.get("c2c_data", {}).get("payment_method_id", None),
+                                c2c_data_payment_type=item.get("c2c_data", {}).get("payment_type", None),
+                                c2c_data_partner_tag=item.get("c2c_data", {}).get("partner_tag", None),
+                                revision=item.get("revision", None),
+                                ) for item in self.body.get("claims")]
+
+
+class ClaimsReportStatusResponse(YCBase):
+    """
+        ???
+        ???
+
+            :param str task_id: task_id из запроса *(Обязательный параметр)* (f9b4825f45f4914affaeb07fbae9757)
+            :param str status: ??? *(Обязательный параметр)* (in_progress)
+
+                * **in_progress** - ???
+                * **retry** - ???
+                * **complete** - ???
+                * **failed** - ???
+
+            :param str author: Yandex Login автора отчета *(Обязательный параметр)* (morty)
+            :param str created_at: ??? *(Обязательный параметр)* (2020-01-01T00:00:00+00:00)
+            :param str request_since_date: ??? *(Обязательный параметр)* (2020-01-01)
+            :param str request_till_date: ??? *(Обязательный параметр)* (2020-01-02)
+            :param Optional[str] request_lang: Язык, на котором надо генерировать отчет.Если не указан, будет использован Accept-Language (ru)
+            :param Optional[str] request_department_id: ID отдела (значение игнорируется). Поле нужно для совместимости с API КК
+            :param str request_idempotency_token: Уникальный для данного клиента токен идемпотентности *(Обязательный параметр)* (f9b4825f45f64914affaeb07fbae9757)
+            :param Optional[str] url: Временная ссылка для скачивания отчета (https://example.com)
+    """
+
+    def __init__(self,
+                 task_id: str = None,
+                 status: str = None,
+                 author: str = None,
+                 created_at: str = None,
+                 request_since_date: str = None,
+                 request_till_date: str = None,
+                 request_lang: Optional[str] = None,
+                 request_department_id: Optional[str] = None,
+                 request_idempotency_token: str = None,
+                 url: Optional[str] = None,
+                 ):
+        self.body = collections.defaultdict(dict)
+
+        if task_id is not None:
+            self.body["task_id"] = validate_fields('task_id', task_id, str)
+            self.body['task_id'] = validate_fields('task_id', task_id, str)
+        if task_id is None:
+            raise InputParamError("<task_id> (=>task_id) of <ClaimsReportStatusResponse> is a required parameter")
 
         if status is not None:
             self.body["status"] = validate_fields('status', status, str)
-            self.body['status'] = validate_fields('status', status, Optional[str])
+            self.body['status'] = validate_fields('status', status, str)
         if status is None:
-            raise InputParamError("<status> (=>status) of <CutClaimResponse> is a required parameter")
+            raise InputParamError("<status> (=>status) of <ClaimsReportStatusResponse> is a required parameter")
 
-        if status not in ['new', 'estimating', 'estimating_failed', 'ready_for_approval', 'accepted', 'performer_lookup', 'performer_draft', 'performer_found', 'performer_not_found', 'pickup_arrived',
-                          'ready_for_pickup_confirmation', 'pickuped', 'delivery_arrived', 'ready_for_delivery_confirmation', 'pay_waiting', 'delivered', 'delivered_finish', 'returning',
-                          'return_arrived', 'ready_for_return_confirmation', 'returned', 'returned_finish', 'failed', 'cancelled', 'cancelled_with_payment', 'cancelled_by_taxi',
-                          'cancelled_with_items_on_hands']:
-            raise InputParamError(
-                "<status> of <CutClaimResponse> should be in <new, estimating, estimating_failed, ready_for_approval, accepted, performer_lookup, performer_draft, performer_found, performer_not_found, pickup_arrived, ready_for_pickup_confirmation, pickuped, delivery_arrived, ready_for_delivery_confirmation, pay_waiting, delivered, delivered_finish, returning, return_arrived, ready_for_return_confirmation, returned, returned_finish, failed, cancelled, cancelled_with_payment, cancelled_by_taxi, cancelled_with_items_on_hands>")
+        if status not in ['in_progress', 'retry', 'complete', 'failed']:
+            raise InputParamError("<status> of <ClaimsReportStatusResponse> should be in <in_progress, retry, complete, failed>")
 
-        if version is not None:
-            self.body["version"] = validate_fields('version', version, int)
-            self.body['version'] = validate_fields('version', version, int)
-        if version is None:
-            raise InputParamError("<version> (=>version) of <CutClaimResponse> is a required parameter")
+        if author is not None:
+            self.body["author"] = validate_fields('author', author, str)
+            self.body['author'] = validate_fields('author', author, str)
+        if author is None:
+            raise InputParamError("<author> (=>author) of <ClaimsReportStatusResponse> is a required parameter")
 
-        if taxi_order_id is not None:
-            self.body["taxi_order_id"] = validate_fields('taxi_order_id', taxi_order_id, str)
-            self.body['taxi_order_id'] = validate_fields('taxi_order_id', taxi_order_id, Optional[str])
+        if created_at is not None:
+            self.body["created_at"] = validate_fields('created_at', created_at, str)
+            self.body['created_at'] = validate_fields('created_at', created_at, str)
+        if created_at is None:
+            raise InputParamError("<created_at> (=>created_at) of <ClaimsReportStatusResponse> is a required parameter")
+
+        if request_since_date is not None:
+            self.body["request"]["since_date"] = validate_fields('request_since_date', request_since_date, str)
+            self.body['request_since_date'] = validate_fields('request_since_date', request_since_date, str)
+        if request_since_date is None:
+            raise InputParamError("<request_since_date> (request=>since_date) of <ClaimsReportStatusResponse> is a required parameter")
+
+        if request_till_date is not None:
+            self.body["request"]["till_date"] = validate_fields('request_till_date', request_till_date, str)
+            self.body['request_till_date'] = validate_fields('request_till_date', request_till_date, str)
+        if request_till_date is None:
+            raise InputParamError("<request_till_date> (request=>till_date) of <ClaimsReportStatusResponse> is a required parameter")
+
+        if request_lang is not None:
+            self.body["request"]["lang"] = validate_fields('request_lang', request_lang, str)
+            self.body['request_lang'] = validate_fields('request_lang', request_lang, Optional[str])
+
+        if request_department_id is not None:
+            self.body["request"]["department_id"] = validate_fields('request_department_id', request_department_id, str)
+            self.body['request_department_id'] = validate_fields('request_department_id', request_department_id, Optional[str])
+
+        if request_idempotency_token is not None:
+            self.body["request"]["idempotency_token"] = validate_fields('request_idempotency_token', request_idempotency_token, str)
+            self.body['request_idempotency_token'] = validate_fields('request_idempotency_token', request_idempotency_token, str)
+        if request_idempotency_token is None:
+            raise InputParamError("<request_idempotency_token> (request=>idempotency_token) of <ClaimsReportStatusResponse> is a required parameter")
+
+        if url is not None:
+            self.body["url"] = validate_fields('url', url, str)
+            self.body['url'] = validate_fields('url', url, Optional[str])
 
     def __repr__(self):
-        return "<CutClaimResponse>"
+        return "<ClaimsReportStatusResponse>"
 
     @property
-    def id(self) -> str:
+    def task_id(self) -> str:
+        """
+
+        :return: task_id из запроса
+        :rtype: str
+        """
+        return self.body.get("task_id")
+
+    @property
+    def status(self) -> str:
         """
 
         :return: ???
         :rtype: str
         """
-        return self.body.get("id")
-
-    @property
-    def status(self) -> Optional[str]:
-        """
-
-        :return: ???
-        :rtype: Optional[str]
-        """
         return self.body.get("status")
 
     @property
-    def version(self) -> int:
+    def author(self) -> str:
         """
 
-        :return: ???
-        :rtype: int
+        :return: Yandex Login автора отчета
+        :rtype: str
         """
-        return self.body.get("version")
+        return self.body.get("author")
 
     @property
-    def taxi_order_id(self) -> Optional[str]:
+    def created_at(self) -> str:
         """
 
         :return: ???
+        :rtype: str
+        """
+        return self.body.get("created_at")
+
+    @property
+    def request_since_date(self) -> str:
+        """
+
+        :return: ???
+        :rtype: str
+        """
+        return self.body.get("request_since_date")
+
+    @property
+    def request_till_date(self) -> str:
+        """
+
+        :return: ???
+        :rtype: str
+        """
+        return self.body.get("request_till_date")
+
+    @property
+    def request_lang(self) -> Optional[str]:
+        """
+
+        :return: Язык, на котором надо генерировать отчет.Если не указан, будет использован Accept-Language
         :rtype: Optional[str]
         """
-        return self.body.get("taxi_order_id")
+        return self.body.get("request_lang")
+
+    @property
+    def request_department_id(self) -> Optional[str]:
+        """
+
+        :return: ID отдела (значение игнорируется). Поле нужно для совместимости с API КК
+        :rtype: Optional[str]
+        """
+        return self.body.get("request_department_id")
+
+    @property
+    def request_idempotency_token(self) -> str:
+        """
+
+        :return: Уникальный для данного клиента токен идемпотентности
+        :rtype: str
+        """
+        return self.body.get("request_idempotency_token")
+
+    @property
+    def url(self) -> Optional[str]:
+        """
+
+        :return: Временная ссылка для скачивания отчета
+        :rtype: Optional[str]
+        """
+        return self.body.get("url")
 
 
 class ConfirmationCodeResponse(YCBase):
@@ -206,7 +359,7 @@ class ConfirmationCodeResponse(YCBase):
     def code(self) -> str:
         """
 
-        :return: ???
+        :return: Код подтверждения
         :rtype: str
         """
         return self.body.get("code")
@@ -215,69 +368,110 @@ class ConfirmationCodeResponse(YCBase):
     def attempts(self) -> int:
         """
 
-        :return: ???
+        :return: Число оставшихся попыток ввода кода
         :rtype: int
         """
         return self.body.get("attempts")
 
 
-class ClaimsJournalResponse(YCBase):
+class ClaimsReportGenerateResponse(YCBase):
     """
         ???
         ???
 
-            :param str cursor: Идентификатор последнего изменения *(Обязательный параметр)*
-            :param List['Event'] events: ??? *(Обязательный параметр)*
+            :param str task_id: ID, по которому можно запрашивать статус *(Обязательный параметр)* (f9b4825f45f64914affaeb07fbae9757)
     """
 
     def __init__(self,
-                 cursor: str = None,
-                 events: List['Event'] = None,
+                 task_id: str = None,
                  ):
         self.body = collections.defaultdict(dict)
 
-        if cursor is not None:
-            self.body["cursor"] = validate_fields('cursor', cursor, str)
-            self.body['cursor'] = validate_fields('cursor', cursor, str)
-        if cursor is None:
-            raise InputParamError("<cursor> (=>cursor) of <ClaimsJournalResponse> is a required parameter")
-
-        if events is not None:
-            self.body["events"] = validate_fields('events', events, List['Event'])
-            self.body['events'] = validate_fields('events', events, List['Event'])
-        if events is None:
-            raise InputParamError("<events> (=>events) of <ClaimsJournalResponse> is a required parameter")
+        if task_id is not None:
+            self.body["task_id"] = validate_fields('task_id', task_id, str)
+            self.body['task_id'] = validate_fields('task_id', task_id, str)
+        if task_id is None:
+            raise InputParamError("<task_id> (=>task_id) of <ClaimsReportGenerateResponse> is a required parameter")
 
     def __repr__(self):
-        return "<ClaimsJournalResponse>"
+        return "<ClaimsReportGenerateResponse>"
 
     @property
-    def cursor(self) -> str:
+    def task_id(self) -> str:
         """
 
-        :return: ???
+        :return: ID, по которому можно запрашивать статус
         :rtype: str
         """
-        return self.body.get("cursor")
+        return self.body.get("task_id")
+
+
+class VoiceforwardingResponse(YCBase):
+    """
+        ???
+        ???
+
+            :param str phone: Номер телефона *(Обязательный параметр)* (+79099999998)
+            :param str ext: Добавочный номер *(Обязательный параметр)* (0163)
+            :param int ttl_seconds: Время, в течение которого этот номер действителен *(Обязательный параметр)*
+    """
+
+    def __init__(self,
+                 phone: str = None,
+                 ext: str = None,
+                 ttl_seconds: int = None,
+                 ):
+        self.body = collections.defaultdict(dict)
+
+        if phone is not None:
+            self.body["phone"] = validate_fields('phone', phone, str)
+            self.body['phone'] = validate_fields('phone', phone, str)
+        if phone is None:
+            raise InputParamError("<phone> (=>phone) of <VoiceforwardingResponse> is a required parameter")
+
+        if ext is not None:
+            self.body["ext"] = validate_fields('ext', ext, str)
+            self.body['ext'] = validate_fields('ext', ext, str)
+        if ext is None:
+            raise InputParamError("<ext> (=>ext) of <VoiceforwardingResponse> is a required parameter")
+
+        if ttl_seconds is not None:
+            self.body["ttl_seconds"] = validate_fields('ttl_seconds', ttl_seconds, int)
+            self.body['ttl_seconds'] = validate_fields('ttl_seconds', ttl_seconds, int)
+        if ttl_seconds and ttl_seconds < 2088:
+            raise InputParamError("<ttl_seconds> of <VoiceforwardingResponse> should be more than 2088")
+        if ttl_seconds is None:
+            raise InputParamError("<ttl_seconds> (=>ttl_seconds) of <VoiceforwardingResponse> is a required parameter")
+
+    def __repr__(self):
+        return "<VoiceforwardingResponse>"
 
     @property
-    def events(self) -> List['Event']:
+    def phone(self) -> str:
         """
 
-        :return: ???
-        :rtype: List['Event']
+        :return: Номер телефона
+        :rtype: str
         """
-        return [Event(operation_id=item.get("operation_id", None),
-                      claim_id=item.get("claim_id", None),
-                      change_type=item.get("change_type", None),
-                      updated_ts=item.get("updated_ts", None),
-                      new_status=item.get("new_status", None),
-                      new_price=item.get("new_price", None),
-                      new_currency=item.get("new_currency", None),
-                      resolution=item.get("resolution", None),
-                      revision=item.get("revision", None),
-                      client_id=item.get("client_id", None),
-                      ) for item in self.body.get("events")]
+        return self.body.get("phone")
+
+    @property
+    def ext(self) -> str:
+        """
+
+        :return: Добавочный номер
+        :rtype: str
+        """
+        return self.body.get("ext")
+
+    @property
+    def ttl_seconds(self) -> int:
+        """
+
+        :return: Время, в течение которого этот номер действителен
+        :rtype: int
+        """
+        return self.body.get("ttl_seconds")
 
 
 class SearchedClaimMP(YCBase):
@@ -291,7 +485,7 @@ class SearchedClaimMP(YCBase):
             :param List['CargoItemMP'] items: Перечисление наименований грузов для отправления *(Обязательный параметр)*
             :param List['ResponseCargoPointMP'] route_points: Информация по точкам маршрута *(Обязательный параметр)*
             :param Optional[int] current_point_id: Целочисленный идентификатор точки (6987)
-            :param Optional[str] status: Статус заявки *(Обязательный параметр)* (new)
+            :param str status: Статус заявки *(Обязательный параметр)* (new)
 
                 * **new** - ???
                 * **estimating** - ???
@@ -351,7 +545,17 @@ class SearchedClaimMP(YCBase):
                 * **paid** - ???
 
             :param str client_requirements_taxi_class: Класс такси. Возможные значения express, cargo. *(Обязательный параметр)* (express)
+
+                * **express** - Легковое авто
+                * **courier** - Курьер
+                * **cargo** - Грузовое авто
+
             :param Optional[str] client_requirements_cargo_type: Тип грузовика (lcv_m)
+
+                * **van** - 190см в длину, 100 в шириру, 90 в высоту
+                * **lcv_m** - 260см в длину, 160 в ширину, 150 в высоту
+                * **lcv_l** - 400 см в длину, 190 в ширину, 200 в высотуv
+
             :param Optional[int] client_requirements_cargo_loaders: Требуемое число грузчиков
             :param Optional[List['str']] client_requirements_cargo_options: Дополнительные опции тарифа
             :param Optional[List['MatchedCar']] matched_cars: Информация об исполнителе (массив, на данный момент всегда 1 элемент)
@@ -377,7 +581,7 @@ class SearchedClaimMP(YCBase):
                  items: List['CargoItemMP'] = None,
                  route_points: List['ResponseCargoPointMP'] = None,
                  current_point_id: Optional[int] = None,
-                 status: Optional[str] = None,
+                 status: str = None,
                  version: int = None,
                  error_messages: Optional[List['HumanErrorMessage']] = None,
                  emergency_contact_name: str = None,
@@ -464,7 +668,7 @@ class SearchedClaimMP(YCBase):
 
         if status is not None:
             self.body["status"] = validate_fields('status', status, str)
-            self.body['status'] = validate_fields('status', status, Optional[str])
+            self.body['status'] = validate_fields('status', status, str)
         if status is None:
             raise InputParamError("<status> (=>status) of <SearchedClaimMP> is a required parameter")
 
@@ -699,7 +903,7 @@ class SearchedClaimMP(YCBase):
     def id(self) -> str:
         """
 
-        :return: ???
+        :return: id заявки, полученный на этапе создания заявки
         :rtype: str
         """
         return self.body.get("id")
@@ -708,7 +912,7 @@ class SearchedClaimMP(YCBase):
     def corp_client_id(self) -> Optional[str]:
         """
 
-        :return: ???
+        :return: id корпоративного клиента (из OAuth токена)
         :rtype: Optional[str]
         """
         return self.body.get("corp_client_id")
@@ -717,7 +921,7 @@ class SearchedClaimMP(YCBase):
     def yandex_uid(self) -> Optional[str]:
         """
 
-        :return: ???
+        :return: yandex uid
         :rtype: Optional[str]
         """
         return self.body.get("yandex_uid")
@@ -726,7 +930,7 @@ class SearchedClaimMP(YCBase):
     def items(self) -> List['CargoItemMP']:
         """
 
-        :return: ???
+        :return: Перечисление наименований грузов для отправления
         :rtype: List['CargoItemMP']
         """
         return [CargoItemMP(extra_id=item.get("extra_id", None),
@@ -753,7 +957,7 @@ class SearchedClaimMP(YCBase):
     def route_points(self) -> List['ResponseCargoPointMP']:
         """
 
-        :return: ???
+        :return: Информация по точкам маршрута
         :rtype: List['ResponseCargoPointMP']
         """
         return [ResponseCargoPointMP(id=item.get("id", None),
@@ -795,17 +999,17 @@ class SearchedClaimMP(YCBase):
     def current_point_id(self) -> Optional[int]:
         """
 
-        :return: ???
+        :return: Целочисленный идентификатор точки
         :rtype: Optional[int]
         """
         return self.body.get("current_point_id")
 
     @property
-    def status(self) -> Optional[str]:
+    def status(self) -> str:
         """
 
-        :return: ???
-        :rtype: Optional[str]
+        :return: Статус заявки
+        :rtype: str
         """
         return self.body.get("status")
 
@@ -833,7 +1037,7 @@ class SearchedClaimMP(YCBase):
     def emergency_contact_name(self) -> str:
         """
 
-        :return: ???
+        :return: Имя контактного лица
         :rtype: str
         """
         return self.body.get("emergency_contact_name")
@@ -842,7 +1046,7 @@ class SearchedClaimMP(YCBase):
     def emergency_contact_phone(self) -> str:
         """
 
-        :return: ???
+        :return: Телефон контактного лица
         :rtype: str
         """
         return self.body.get("emergency_contact_phone")
@@ -851,7 +1055,7 @@ class SearchedClaimMP(YCBase):
     def skip_door_to_door(self) -> Optional[bool]:
         """
 
-        :return: ???
+        :return: Отказ от доставки до двери. В случае true — курьер доставит заказ только на улицу, до подъезда
         :rtype: Optional[bool]
         """
         return self.body.get("skip_door_to_door")
@@ -860,7 +1064,7 @@ class SearchedClaimMP(YCBase):
     def skip_client_notify(self) -> Optional[bool]:
         """
 
-        :return: ???
+        :return: Не отправлять получателю нотификации, когда к нему направится курьер
         :rtype: Optional[bool]
         """
         return self.body.get("skip_client_notify")
@@ -869,7 +1073,7 @@ class SearchedClaimMP(YCBase):
     def skip_emergency_notify(self) -> Optional[bool]:
         """
 
-        :return: ???
+        :return: Не отправлять нотификации emergency контакту
         :rtype: Optional[bool]
         """
         return self.body.get("skip_emergency_notify")
@@ -878,7 +1082,7 @@ class SearchedClaimMP(YCBase):
     def skip_act(self) -> Optional[bool]:
         """
 
-        :return: ???
+        :return: Не показывать акт
         :rtype: Optional[bool]
         """
         return self.body.get("skip_act")
@@ -887,7 +1091,7 @@ class SearchedClaimMP(YCBase):
     def optional_return(self) -> Optional[bool]:
         """
 
-        :return: ???
+        :return: Не требуется возврат товаров в случае отмены заказа. Курьер оставляет товар себе
         :rtype: Optional[bool]
         """
         return self.body.get("optional_return")
@@ -896,7 +1100,7 @@ class SearchedClaimMP(YCBase):
     def eta(self) -> Optional[int]:
         """
 
-        :return: ???
+        :return: Ожидаемое время исполнения заказа в минутах
         :rtype: Optional[int]
         """
         return self.body.get("eta")
@@ -905,7 +1109,7 @@ class SearchedClaimMP(YCBase):
     def created_ts(self) -> str:
         """
 
-        :return: ???
+        :return: Дата-время создания
         :rtype: str
         """
         return self.body.get("created_ts")
@@ -914,7 +1118,7 @@ class SearchedClaimMP(YCBase):
     def updated_ts(self) -> str:
         """
 
-        :return: ???
+        :return: Дата-время последнего обновления
         :rtype: str
         """
         return self.body.get("updated_ts")
@@ -923,7 +1127,7 @@ class SearchedClaimMP(YCBase):
     def taxi_offer_offer_id(self) -> str:
         """
 
-        :return: ???
+        :return: Идентификатор оффера
         :rtype: str
         """
         return self.body.get("taxi_offer_offer_id")
@@ -932,7 +1136,7 @@ class SearchedClaimMP(YCBase):
     def taxi_offer_price_raw(self) -> int:
         """
 
-        :return: ???
+        :return: Цена по офферу в валюте, указанной в договоре
         :rtype: int
         """
         return self.body.get("taxi_offer_price_raw")
@@ -941,7 +1145,7 @@ class SearchedClaimMP(YCBase):
     def taxi_offer_price(self) -> Optional[str]:
         """
 
-        :return: ???
+        :return: Decimal(19, 4)
         :rtype: Optional[str]
         """
         return self.body.get("taxi_offer_price")
@@ -950,7 +1154,7 @@ class SearchedClaimMP(YCBase):
     def pricing_offer_offer_id(self) -> str:
         """
 
-        :return: ???
+        :return: Идентификатор оффера
         :rtype: str
         """
         return self.body.get("pricing_offer_offer_id")
@@ -959,7 +1163,7 @@ class SearchedClaimMP(YCBase):
     def pricing_offer_price_raw(self) -> int:
         """
 
-        :return: ???
+        :return: (deprecated) Цена по офферу в валюте, указанной в договоре
         :rtype: int
         """
         return self.body.get("pricing_offer_price_raw")
@@ -968,7 +1172,7 @@ class SearchedClaimMP(YCBase):
     def pricing_offer_price(self) -> str:
         """
 
-        :return: ???
+        :return: Decimal(19, 4)
         :rtype: str
         """
         return self.body.get("pricing_offer_price")
@@ -977,7 +1181,7 @@ class SearchedClaimMP(YCBase):
     def pricing_currency(self) -> Optional[str]:
         """
 
-        :return: ???
+        :return: Трехзначный код валюты, в которой ведется расчет (например, RUB)
         :rtype: Optional[str]
         """
         return self.body.get("pricing_currency")
@@ -1022,7 +1226,7 @@ class SearchedClaimMP(YCBase):
     def pricing_final_price(self) -> str:
         """
 
-        :return: ???
+        :return: Decimal(19, 4)
         :rtype: str
         """
         return self.body.get("pricing_final_price")
@@ -1031,7 +1235,7 @@ class SearchedClaimMP(YCBase):
     def available_cancel_state(self) -> Optional[str]:
         """
 
-        :return: ???
+        :return: Признак возможности платной/бесплатной отмены
         :rtype: Optional[str]
         """
         return self.body.get("available_cancel_state")
@@ -1040,7 +1244,12 @@ class SearchedClaimMP(YCBase):
     def client_requirements_taxi_class(self) -> str:
         """
 
-        :return: ???
+        :return: Класс такси. Возможные значения express, cargo.
+
+            * **express** - Легковое авто
+            * **courier** - Курьер
+            * **cargo** - Грузовое авто
+
         :rtype: str
         """
         return self.body.get("client_requirements_taxi_class")
@@ -1049,7 +1258,12 @@ class SearchedClaimMP(YCBase):
     def client_requirements_cargo_type(self) -> Optional[str]:
         """
 
-        :return: ???
+        :return: Тип грузовика
+
+            * **van** - 190см в длину, 100 в шириру, 90 в высоту
+            * **lcv_m** - 260см в длину, 160 в ширину, 150 в высоту
+            * **lcv_l** - 400 см в длину, 190 в ширину, 200 в высоту
+
         :rtype: Optional[str]
         """
         return self.body.get("client_requirements_cargo_type")
@@ -1058,7 +1272,7 @@ class SearchedClaimMP(YCBase):
     def client_requirements_cargo_loaders(self) -> Optional[int]:
         """
 
-        :return: ???
+        :return: Требуемое число грузчиков
         :rtype: Optional[int]
         """
         return self.body.get("client_requirements_cargo_loaders")
@@ -1067,7 +1281,7 @@ class SearchedClaimMP(YCBase):
     def client_requirements_cargo_options(self) -> Optional[List['str']]:
         """
 
-        :return: ???
+        :return: Дополнительные опции тарифа
         :rtype: Optional[List['str']]
         """
         return [item for item in self.body.get("client_requirements_cargo_options")]
@@ -1076,7 +1290,7 @@ class SearchedClaimMP(YCBase):
     def matched_cars(self) -> Optional[List['MatchedCar']]:
         """
 
-        :return: ???
+        :return: Информация об исполнителе (массив, на данный момент всегда 1 элемент)
         :rtype: Optional[List['MatchedCar']]
         """
         return [MatchedCar(taxi_class=item.get("taxi_class", None),
@@ -1093,7 +1307,7 @@ class SearchedClaimMP(YCBase):
     def warnings(self) -> Optional[List['ClaimWarning']]:
         """
 
-        :return: ???
+        :return: Предупреждения по циклу заявки
         :rtype: Optional[List['ClaimWarning']]
         """
         return [ClaimWarning(source=item.get("source", None),
@@ -1105,7 +1319,7 @@ class SearchedClaimMP(YCBase):
     def performer_info_courier_name(self) -> str:
         """
 
-        :return: ???
+        :return: Имя курьера, доставляющего посылку
         :rtype: str
         """
         return self.body.get("performer_info_courier_name")
@@ -1114,7 +1328,7 @@ class SearchedClaimMP(YCBase):
     def performer_info_legal_name(self) -> str:
         """
 
-        :return: ???
+        :return: Данные о юр. лице, осуществляющем доставку
         :rtype: str
         """
         return self.body.get("performer_info_legal_name")
@@ -1123,7 +1337,7 @@ class SearchedClaimMP(YCBase):
     def performer_info_car_model(self) -> Optional[str]:
         """
 
-        :return: ???
+        :return: Модель машины
         :rtype: Optional[str]
         """
         return self.body.get("performer_info_car_model")
@@ -1132,7 +1346,7 @@ class SearchedClaimMP(YCBase):
     def performer_info_car_number(self) -> Optional[str]:
         """
 
-        :return: ???
+        :return: Номер машины
         :rtype: Optional[str]
         """
         return self.body.get("performer_info_car_number")
@@ -1141,7 +1355,7 @@ class SearchedClaimMP(YCBase):
     def callback_properties_callback_url(self) -> str:
         """
 
-        :return: ???
+        :return: URL, который будет вызываться при смене статусов по заявке.Данный механизм устарел, вместо него следует использовать операцию v1/claims/journal.
         :rtype: str
         """
         return self.body.get("callback_properties_callback_url")
@@ -1150,7 +1364,7 @@ class SearchedClaimMP(YCBase):
     def due(self) -> Optional[str]:
         """
 
-        :return: ???
+        :return: Создать заказ к определенному времени (например, заказ на завтра). Согласуйте с менеджером использование опции!
         :rtype: Optional[str]
         """
         return self.body.get("due")
@@ -1159,7 +1373,7 @@ class SearchedClaimMP(YCBase):
     def shipping_document(self) -> Optional[str]:
         """
 
-        :return: ???
+        :return: Сопроводительные документы
         :rtype: Optional[str]
         """
         return self.body.get("shipping_document")
@@ -1168,7 +1382,7 @@ class SearchedClaimMP(YCBase):
     def comment(self) -> Optional[str]:
         """
 
-        :return: ???
+        :return: Общий комментарий к заказу
         :rtype: Optional[str]
         """
         return self.body.get("comment")
@@ -1208,376 +1422,6 @@ class SearchedClaimMP(YCBase):
         :rtype: int
         """
         return self.body.get("revision")
-
-
-class SearchClaimsResponseMP(YCBase):
-    """
-        ???
-        Результат поиска
-
-            :param List['SearchedClaimMP'] claims: ??? *(Обязательный параметр)*
-    """
-
-    def __init__(self,
-                 claims: List['SearchedClaimMP'] = None,
-                 ):
-        self.body = collections.defaultdict(dict)
-
-        if claims is not None:
-            self.body["claims"] = validate_fields('claims', claims, List['SearchedClaimMP'])
-            self.body['claims'] = validate_fields('claims', claims, List['SearchedClaimMP'])
-        if claims is None:
-            raise InputParamError("<claims> (=>claims) of <SearchClaimsResponseMP> is a required parameter")
-
-    def __repr__(self):
-        return "<SearchClaimsResponseMP>"
-
-    @property
-    def claims(self) -> List['SearchedClaimMP']:
-        """
-
-        :return: Результат поиска
-        :rtype: List['SearchedClaimMP']
-        """
-        return [SearchedClaimMP(id=item.get("id", None),
-                                corp_client_id=item.get("corp_client_id", None),
-                                yandex_uid=item.get("yandex_uid", None),
-                                items=item.get("items", None),
-                                route_points=item.get("route_points", None),
-                                current_point_id=item.get("current_point_id", None),
-                                status=item.get("status", None),
-                                version=item.get("version", None),
-                                error_messages=item.get("error_messages", None),
-                                emergency_contact_name=item.get("emergency_contact", {}).get("name", None),
-                                emergency_contact_phone=item.get("emergency_contact", {}).get("phone", None),
-                                skip_door_to_door=item.get("skip_door_to_door", None),
-                                skip_client_notify=item.get("skip_client_notify", None),
-                                skip_emergency_notify=item.get("skip_emergency_notify", None),
-                                skip_act=item.get("skip_act", None),
-                                optional_return=item.get("optional_return", None),
-                                eta=item.get("eta", None),
-                                created_ts=item.get("created_ts", None),
-                                updated_ts=item.get("updated_ts", None),
-                                taxi_offer_offer_id=item.get("taxi_offer", {}).get("offer_id", None),
-                                taxi_offer_price_raw=item.get("taxi_offer", {}).get("price_raw", None),
-                                taxi_offer_price=item.get("taxi_offer", {}).get("price", None),
-                                pricing_offer_offer_id=item.get("pricing", {}).get("offer", {}).get("offer_id", None),
-                                pricing_offer_price_raw=item.get("pricing", {}).get("offer", {}).get("price_raw", None),
-                                pricing_offer_price=item.get("pricing", {}).get("offer", {}).get("price", None),
-                                pricing_currency=item.get("pricing", {}).get("currency", None),
-                                pricing_currency_rules_code=item.get("pricing", {}).get("currency_rules", {}).get("code", None),
-                                pricing_currency_rules_text=item.get("pricing", {}).get("currency_rules", {}).get("text", None),
-                                pricing_currency_rules_template=item.get("pricing", {}).get("currency_rules", {}).get("template", None),
-                                pricing_currency_rules_sign=item.get("pricing", {}).get("currency_rules", {}).get("sign", None),
-                                pricing_final_price=item.get("pricing", {}).get("final_price", None),
-                                available_cancel_state=item.get("available_cancel_state", None),
-                                client_requirements_taxi_class=item.get("client_requirements", {}).get("taxi_class", None),
-                                client_requirements_cargo_type=item.get("client_requirements", {}).get("cargo_type", None),
-                                client_requirements_cargo_loaders=item.get("client_requirements", {}).get("cargo_loaders", None),
-                                client_requirements_cargo_options=item.get("client_requirements", {}).get("cargo_options", None),
-                                matched_cars=item.get("matched_cars", None),
-                                warnings=item.get("warnings", None),
-                                performer_info_courier_name=item.get("performer_info", {}).get("courier_name", None),
-                                performer_info_legal_name=item.get("performer_info", {}).get("legal_name", None),
-                                performer_info_car_model=item.get("performer_info", {}).get("car_model", None),
-                                performer_info_car_number=item.get("performer_info", {}).get("car_number", None),
-                                callback_properties_callback_url=item.get("callback_properties", {}).get("callback_url", None),
-                                due=item.get("due", None),
-                                shipping_document=item.get("shipping_document", None),
-                                comment=item.get("comment", None),
-                                c2c_data_payment_method_id=item.get("c2c_data", {}).get("payment_method_id", None),
-                                c2c_data_payment_type=item.get("c2c_data", {}).get("payment_type", None),
-                                c2c_data_partner_tag=item.get("c2c_data", {}).get("partner_tag", None),
-                                revision=item.get("revision", None),
-                                ) for item in self.body.get("claims")]
-
-
-class VoiceforwardingResponse(YCBase):
-    """
-        ???
-        ???
-
-            :param str phone: Номер телефона *(Обязательный параметр)* (+79099999998)
-            :param str ext: Добавочный номер *(Обязательный параметр)* (0163)
-            :param int ttl_seconds: Время, в течение которого этот номер действителен *(Обязательный параметр)*
-    """
-
-    def __init__(self,
-                 phone: str = None,
-                 ext: str = None,
-                 ttl_seconds: int = None,
-                 ):
-        self.body = collections.defaultdict(dict)
-
-        if phone is not None:
-            self.body["phone"] = validate_fields('phone', phone, str)
-            self.body['phone'] = validate_fields('phone', phone, str)
-        if phone is None:
-            raise InputParamError("<phone> (=>phone) of <VoiceforwardingResponse> is a required parameter")
-
-        if ext is not None:
-            self.body["ext"] = validate_fields('ext', ext, str)
-            self.body['ext'] = validate_fields('ext', ext, str)
-        if ext is None:
-            raise InputParamError("<ext> (=>ext) of <VoiceforwardingResponse> is a required parameter")
-
-        if ttl_seconds is not None:
-            self.body["ttl_seconds"] = validate_fields('ttl_seconds', ttl_seconds, int)
-            self.body['ttl_seconds'] = validate_fields('ttl_seconds', ttl_seconds, int)
-        if ttl_seconds and ttl_seconds < 2088:
-            raise InputParamError("<ttl_seconds> of <VoiceforwardingResponse> should be more than 2088")
-        if ttl_seconds is None:
-            raise InputParamError("<ttl_seconds> (=>ttl_seconds) of <VoiceforwardingResponse> is a required parameter")
-
-    def __repr__(self):
-        return "<VoiceforwardingResponse>"
-
-    @property
-    def phone(self) -> str:
-        """
-
-        :return: ???
-        :rtype: str
-        """
-        return self.body.get("phone")
-
-    @property
-    def ext(self) -> str:
-        """
-
-        :return: ???
-        :rtype: str
-        """
-        return self.body.get("ext")
-
-    @property
-    def ttl_seconds(self) -> int:
-        """
-
-        :return: ???
-        :rtype: int
-        """
-        return self.body.get("ttl_seconds")
-
-
-class ClaimsReportStatusResponse(YCBase):
-    """
-        ???
-        ???
-
-            :param str task_id: task_id из запроса *(Обязательный параметр)* (f9b4825f45f4914affaeb07fbae9757)
-            :param str status: ??? *(Обязательный параметр)* (in_progress)
-
-                * **in_progress** - ???
-                * **retry** - ???
-                * **complete** - ???
-                * **failed** - ???
-
-            :param str author: Yandex Login автора отчета *(Обязательный параметр)* (morty)
-            :param str created_at: ??? *(Обязательный параметр)* (2020-01-01T00:00:00+00:00)
-            :param str request_since_date: ??? *(Обязательный параметр)* (2020-01-01)
-            :param str request_till_date: ??? *(Обязательный параметр)* (2020-01-02)
-            :param Optional[str] request_lang: Язык, на котором надо генерировать отчет.Если не указан, будет использован Accept-Language (ru)
-            :param Optional[str] request_department_id: ID отдела (значение игнорируется). Поле нужно для совместимости с API КК
-            :param str request_idempotency_token: Уникальный для данного клиента токен идемпотентности *(Обязательный параметр)* (f9b4825f45f64914affaeb07fbae9757)
-            :param Optional[str] url: Временная ссылка для скачивания отчета (https://example.com)
-    """
-
-    def __init__(self,
-                 task_id: str = None,
-                 status: str = None,
-                 author: str = None,
-                 created_at: str = None,
-                 request_since_date: str = None,
-                 request_till_date: str = None,
-                 request_lang: Optional[str] = None,
-                 request_department_id: Optional[str] = None,
-                 request_idempotency_token: str = None,
-                 url: Optional[str] = None,
-                 ):
-        self.body = collections.defaultdict(dict)
-
-        if task_id is not None:
-            self.body["task_id"] = validate_fields('task_id', task_id, str)
-            self.body['task_id'] = validate_fields('task_id', task_id, str)
-        if task_id is None:
-            raise InputParamError("<task_id> (=>task_id) of <ClaimsReportStatusResponse> is a required parameter")
-
-        if status is not None:
-            self.body["status"] = validate_fields('status', status, str)
-            self.body['status'] = validate_fields('status', status, str)
-        if status is None:
-            raise InputParamError("<status> (=>status) of <ClaimsReportStatusResponse> is a required parameter")
-
-        if status not in ['in_progress', 'retry', 'complete', 'failed']:
-            raise InputParamError("<status> of <ClaimsReportStatusResponse> should be in <in_progress, retry, complete, failed>")
-
-        if author is not None:
-            self.body["author"] = validate_fields('author', author, str)
-            self.body['author'] = validate_fields('author', author, str)
-        if author is None:
-            raise InputParamError("<author> (=>author) of <ClaimsReportStatusResponse> is a required parameter")
-
-        if created_at is not None:
-            self.body["created_at"] = validate_fields('created_at', created_at, str)
-            self.body['created_at'] = validate_fields('created_at', created_at, str)
-        if created_at is None:
-            raise InputParamError("<created_at> (=>created_at) of <ClaimsReportStatusResponse> is a required parameter")
-
-        if request_since_date is not None:
-            self.body["request"]["since_date"] = validate_fields('request_since_date', request_since_date, str)
-            self.body['request_since_date'] = validate_fields('request_since_date', request_since_date, str)
-        if request_since_date is None:
-            raise InputParamError("<request_since_date> (request=>since_date) of <ClaimsReportStatusResponse> is a required parameter")
-
-        if request_till_date is not None:
-            self.body["request"]["till_date"] = validate_fields('request_till_date', request_till_date, str)
-            self.body['request_till_date'] = validate_fields('request_till_date', request_till_date, str)
-        if request_till_date is None:
-            raise InputParamError("<request_till_date> (request=>till_date) of <ClaimsReportStatusResponse> is a required parameter")
-
-        if request_lang is not None:
-            self.body["request"]["lang"] = validate_fields('request_lang', request_lang, str)
-            self.body['request_lang'] = validate_fields('request_lang', request_lang, Optional[str])
-
-        if request_department_id is not None:
-            self.body["request"]["department_id"] = validate_fields('request_department_id', request_department_id, str)
-            self.body['request_department_id'] = validate_fields('request_department_id', request_department_id, Optional[str])
-
-        if request_idempotency_token is not None:
-            self.body["request"]["idempotency_token"] = validate_fields('request_idempotency_token', request_idempotency_token, str)
-            self.body['request_idempotency_token'] = validate_fields('request_idempotency_token', request_idempotency_token, str)
-        if request_idempotency_token is None:
-            raise InputParamError("<request_idempotency_token> (request=>idempotency_token) of <ClaimsReportStatusResponse> is a required parameter")
-
-        if url is not None:
-            self.body["url"] = validate_fields('url', url, str)
-            self.body['url'] = validate_fields('url', url, Optional[str])
-
-    def __repr__(self):
-        return "<ClaimsReportStatusResponse>"
-
-    @property
-    def task_id(self) -> str:
-        """
-
-        :return: ???
-        :rtype: str
-        """
-        return self.body.get("task_id")
-
-    @property
-    def status(self) -> str:
-        """
-
-        :return: ???
-        :rtype: str
-        """
-        return self.body.get("status")
-
-    @property
-    def author(self) -> str:
-        """
-
-        :return: ???
-        :rtype: str
-        """
-        return self.body.get("author")
-
-    @property
-    def created_at(self) -> str:
-        """
-
-        :return: ???
-        :rtype: str
-        """
-        return self.body.get("created_at")
-
-    @property
-    def request_since_date(self) -> str:
-        """
-
-        :return: ???
-        :rtype: str
-        """
-        return self.body.get("request_since_date")
-
-    @property
-    def request_till_date(self) -> str:
-        """
-
-        :return: ???
-        :rtype: str
-        """
-        return self.body.get("request_till_date")
-
-    @property
-    def request_lang(self) -> Optional[str]:
-        """
-
-        :return: ???
-        :rtype: Optional[str]
-        """
-        return self.body.get("request_lang")
-
-    @property
-    def request_department_id(self) -> Optional[str]:
-        """
-
-        :return: ???
-        :rtype: Optional[str]
-        """
-        return self.body.get("request_department_id")
-
-    @property
-    def request_idempotency_token(self) -> str:
-        """
-
-        :return: ???
-        :rtype: str
-        """
-        return self.body.get("request_idempotency_token")
-
-    @property
-    def url(self) -> Optional[str]:
-        """
-
-        :return: ???
-        :rtype: Optional[str]
-        """
-        return self.body.get("url")
-
-
-class ClaimsReportGenerateResponse(YCBase):
-    """
-        ???
-        ???
-
-            :param str task_id: ID, по которому можно запрашивать статус *(Обязательный параметр)* (f9b4825f45f64914affaeb07fbae9757)
-    """
-
-    def __init__(self,
-                 task_id: str = None,
-                 ):
-        self.body = collections.defaultdict(dict)
-
-        if task_id is not None:
-            self.body["task_id"] = validate_fields('task_id', task_id, str)
-            self.body['task_id'] = validate_fields('task_id', task_id, str)
-        if task_id is None:
-            raise InputParamError("<task_id> (=>task_id) of <ClaimsReportGenerateResponse> is a required parameter")
-
-    def __repr__(self):
-        return "<ClaimsReportGenerateResponse>"
-
-    @property
-    def task_id(self) -> str:
-        """
-
-        :return: ???
-        :rtype: str
-        """
-        return self.body.get("task_id")
 
 
 class PerformerPositionResponse(YCBase):
@@ -1648,7 +1492,7 @@ class PerformerPositionResponse(YCBase):
     def position_lat(self) -> int:
         """
 
-        :return: performer position info
+        :return: Широта
         :rtype: int
         """
         return self.body.get("position_lat")
@@ -1657,7 +1501,7 @@ class PerformerPositionResponse(YCBase):
     def position_lon(self) -> int:
         """
 
-        :return: performer position info
+        :return: Долгота
         :rtype: int
         """
         return self.body.get("position_lon")
@@ -1666,7 +1510,7 @@ class PerformerPositionResponse(YCBase):
     def position_timestamp(self) -> int:
         """
 
-        :return: performer position info
+        :return: Время снятия сигнала GPS, unix-time
         :rtype: int
         """
         return self.body.get("position_timestamp")
@@ -1675,7 +1519,7 @@ class PerformerPositionResponse(YCBase):
     def position_accuracy(self) -> Optional[int]:
         """
 
-        :return: performer position info
+        :return: Точность GPS. Пока запрещена к передаче т.к. не решилис единицами измерения.
         :rtype: Optional[int]
         """
         return self.body.get("position_accuracy")
@@ -1684,7 +1528,7 @@ class PerformerPositionResponse(YCBase):
     def position_speed(self) -> Optional[int]:
         """
 
-        :return: performer position info
+        :return: Средняя скорость, в м/с
         :rtype: Optional[int]
         """
         return self.body.get("position_speed")
@@ -1693,22 +1537,78 @@ class PerformerPositionResponse(YCBase):
     def position_direction(self) -> Optional[int]:
         """
 
-        :return: performer position info
+        :return: Направление. Угол от 0 градусов до 360 градусов от направления на север,по часовой стрелке. 0 - север, 90 - восток, 180 - юг,270 - запад.
         :rtype: Optional[int]
         """
         return self.body.get("position_direction")
 
 
-class Event(YCBase):
+class ClaimsJournalResponse(YCBase):
     """
         ???
         ???
 
-            :param int operation_id: ??? *(Обязательный параметр)* (1)
-            :param str claim_id: Идентификатор заявки claim_id *(Обязательный параметр)* (3b8d1af142664fde824626a7c19e2bd9)
-            :param str change_type: Тип изменения. Возможные значения status_changed — изменение статуса; price_changed — изменение цены *(Обязательный параметр)* (status_changed)
-            :param str updated_ts: Время события в формате ISO 8601 *(Обязательный параметр)* (2020-01-01T00:00:00+00:00)
-            :param str new_status: Статус заявки (new)
+            :param str cursor: Идентификатор последнего изменения *(Обязательный параметр)*
+            :param List['Event'] events: ??? *(Обязательный параметр)*
+    """
+
+    def __init__(self,
+                 cursor: str = None,
+                 events: List['Event'] = None,
+                 ):
+        self.body = collections.defaultdict(dict)
+
+        if cursor is not None:
+            self.body["cursor"] = validate_fields('cursor', cursor, str)
+            self.body['cursor'] = validate_fields('cursor', cursor, str)
+        if cursor is None:
+            raise InputParamError("<cursor> (=>cursor) of <ClaimsJournalResponse> is a required parameter")
+
+        if events is not None:
+            self.body["events"] = validate_fields('events', events, List['Event'])
+            self.body['events'] = validate_fields('events', events, List['Event'])
+        if events is None:
+            raise InputParamError("<events> (=>events) of <ClaimsJournalResponse> is a required parameter")
+
+    def __repr__(self):
+        return "<ClaimsJournalResponse>"
+
+    @property
+    def cursor(self) -> str:
+        """
+
+        :return: Идентификатор последнего изменения
+        :rtype: str
+        """
+        return self.body.get("cursor")
+
+    @property
+    def events(self) -> List['Event']:
+        """
+
+        :return: ???
+        :rtype: List['Event']
+        """
+        return [Event(operation_id=item.get("operation_id", None),
+                      claim_id=item.get("claim_id", None),
+                      change_type=item.get("change_type", None),
+                      updated_ts=item.get("updated_ts", None),
+                      new_status=item.get("new_status", None),
+                      new_price=item.get("new_price", None),
+                      new_currency=item.get("new_currency", None),
+                      resolution=item.get("resolution", None),
+                      revision=item.get("revision", None),
+                      client_id=item.get("client_id", None),
+                      ) for item in self.body.get("events")]
+
+
+class CutClaimResponse(YCBase):
+    """
+        ???
+        ???
+
+            :param str id: id заявки, полученный на этапе создания заявки *(Обязательный параметр)* (741cedf82cd464fa6fa16d87155c636)
+            :param Optional[str] status: Статус заявки *(Обязательный параметр)* (new)
 
                 * **new** - ???
                 * **estimating** - ???
@@ -1737,6 +1637,126 @@ class Event(YCBase):
                 * **cancelled_with_payment** - ???
                 * **cancelled_by_taxi** - ???
                 * **cancelled_with_items_on_hands** - ???
+
+            :param int version: Версия заявки из запроса *(Обязательный параметр)* (1)
+            :param Optional[str] taxi_order_id: taxi_order_id в такси (uuid) (33f95d1a73b84cbcaa06c9ad306dc459)
+    """
+
+    def __init__(self,
+                 id: str = None,
+                 status: Optional[str] = None,
+                 version: int = None,
+                 taxi_order_id: Optional[str] = None,
+                 ):
+        self.body = collections.defaultdict(dict)
+
+        if id is not None:
+            self.body["id"] = validate_fields('id', id, str)
+            self.body['id'] = validate_fields('id', id, str)
+        if id is None:
+            raise InputParamError("<id> (=>id) of <CutClaimResponse> is a required parameter")
+
+        if status is not None:
+            self.body["status"] = validate_fields('status', status, str)
+            self.body['status'] = validate_fields('status', status, Optional[str])
+        if status is None:
+            raise InputParamError("<status> (=>status) of <CutClaimResponse> is a required parameter")
+
+        if status not in ['new', 'estimating', 'estimating_failed', 'ready_for_approval', 'accepted', 'performer_lookup', 'performer_draft', 'performer_found', 'performer_not_found', 'pickup_arrived',
+                          'ready_for_pickup_confirmation', 'pickuped', 'delivery_arrived', 'ready_for_delivery_confirmation', 'pay_waiting', 'delivered', 'delivered_finish', 'returning',
+                          'return_arrived', 'ready_for_return_confirmation', 'returned', 'returned_finish', 'failed', 'cancelled', 'cancelled_with_payment', 'cancelled_by_taxi',
+                          'cancelled_with_items_on_hands']:
+            raise InputParamError(
+                "<status> of <CutClaimResponse> should be in <new, estimating, estimating_failed, ready_for_approval, accepted, performer_lookup, performer_draft, performer_found, performer_not_found, pickup_arrived, ready_for_pickup_confirmation, pickuped, delivery_arrived, ready_for_delivery_confirmation, pay_waiting, delivered, delivered_finish, returning, return_arrived, ready_for_return_confirmation, returned, returned_finish, failed, cancelled, cancelled_with_payment, cancelled_by_taxi, cancelled_with_items_on_hands>")
+
+        if version is not None:
+            self.body["version"] = validate_fields('version', version, int)
+            self.body['version'] = validate_fields('version', version, int)
+        if version is None:
+            raise InputParamError("<version> (=>version) of <CutClaimResponse> is a required parameter")
+
+        if taxi_order_id is not None:
+            self.body["taxi_order_id"] = validate_fields('taxi_order_id', taxi_order_id, str)
+            self.body['taxi_order_id'] = validate_fields('taxi_order_id', taxi_order_id, Optional[str])
+
+    def __repr__(self):
+        return "<CutClaimResponse>"
+
+    @property
+    def id(self) -> str:
+        """
+
+        :return: id заявки, полученный на этапе создания заявки
+        :rtype: str
+        """
+        return self.body.get("id")
+
+    @property
+    def status(self) -> Optional[str]:
+        """
+
+        :return: Статус заявки
+        :rtype: Optional[str]
+        """
+        return self.body.get("status")
+
+    @property
+    def version(self) -> int:
+        """
+
+        :return: Версия заявки из запроса
+        :rtype: int
+        """
+        return self.body.get("version")
+
+    @property
+    def taxi_order_id(self) -> Optional[str]:
+        """
+
+        :return: taxi_order_id в такси (uuid)
+        :rtype: Optional[str]
+        """
+        return self.body.get("taxi_order_id")
+
+
+class Event(YCBase):
+    """
+        ???
+        ???
+
+            :param int operation_id: ??? *(Обязательный параметр)* (1)
+            :param str claim_id: Идентификатор заявки claim_id *(Обязательный параметр)* (3b8d1af142664fde824626a7c19e2bd9)
+            :param str change_type: Тип изменения. Возможные значения status_changed — изменение статуса; price_changed — изменение цены *(Обязательный параметр)* (status_changed)
+            :param str updated_ts: Время события в формате ISO 8601 *(Обязательный параметр)* (2020-01-01T00:00:00+00:00)
+            :param str new_status: Статус заявки (new)
+
+                * **new** - новая заявка
+                * **estimating** - идет процесс оценки заявки (подбор типа автомобиля по параметрам груза и расчет стоимости)
+                * **estimating_failed** - не удалось оценить заявку. Причину можно увидеть в error_messages в ответе ручки /info
+                * **ready_for_approval** - заявка успешно оценена и ожидает подтверждения от клиента
+                * **accepted** - заявка подтверждена клиентом
+                * **performer_lookup** - заявка взята в обработку. Промежуточный статус перед созданием заказа
+                * **performer_draft** - идет поиск водителя
+                * **performer_found** - водитель найден и едет в точку А
+                * **performer_not_found** - не удалось найти водителя. Можно попробовать снова через некоторое время
+                * **pickup_arrived** - водитель приехал на точку А
+                * **ready_for_pickup_confirmation** - водитель ждет, когда отправитель назовет ему код подтверждения
+                * **pickuped** - водитель успешно забрал груз
+                * **delivery_arrived** - водитель приехал на точку Б
+                * **ready_for_delivery_confirmation** - водитель ждет, когда получатель назовет ему код подтверждения
+                * **pay_waiting** - заказ ожидает оплаты (актуально для оплаты при получении)
+                * **delivered** - водитель успешно доставил груз (ввел смс код). Код приходит после оплаты, если была оплата при получении.
+                * **delivered_finish** - заказ завершен
+                * **returning** -  водителю пришлось вернуть груз и он едет в точку возврата
+                * **return_arrived** - водитель приехал на точку возврата
+                * **ready_for_return_confirmation** - водитель в точке возврата ожидает, когда ему назовут код подтверждения
+                * **returned** - водитель успешно вернул груз (ввел смс код)
+                * **returned_finish** - заказ завершен
+                * **failed** - терминальный статус, не удалось начать выполнение заказа
+                * **cancelled** - заказ был отменен клиентом бесплатно
+                * **cancelled_with_payment** - заказ был отменен клиентом платно (водитель уже приехал)
+                * **cancelled_by_taxi** - водитель отменил заказ (до получения груза)
+                * **cancelled_with_items_on_hands** - клиент платно отменил заявку без необходимости возврата груза (заявка была создана с флагом optional_return)
 
             :param Optional[str] new_price: ??? (20.00)
             :param Optional[str] new_currency: ??? (RUB)
@@ -1839,7 +1859,7 @@ class Event(YCBase):
     def claim_id(self) -> str:
         """
 
-        :return: ???
+        :return: Идентификатор заявки claim_id
         :rtype: str
         """
         return self.body.get("claim_id")
@@ -1848,7 +1868,7 @@ class Event(YCBase):
     def change_type(self) -> str:
         """
 
-        :return: ???
+        :return: Тип изменения. Возможные значения status_changed — изменение статуса; price_changed — изменение цены
         :rtype: str
         """
         return self.body.get("change_type")
@@ -1857,7 +1877,7 @@ class Event(YCBase):
     def updated_ts(self) -> str:
         """
 
-        :return: ???
+        :return: Время события в формате ISO 8601
         :rtype: str
         """
         return self.body.get("updated_ts")
@@ -1866,7 +1886,7 @@ class Event(YCBase):
     def new_status(self) -> str:
         """
 
-        :return: ???
+        :return: Статус заявки
         :rtype: str
         """
         return self.body.get("new_status")
@@ -1893,7 +1913,7 @@ class Event(YCBase):
     def resolution(self) -> Optional[str]:
         """
 
-        :return: ???
+        :return: Резолюция терминального статуса
         :rtype: Optional[str]
         """
         return self.body.get("resolution")
@@ -1902,7 +1922,7 @@ class Event(YCBase):
     def revision(self) -> int:
         """
 
-        :return: ???
+        :return: Версия изменения заявки
         :rtype: int
         """
         return self.body.get("revision")
@@ -1915,6 +1935,145 @@ class Event(YCBase):
         :rtype: Optional[str]
         """
         return self.body.get("client_id")
+
+
+class MatchedCar(YCBase):
+    """
+        ???
+        Информация о подобранной машине
+
+            :param str taxi_class: Класс такси. Возможные значения express, cargo *(Обязательный параметр)* (express)
+            :param Optional[str] client_taxi_class: Подмененный тариф (e.g., cargo, хотя в cars cargocorp) (cargo)
+            :param Optional[str] cargo_type: Тип грузовика (lcv_m)
+            :param Optional[int] cargo_type_int: Тип грузовика (2 is equal to "lcv_m")
+            :param Optional[int] cargo_loaders: Требуемое число грузчиков
+            :param Optional[bool] door_to_door: Опция "от двери до двери" для тарифа "доставка"
+            :param Optional[List['int']] cargo_points: Значение cargo_points_field, фейковое требование длятарифа
+            :param Optional[str] cargo_points_field: Название требования для мультиточек (fake_middle_point_cargo)
+    """
+
+    def __init__(self,
+                 taxi_class: str = None,
+                 client_taxi_class: Optional[str] = None,
+                 cargo_type: Optional[str] = None,
+                 cargo_type_int: Optional[int] = None,
+                 cargo_loaders: Optional[int] = None,
+                 door_to_door: Optional[bool] = None,
+                 cargo_points: Optional[List['int']] = None,
+                 cargo_points_field: Optional[str] = None,
+                 ):
+        self.body = collections.defaultdict(dict)
+
+        if taxi_class is not None:
+            self.body["taxi_class"] = validate_fields('taxi_class', taxi_class, str)
+            self.body['taxi_class'] = validate_fields('taxi_class', taxi_class, str)
+        if taxi_class is None:
+            raise InputParamError("<taxi_class> (=>taxi_class) of <MatchedCar> is a required parameter")
+
+        if client_taxi_class is not None:
+            self.body["client_taxi_class"] = validate_fields('client_taxi_class', client_taxi_class, str)
+            self.body['client_taxi_class'] = validate_fields('client_taxi_class', client_taxi_class, Optional[str])
+
+        if cargo_type is not None:
+            self.body["cargo_type"] = validate_fields('cargo_type', cargo_type, str)
+            self.body['cargo_type'] = validate_fields('cargo_type', cargo_type, Optional[str])
+
+        if cargo_type_int is not None:
+            self.body["cargo_type_int"] = validate_fields('cargo_type_int', cargo_type_int, int)
+            self.body['cargo_type_int'] = validate_fields('cargo_type_int', cargo_type_int, Optional[int])
+
+        if cargo_loaders is not None:
+            self.body["cargo_loaders"] = validate_fields('cargo_loaders', cargo_loaders, int)
+            self.body['cargo_loaders'] = validate_fields('cargo_loaders', cargo_loaders, Optional[int])
+        if cargo_loaders and cargo_loaders < 0:
+            raise InputParamError("<cargo_loaders> of <MatchedCar> should be more than 0")
+
+        if door_to_door is not None:
+            self.body["door_to_door"] = validate_fields('door_to_door', door_to_door, bool)
+            self.body['door_to_door'] = validate_fields('door_to_door', door_to_door, Optional[bool])
+
+        if cargo_points is not None:
+            self.body["cargo_points"] = validate_fields('cargo_points', cargo_points, List['int'])
+            self.body['cargo_points'] = validate_fields('cargo_points', cargo_points, Optional[List['int']])
+
+        if cargo_points_field is not None:
+            self.body["cargo_points_field"] = validate_fields('cargo_points_field', cargo_points_field, str)
+            self.body['cargo_points_field'] = validate_fields('cargo_points_field', cargo_points_field, Optional[str])
+
+    def __repr__(self):
+        return "<MatchedCar>"
+
+    @property
+    def taxi_class(self) -> str:
+        """
+
+        :return: Класс такси. Возможные значения express, cargo
+        :rtype: str
+        """
+        return self.body.get("taxi_class")
+
+    @property
+    def client_taxi_class(self) -> Optional[str]:
+        """
+
+        :return: Подмененный тариф (e.g., cargo, хотя в cars cargocorp)
+        :rtype: Optional[str]
+        """
+        return self.body.get("client_taxi_class")
+
+    @property
+    def cargo_type(self) -> Optional[str]:
+        """
+
+        :return: Тип грузовика
+        :rtype: Optional[str]
+        """
+        return self.body.get("cargo_type")
+
+    @property
+    def cargo_type_int(self) -> Optional[int]:
+        """
+
+        :return: Тип грузовика
+        :rtype: Optional[int]
+        """
+        return self.body.get("cargo_type_int")
+
+    @property
+    def cargo_loaders(self) -> Optional[int]:
+        """
+
+        :return: Требуемое число грузчиков
+        :rtype: Optional[int]
+        """
+        return self.body.get("cargo_loaders")
+
+    @property
+    def door_to_door(self) -> Optional[bool]:
+        """
+
+        :return: Опция "от двери до двери" для тарифа "доставка"
+        :rtype: Optional[bool]
+        """
+        return self.body.get("door_to_door")
+
+    @property
+    def cargo_points(self) -> Optional[List['int']]:
+        """
+
+        :return: Значение cargo_points_field, фейковое требование длятарифа
+        :rtype: Optional[List['int']]
+        """
+        return [item for item in self.body.get("cargo_points")]
+
+    @property
+    def cargo_points_field(self) -> Optional[str]:
+        """
+
+        :return: Название требования для мультиточек
+        :rtype: Optional[str]
+        """
+        return self.body.get("cargo_points_field")
 
 
 class HumanErrorMessage(YCBase):
@@ -1951,7 +2110,7 @@ class HumanErrorMessage(YCBase):
     def code(self) -> str:
         """
 
-        :return: ???
+        :return: Машино-понятный код ошибки
         :rtype: str
         """
         return self.body.get("code")
@@ -1960,25 +2119,10 @@ class HumanErrorMessage(YCBase):
     def message(self) -> str:
         """
 
-        :return: ???
+        :return: Человеко-понятный локализованный текст ошибки
         :rtype: str
         """
         return self.body.get("message")
-
-
-class ClaimRequirement(YCBase):
-    """
-        ???
-        Дополнительные требования к заявке
-
-    """
-
-    def __init__(self,
-                 ):
-        self.body = collections.defaultdict(dict)
-
-    def __repr__(self):
-        return "<ClaimRequirement>"
 
 
 class CargoPointMP(YCBase):
@@ -2009,17 +2153,25 @@ class CargoPointMP(YCBase):
             :param Optional[bool] skip_confirmation: Пропускать подтверждение через SMS в данной точке
             :param str type: Тип точки *(Обязательный параметр)* (source)
 
-                * **source** - ???
-                * **destination** - ???
-                * **return** - ???
+                * **source** — точка получения отправления (ровно одна)
+                * **destination** — точка доставки отправления
+                * **return** — точка возврата части товаров, опциональная (не более одной)
 
             :param str payment_on_delivery_client_order_id: id заказа *(Обязательный параметр)* (100)
-            :param Optional[str] payment_on_delivery_cost: Decimal(19, 4) *(Обязательный параметр)* (12.50)
+            :param str payment_on_delivery_cost: Decimal(19, 4) *(Обязательный параметр)* (12.50)
             :param Optional[str] payment_on_delivery_customer_full_name: Для юридического лица — название организации, для ИП и физического лица — ФИО (Morty)
             :param Optional[str] payment_on_delivery_customer_inn: ИНН пользователя (10 или 12 цифр) (3664069397)
             :param Optional[str] payment_on_delivery_customer_email: Электронная почта пользователя. Если не указано, будет использована почта получателя из точки (morty@yandex.ru)
             :param Optional[str] payment_on_delivery_customer_phone: Телефон пользователя. Если не указано, будет использован телефон получателя из точки (79000000000)
             :param Optional[int] payment_on_delivery_tax_system_code: Система налогообложения магазина (1)
+
+                * **1** - Общая система налогообложения
+                * **2** - Упрощенная (УСН, доходы)
+                * **3** - Упрощенная (УСН, доходы минус расходы)
+                * **4** - Единый налог на вмененный доход (ЕНВД)
+                * **5** - Единый сельскохозяйственный налог (ЕСН)
+                * **6** - Патентная система налогообложения
+
             :param Optional[str] payment_on_delivery_currency: Трехзначный код валюты, в которой ведется расчет (RUB)
             :param Optional[str] external_order_id: Номер заказа клиента (100)
             :param Optional[str] pickup_code: Код выдачи товара (ПВЗ) (8934)
@@ -2049,7 +2201,7 @@ class CargoPointMP(YCBase):
                  skip_confirmation: Optional[bool] = None,
                  type: str = None,
                  payment_on_delivery_client_order_id: str = None,
-                 payment_on_delivery_cost: Optional[str] = None,
+                 payment_on_delivery_cost: str = None,
                  payment_on_delivery_customer_full_name: Optional[str] = None,
                  payment_on_delivery_customer_inn: Optional[str] = None,
                  payment_on_delivery_customer_email: Optional[str] = None,
@@ -2178,7 +2330,7 @@ class CargoPointMP(YCBase):
 
         if payment_on_delivery_cost is not None:
             self.body["payment_on_delivery"]["cost"] = validate_fields('payment_on_delivery_cost', payment_on_delivery_cost, str)
-            self.body['payment_on_delivery_cost'] = validate_fields('payment_on_delivery_cost', payment_on_delivery_cost, Optional[str])
+            self.body['payment_on_delivery_cost'] = validate_fields('payment_on_delivery_cost', payment_on_delivery_cost, str)
         if payment_on_delivery_cost is None:
             raise InputParamError("<payment_on_delivery_cost> (payment_on_delivery=>cost) of <CargoPointMP> is a required parameter")
 
@@ -2229,7 +2381,7 @@ class CargoPointMP(YCBase):
     def point_id(self) -> Optional[int]:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Целочисленный идентификатор точки
         :rtype: Optional[int]
         """
         return self.body.get("point_id")
@@ -2238,7 +2390,7 @@ class CargoPointMP(YCBase):
     def visit_order(self) -> Optional[int]:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Порядок посещения точки
         :rtype: Optional[int]
         """
         return self.body.get("visit_order")
@@ -2247,7 +2399,7 @@ class CargoPointMP(YCBase):
     def contact_name(self) -> str:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Имя контактного лица
         :rtype: str
         """
         return self.body.get("contact_name")
@@ -2256,7 +2408,7 @@ class CargoPointMP(YCBase):
     def contact_phone(self) -> str:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Телефон контактного лица
         :rtype: str
         """
         return self.body.get("contact_phone")
@@ -2265,7 +2417,7 @@ class CargoPointMP(YCBase):
     def contact_email(self) -> Optional[str]:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Email — обязательный параметр для точек source и return
         :rtype: Optional[str]
         """
         return self.body.get("contact_email")
@@ -2274,7 +2426,7 @@ class CargoPointMP(YCBase):
     def address_fullname(self) -> str:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Полное название с указанием города (Москва, Садовническая набережная, 82с2, БЦ Аврора)
         :rtype: str
         """
         return self.body.get("address_fullname")
@@ -2283,7 +2435,7 @@ class CargoPointMP(YCBase):
     def address_shortname(self) -> Optional[str]:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Адрес в пределах города, как показывается на Таксометре (Садовническая набережная, 82с2, БЦ Аврора)
         :rtype: Optional[str]
         """
         return self.body.get("address_shortname")
@@ -2292,7 +2444,7 @@ class CargoPointMP(YCBase):
     def address_coordinates(self) -> List['int']:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Массив из двух вещественных чисел [долгота, широта]. Порядок важен!
         :rtype: List['int']
         """
         return [item for item in self.body.get("address_coordinates")]
@@ -2301,7 +2453,7 @@ class CargoPointMP(YCBase):
     def address_country(self) -> Optional[str]:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Страна
         :rtype: Optional[str]
         """
         return self.body.get("address_country")
@@ -2310,7 +2462,7 @@ class CargoPointMP(YCBase):
     def address_city(self) -> Optional[str]:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Город
         :rtype: Optional[str]
         """
         return self.body.get("address_city")
@@ -2319,7 +2471,7 @@ class CargoPointMP(YCBase):
     def address_street(self) -> Optional[str]:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Улица
         :rtype: Optional[str]
         """
         return self.body.get("address_street")
@@ -2328,7 +2480,7 @@ class CargoPointMP(YCBase):
     def address_building(self) -> Optional[str]:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Строение
         :rtype: Optional[str]
         """
         return self.body.get("address_building")
@@ -2337,7 +2489,7 @@ class CargoPointMP(YCBase):
     def address_porch(self) -> Optional[str]:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Подъезд (может быть A)
         :rtype: Optional[str]
         """
         return self.body.get("address_porch")
@@ -2346,7 +2498,7 @@ class CargoPointMP(YCBase):
     def address_floor(self) -> Optional[int]:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Этаж (DEPRECATED)
         :rtype: Optional[int]
         """
         return self.body.get("address_floor")
@@ -2355,7 +2507,7 @@ class CargoPointMP(YCBase):
     def address_flat(self) -> Optional[int]:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Квартира (DEPRECATED)
         :rtype: Optional[int]
         """
         return self.body.get("address_flat")
@@ -2364,7 +2516,7 @@ class CargoPointMP(YCBase):
     def address_sfloor(self) -> Optional[str]:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Этаж
         :rtype: Optional[str]
         """
         return self.body.get("address_sfloor")
@@ -2373,7 +2525,7 @@ class CargoPointMP(YCBase):
     def address_sflat(self) -> Optional[str]:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Квартира
         :rtype: Optional[str]
         """
         return self.body.get("address_sflat")
@@ -2382,7 +2534,7 @@ class CargoPointMP(YCBase):
     def address_door_code(self) -> Optional[str]:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Код домофона
         :rtype: Optional[str]
         """
         return self.body.get("address_door_code")
@@ -2391,7 +2543,7 @@ class CargoPointMP(YCBase):
     def address_comment(self) -> Optional[str]:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Комментарий для доставщика
         :rtype: Optional[str]
         """
         return self.body.get("address_comment")
@@ -2400,7 +2552,7 @@ class CargoPointMP(YCBase):
     def address_uri(self) -> Optional[str]:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Карточный uri геообъекта
         :rtype: Optional[str]
         """
         return self.body.get("address_uri")
@@ -2409,7 +2561,7 @@ class CargoPointMP(YCBase):
     def skip_confirmation(self) -> Optional[bool]:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Пропускать подтверждение через SMS в данной точке
         :rtype: Optional[bool]
         """
         return self.body.get("skip_confirmation")
@@ -2418,7 +2570,12 @@ class CargoPointMP(YCBase):
     def type(self) -> str:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Тип точки
+
+            * **source** — точка получения отправления (ровно одна)
+            * **destination** — точка доставки отправления
+            * **return** — точка возврата части товаров, опциональная (не более одной)
+
         :rtype: str
         """
         return self.body.get("type")
@@ -2427,17 +2584,17 @@ class CargoPointMP(YCBase):
     def payment_on_delivery_client_order_id(self) -> str:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: id заказа
         :rtype: str
         """
         return self.body.get("payment_on_delivery_client_order_id")
 
     @property
-    def payment_on_delivery_cost(self) -> Optional[str]:
+    def payment_on_delivery_cost(self) -> str:
         """
 
-        :return: Описание точки в заявке с мультиточками
-        :rtype: Optional[str]
+        :return: Decimal(19, 4)
+        :rtype: str
         """
         return self.body.get("payment_on_delivery_cost")
 
@@ -2445,7 +2602,7 @@ class CargoPointMP(YCBase):
     def payment_on_delivery_customer_full_name(self) -> Optional[str]:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Для юридического лица — название организации, для ИП и физического лица — ФИО
         :rtype: Optional[str]
         """
         return self.body.get("payment_on_delivery_customer_full_name")
@@ -2454,7 +2611,7 @@ class CargoPointMP(YCBase):
     def payment_on_delivery_customer_inn(self) -> Optional[str]:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: ИНН пользователя (10 или 12 цифр)
         :rtype: Optional[str]
         """
         return self.body.get("payment_on_delivery_customer_inn")
@@ -2463,7 +2620,7 @@ class CargoPointMP(YCBase):
     def payment_on_delivery_customer_email(self) -> Optional[str]:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Электронная почта пользователя. Если не указано, будет использована почта получателя из точки
         :rtype: Optional[str]
         """
         return self.body.get("payment_on_delivery_customer_email")
@@ -2472,7 +2629,7 @@ class CargoPointMP(YCBase):
     def payment_on_delivery_customer_phone(self) -> Optional[str]:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Телефон пользователя. Если не указано, будет использован телефон получателя из точки
         :rtype: Optional[str]
         """
         return self.body.get("payment_on_delivery_customer_phone")
@@ -2481,7 +2638,15 @@ class CargoPointMP(YCBase):
     def payment_on_delivery_tax_system_code(self) -> Optional[int]:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Система налогообложения магазина
+
+            * **1** - Общая система налогообложения
+            * **2** - Упрощенная (УСН, доходы)
+            * **3** - Упрощенная (УСН, доходы минус расходы)
+            * **4** - Единый налог на вмененный доход (ЕНВД)
+            * **5** - Единый сельскохозяйственный налог (ЕСН)
+            * **6** - Патентная система налогообложения
+
         :rtype: Optional[int]
         """
         return self.body.get("payment_on_delivery_tax_system_code")
@@ -2490,7 +2655,7 @@ class CargoPointMP(YCBase):
     def payment_on_delivery_currency(self) -> Optional[str]:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Трехзначный код валюты, в которой ведется расчет
         :rtype: Optional[str]
         """
         return self.body.get("payment_on_delivery_currency")
@@ -2499,7 +2664,7 @@ class CargoPointMP(YCBase):
     def external_order_id(self) -> Optional[str]:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Номер заказа клиента
         :rtype: Optional[str]
         """
         return self.body.get("external_order_id")
@@ -2508,10 +2673,111 @@ class CargoPointMP(YCBase):
     def pickup_code(self) -> Optional[str]:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Код выдачи товара (ПВЗ)
         :rtype: Optional[str]
         """
         return self.body.get("pickup_code")
+
+
+class ClaimWarning(YCBase):
+    """
+        ???
+        ???
+
+            :param str source: Источник предупреждения (ex. client_requirements) *(Обязательный параметр)* (client_requirements)
+
+                * **client_requirements** - Требования клиента
+                * **taxi_requirements** - Требования такси
+
+            :param str code: Тип предупреждения (ex. not_fit_in_car) *(Обязательный параметр)* (not_fit_in_car)
+
+                * **not_fit_in_car** - Товар не помещается в заявленное транспортное средство
+                * **requirement_unavailable** - Некоторые из пожеланий недоступны на выбранном тарифе
+
+            :param Optional[str] message: Локализованная информация с причиной предупреждения (Предупреждение)
+    """
+
+    def __init__(self,
+                 source: str = None,
+                 code: str = None,
+                 message: Optional[str] = None,
+                 ):
+        self.body = collections.defaultdict(dict)
+
+        if source is not None:
+            self.body["source"] = validate_fields('source', source, str)
+            self.body['source'] = validate_fields('source', source, str)
+        if source is None:
+            raise InputParamError("<source> (=>source) of <ClaimWarning> is a required parameter")
+
+        if source not in ['client_requirements', 'taxi_requirements']:
+            raise InputParamError("<source> of <ClaimWarning> should be in <client_requirements, taxi_requirements>")
+
+        if code is not None:
+            self.body["code"] = validate_fields('code', code, str)
+            self.body['code'] = validate_fields('code', code, str)
+        if code is None:
+            raise InputParamError("<code> (=>code) of <ClaimWarning> is a required parameter")
+
+        if code not in ['not_fit_in_car', 'requirement_unavailable']:
+            raise InputParamError("<code> of <ClaimWarning> should be in <not_fit_in_car, requirement_unavailable>")
+
+        if message is not None:
+            self.body["message"] = validate_fields('message', message, str)
+            self.body['message'] = validate_fields('message', message, Optional[str])
+
+    def __repr__(self):
+        return "<ClaimWarning>"
+
+    @property
+    def source(self) -> str:
+        """
+
+        :return: Источник предупреждения (ex. client_requirements)
+
+            * **client_requirements** - Требования клиента
+            * **taxi_requirements** - Требования такси
+
+        :rtype: str
+        """
+        return self.body.get("source")
+
+    @property
+    def code(self) -> str:
+        """
+
+        :return: Тип предупреждения (ex. not_fit_in_car)
+
+            * **not_fit_in_car** - Товар не помещается в заявленное транспортное средство
+            * **requirement_unavailable** - Некоторые из пожеланий недоступны на выбранном тарифе
+
+        :rtype: str
+        """
+        return self.body.get("code")
+
+    @property
+    def message(self) -> Optional[str]:
+        """
+
+        :return: Локализованная информация с причиной предупреждения
+        :rtype: Optional[str]
+        """
+        return self.body.get("message")
+
+
+class ClaimRequirement(YCBase):
+    """
+        ???
+        Дополнительные требования к заявке
+
+    """
+
+    def __init__(self,
+                 ):
+        self.body = collections.defaultdict(dict)
+
+    def __repr__(self):
+        return "<ClaimRequirement>"
 
 
 class ResponseCargoPointMP(YCBase):
@@ -2547,10 +2813,10 @@ class ResponseCargoPointMP(YCBase):
             :param int visit_order: Порядок посещения точки *(Обязательный параметр)* (1)
             :param str visit_status: Статус посещения данной точки pending - точка еще не посещена arrived - водитель прибыл на точку visited - водитель передал/забрал груз на точке skipped - точка пропущена (в случае возврата, когда клиент не смог принять груз) *(Обязательный параметр)* (pending)
 
-                * **pending** - ???
-                * **arrived** - ???
-                * **visited** - ???
-                * **skipped** - ???
+                * **pending** - ждет исполнения
+                * **arrived** - курьер прибыл на точку, но еще не передал/забрал товар
+                * **visited** - передали/забрали товар из точки
+                * **skipped** - возврат (то есть клиент в этой точке не принял посылку и ее повезут в точку возврата. не значит, что товар уже вернули на склад)
 
             :param Optional[bool] skip_confirmation: Пропускать подтверждение через SMS в данной точке
             :param str payment_on_delivery_client_order_id: id заказа *(Обязательный параметр)* (100)
@@ -2777,7 +3043,7 @@ class ResponseCargoPointMP(YCBase):
     def id(self) -> int:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Целочисленный идентификатор точки
         :rtype: int
         """
         return self.body.get("id")
@@ -2786,7 +3052,7 @@ class ResponseCargoPointMP(YCBase):
     def contact_name(self) -> str:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Имя контактного лица
         :rtype: str
         """
         return self.body.get("contact_name")
@@ -2795,7 +3061,7 @@ class ResponseCargoPointMP(YCBase):
     def contact_phone(self) -> str:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Телефон контактного лица
         :rtype: str
         """
         return self.body.get("contact_phone")
@@ -2804,7 +3070,7 @@ class ResponseCargoPointMP(YCBase):
     def contact_email(self) -> Optional[str]:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Email — обязательный параметр для точек source и return
         :rtype: Optional[str]
         """
         return self.body.get("contact_email")
@@ -2813,7 +3079,7 @@ class ResponseCargoPointMP(YCBase):
     def address_fullname(self) -> str:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Полное название с указанием города (Москва, Садовническая набережная, 82с2, БЦ Аврора)
         :rtype: str
         """
         return self.body.get("address_fullname")
@@ -2822,7 +3088,7 @@ class ResponseCargoPointMP(YCBase):
     def address_shortname(self) -> Optional[str]:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Адрес в пределах города, как показывается на Таксометре (Садовническая набережная, 82с2, БЦ Аврора)
         :rtype: Optional[str]
         """
         return self.body.get("address_shortname")
@@ -2831,7 +3097,7 @@ class ResponseCargoPointMP(YCBase):
     def address_coordinates(self) -> List['int']:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Массив из двух вещественных чисел [долгота, широта]. Порядок важен!
         :rtype: List['int']
         """
         return [item for item in self.body.get("address_coordinates")]
@@ -2840,7 +3106,7 @@ class ResponseCargoPointMP(YCBase):
     def address_country(self) -> Optional[str]:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Страна
         :rtype: Optional[str]
         """
         return self.body.get("address_country")
@@ -2849,7 +3115,7 @@ class ResponseCargoPointMP(YCBase):
     def address_city(self) -> Optional[str]:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Город
         :rtype: Optional[str]
         """
         return self.body.get("address_city")
@@ -2858,7 +3124,7 @@ class ResponseCargoPointMP(YCBase):
     def address_street(self) -> Optional[str]:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Улица
         :rtype: Optional[str]
         """
         return self.body.get("address_street")
@@ -2867,7 +3133,7 @@ class ResponseCargoPointMP(YCBase):
     def address_building(self) -> Optional[str]:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Строение
         :rtype: Optional[str]
         """
         return self.body.get("address_building")
@@ -2876,7 +3142,7 @@ class ResponseCargoPointMP(YCBase):
     def address_porch(self) -> Optional[str]:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Подъезд (может быть A)
         :rtype: Optional[str]
         """
         return self.body.get("address_porch")
@@ -2885,7 +3151,7 @@ class ResponseCargoPointMP(YCBase):
     def address_floor(self) -> Optional[int]:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Этаж (DEPRECATED)
         :rtype: Optional[int]
         """
         return self.body.get("address_floor")
@@ -2894,7 +3160,7 @@ class ResponseCargoPointMP(YCBase):
     def address_flat(self) -> Optional[int]:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Квартира (DEPRECATED)
         :rtype: Optional[int]
         """
         return self.body.get("address_flat")
@@ -2903,7 +3169,7 @@ class ResponseCargoPointMP(YCBase):
     def address_sfloor(self) -> Optional[str]:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Этаж
         :rtype: Optional[str]
         """
         return self.body.get("address_sfloor")
@@ -2912,7 +3178,7 @@ class ResponseCargoPointMP(YCBase):
     def address_sflat(self) -> Optional[str]:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Квартира
         :rtype: Optional[str]
         """
         return self.body.get("address_sflat")
@@ -2921,7 +3187,7 @@ class ResponseCargoPointMP(YCBase):
     def address_door_code(self) -> Optional[str]:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Код домофона
         :rtype: Optional[str]
         """
         return self.body.get("address_door_code")
@@ -2930,7 +3196,7 @@ class ResponseCargoPointMP(YCBase):
     def address_comment(self) -> Optional[str]:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Комментарий для доставщика
         :rtype: Optional[str]
         """
         return self.body.get("address_comment")
@@ -2939,7 +3205,7 @@ class ResponseCargoPointMP(YCBase):
     def address_uri(self) -> Optional[str]:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Карточный uri геообъекта
         :rtype: Optional[str]
         """
         return self.body.get("address_uri")
@@ -2948,7 +3214,7 @@ class ResponseCargoPointMP(YCBase):
     def type(self) -> str:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Тип точки
         :rtype: str
         """
         return self.body.get("type")
@@ -2957,7 +3223,7 @@ class ResponseCargoPointMP(YCBase):
     def visit_order(self) -> int:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Порядок посещения точки
         :rtype: int
         """
         return self.body.get("visit_order")
@@ -2966,7 +3232,13 @@ class ResponseCargoPointMP(YCBase):
     def visit_status(self) -> str:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Статус посещения данной точки pending - точка еще не посещена arrived - водитель прибыл на точку visited - водитель передал/забрал груз на точке skipped - точка пропущена (в случае возврата, когда клиент не смог принять груз)
+
+            * **pending** - ждет исполнения
+            * **arrived** - курьер прибыл на точку, но еще не передал/забрал товар
+            * **visited** - передали/забрали товар из точки
+            * **skipped** - возврат (то есть клиент в этой точке не принял посылку и ее повезут в точку возврата. не значит, что товар уже вернули на склад)
+
         :rtype: str
         """
         return self.body.get("visit_status")
@@ -2975,7 +3247,7 @@ class ResponseCargoPointMP(YCBase):
     def skip_confirmation(self) -> Optional[bool]:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Пропускать подтверждение через SMS в данной точке
         :rtype: Optional[bool]
         """
         return self.body.get("skip_confirmation")
@@ -2984,7 +3256,7 @@ class ResponseCargoPointMP(YCBase):
     def payment_on_delivery_client_order_id(self) -> str:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: id заказа
         :rtype: str
         """
         return self.body.get("payment_on_delivery_client_order_id")
@@ -2993,7 +3265,7 @@ class ResponseCargoPointMP(YCBase):
     def payment_on_delivery_is_paid(self) -> bool:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Оплачен ли заказ
         :rtype: bool
         """
         return self.body.get("payment_on_delivery_is_paid")
@@ -3002,7 +3274,7 @@ class ResponseCargoPointMP(YCBase):
     def payment_on_delivery_cost(self) -> str:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Decimal(19, 4)
         :rtype: str
         """
         return self.body.get("payment_on_delivery_cost")
@@ -3011,7 +3283,7 @@ class ResponseCargoPointMP(YCBase):
     def payment_on_delivery_customer_full_name(self) -> Optional[str]:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Для юридического лица — название организации, для ИП и физического лица — ФИО
         :rtype: Optional[str]
         """
         return self.body.get("payment_on_delivery_customer_full_name")
@@ -3020,7 +3292,7 @@ class ResponseCargoPointMP(YCBase):
     def payment_on_delivery_customer_inn(self) -> Optional[str]:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: ИНН пользователя (10 или 12 цифр)
         :rtype: Optional[str]
         """
         return self.body.get("payment_on_delivery_customer_inn")
@@ -3029,7 +3301,7 @@ class ResponseCargoPointMP(YCBase):
     def payment_on_delivery_customer_email(self) -> Optional[str]:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Электронная почта пользователя. Если не указано, будет использована почта получателя из точки
         :rtype: Optional[str]
         """
         return self.body.get("payment_on_delivery_customer_email")
@@ -3038,7 +3310,7 @@ class ResponseCargoPointMP(YCBase):
     def payment_on_delivery_customer_phone(self) -> Optional[str]:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Телефон пользователя. Если не указано, будет использован телефон получателя из точки
         :rtype: Optional[str]
         """
         return self.body.get("payment_on_delivery_customer_phone")
@@ -3047,7 +3319,15 @@ class ResponseCargoPointMP(YCBase):
     def payment_on_delivery_tax_system_code(self) -> Optional[int]:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Система налогообложения магазина
+
+            * **1** - Общая система налогообложения
+            * **2** - Упрощенная (УСН, доходы)
+            * **3** - Упрощенная (УСН, доходы минус расходы)
+            * **4** - Единый налог на вмененный доход (ЕНВД)
+            * **5** - Единый сельскохозяйственный налог (ЕСН)
+            * **6** - Патентная система налогообложения
+
         :rtype: Optional[int]
         """
         return self.body.get("payment_on_delivery_tax_system_code")
@@ -3056,7 +3336,7 @@ class ResponseCargoPointMP(YCBase):
     def external_order_id(self) -> Optional[str]:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Номер заказа клиента
         :rtype: Optional[str]
         """
         return self.body.get("external_order_id")
@@ -3065,88 +3345,10 @@ class ResponseCargoPointMP(YCBase):
     def pickup_code(self) -> Optional[str]:
         """
 
-        :return: Описание точки в заявке с мультиточками
+        :return: Код выдачи товара (ПВЗ)
         :rtype: Optional[str]
         """
         return self.body.get("pickup_code")
-
-
-class ClaimWarning(YCBase):
-    """
-        ???
-        ???
-
-            :param str source: Источник предупреждения (ex. client_requirements) *(Обязательный параметр)* (client_requirements)
-
-                * **client_requirements** - ???
-                * **taxi_requirements** - ???
-
-            :param str code: Тип предупреждения (ex. not_fit_in_car) *(Обязательный параметр)* (not_fit_in_car)
-
-                * **not_fit_in_car** - ???
-                * **requirement_unavailable** - ???
-
-            :param Optional[str] message: Локализованная информация с причиной предупреждения (Предупреждение)
-    """
-
-    def __init__(self,
-                 source: str = None,
-                 code: str = None,
-                 message: Optional[str] = None,
-                 ):
-        self.body = collections.defaultdict(dict)
-
-        if source is not None:
-            self.body["source"] = validate_fields('source', source, str)
-            self.body['source'] = validate_fields('source', source, str)
-        if source is None:
-            raise InputParamError("<source> (=>source) of <ClaimWarning> is a required parameter")
-
-        if source not in ['client_requirements', 'taxi_requirements']:
-            raise InputParamError("<source> of <ClaimWarning> should be in <client_requirements, taxi_requirements>")
-
-        if code is not None:
-            self.body["code"] = validate_fields('code', code, str)
-            self.body['code'] = validate_fields('code', code, str)
-        if code is None:
-            raise InputParamError("<code> (=>code) of <ClaimWarning> is a required parameter")
-
-        if code not in ['not_fit_in_car', 'requirement_unavailable']:
-            raise InputParamError("<code> of <ClaimWarning> should be in <not_fit_in_car, requirement_unavailable>")
-
-        if message is not None:
-            self.body["message"] = validate_fields('message', message, str)
-            self.body['message'] = validate_fields('message', message, Optional[str])
-
-    def __repr__(self):
-        return "<ClaimWarning>"
-
-    @property
-    def source(self) -> str:
-        """
-
-        :return: ???
-        :rtype: str
-        """
-        return self.body.get("source")
-
-    @property
-    def code(self) -> str:
-        """
-
-        :return: ???
-        :rtype: str
-        """
-        return self.body.get("code")
-
-    @property
-    def message(self) -> Optional[str]:
-        """
-
-        :return: ???
-        :rtype: Optional[str]
-        """
-        return self.body.get("message")
 
 
 class CargoItemMP(YCBase):
@@ -3166,8 +3368,45 @@ class CargoItemMP(YCBase):
             :param str cost_currency: Валюта цены за штуку в формате ISO 4217 (используется в оплате при получении товара) *(Обязательный параметр)* (RUB)
             :param int quantity: Количество указанного товара *(Обязательный параметр)* (1)
             :param int fiscalization_vat_code: Ставка НДС *(Обязательный параметр)* (1)
+
+                * **1** - Без НДС
+                * **2** - НДС по ставке 0%
+                * **3** - НДС по ставке 10%
+                * **4** - НДС чека по ставке 20%
+                * **5**	- НДС чека по расчетной ставке 10/110
+                * **6** - НДС чека по расчетной ставке 20/120
+
             :param str fiscalization_payment_subject: Признак предмета расчета *(Обязательный параметр)* (commodity)
+
+                * **commodity** - Товар
+                * **excise** - Подакцизный товар
+                * **job** - Работа
+                * **service** - Услуга
+                * **gambling_bet** - Ставка в азартной игре
+                * **gambling_prize** - Выигрыш в азартной игре
+                * **lottery** - Лотерейный билет
+                * **lottery_prize** - Выигрыш в лотерею
+                * **intellectual_activity** - Результаты интеллектуальной деятельности
+                * **payment** - Платеж
+                * **agent_commission** - Агентское вознаграждение
+                * **property_right** - Имущественные права
+                * **non_operating_gain** - Внереализационный доход
+                * **insurance_premium** - Страховой сбор
+                * **sales_tax** - Торговый сбор
+                * **resort_fee** - Курортный сбор
+                * **composite** - Несколько вариантов
+                * **another** - Другое
+
             :param str fiscalization_payment_mode: Признак способа расчета *(Обязательный параметр)* (full_payment)
+
+                * **full_prepayment** - Полная предоплата
+                * **partial_prepayment** - Частичная предоплата
+                * **advance** - Аванс
+                * **full_payment** - Полный расчет
+                * **partial_payment** - Частичный расчет и кредит
+                * **credit** - Кредит
+                * **credit_payment** - Выплата по кредиту
+
             :param Optional[str] fiscalization_product_code: Код товара
             :param Optional[str] fiscalization_country_of_origin_code: Код страны происхождения товара (RU)
             :param Optional[str] fiscalization_customs_declaration_number: Номер таможенной декларации (10702030/260917/0080123)
@@ -3313,7 +3552,7 @@ class CargoItemMP(YCBase):
     def extra_id(self) -> Optional[str]:
         """
 
-        :return: ???
+        :return: Краткий уникальный идентификатор item'а (в рамках заявки)
         :rtype: Optional[str]
         """
         return self.body.get("extra_id")
@@ -3322,7 +3561,7 @@ class CargoItemMP(YCBase):
     def pickup_point(self) -> int:
         """
 
-        :return: ???
+        :return: id точки, откуда нужно забрать товар (отличается от id в заявке)
         :rtype: int
         """
         return self.body.get("pickup_point")
@@ -3331,7 +3570,7 @@ class CargoItemMP(YCBase):
     def droppof_point(self) -> int:
         """
 
-        :return: ???
+        :return: id точки, куда нужно доставить товар (отличается от id в заявке)
         :rtype: int
         """
         return self.body.get("droppof_point")
@@ -3340,7 +3579,7 @@ class CargoItemMP(YCBase):
     def title(self) -> str:
         """
 
-        :return: ???
+        :return: Наименование единицы товара
         :rtype: str
         """
         return self.body.get("title")
@@ -3349,7 +3588,7 @@ class CargoItemMP(YCBase):
     def size_length(self) -> int:
         """
 
-        :return: ???
+        :return: Размер в метрах
         :rtype: int
         """
         return self.body.get("size_length")
@@ -3358,7 +3597,7 @@ class CargoItemMP(YCBase):
     def size_width(self) -> int:
         """
 
-        :return: ???
+        :return: Размер в метрах
         :rtype: int
         """
         return self.body.get("size_width")
@@ -3367,7 +3606,7 @@ class CargoItemMP(YCBase):
     def size_height(self) -> int:
         """
 
-        :return: ???
+        :return: Размер в метрах
         :rtype: int
         """
         return self.body.get("size_height")
@@ -3376,7 +3615,7 @@ class CargoItemMP(YCBase):
     def weight(self) -> Optional[int]:
         """
 
-        :return: ???
+        :return: Вес единицы товара в кг.
         :rtype: Optional[int]
         """
         return self.body.get("weight")
@@ -3385,7 +3624,7 @@ class CargoItemMP(YCBase):
     def cost_value(self) -> str:
         """
 
-        :return: ???
+        :return: Цена за штуку в валюте cost_currency
         :rtype: str
         """
         return self.body.get("cost_value")
@@ -3394,7 +3633,7 @@ class CargoItemMP(YCBase):
     def cost_currency(self) -> str:
         """
 
-        :return: ???
+        :return: Валюта цены за штуку в формате ISO 4217 (используется в оплате при получении товара)
         :rtype: str
         """
         return self.body.get("cost_currency")
@@ -3403,7 +3642,7 @@ class CargoItemMP(YCBase):
     def quantity(self) -> int:
         """
 
-        :return: ???
+        :return: Количество указанного товара
         :rtype: int
         """
         return self.body.get("quantity")
@@ -3412,7 +3651,15 @@ class CargoItemMP(YCBase):
     def fiscalization_vat_code(self) -> int:
         """
 
-        :return: ???
+        :return: Ставка НДС
+
+            * **1** - Без НДС
+            * **2** - НДС по ставке 0%
+            * **3** - НДС по ставке 10%
+            * **4** - НДС чека по ставке 20%
+            * **5**	- НДС чека по расчетной ставке 10/110
+            * **6** - НДС чека по расчетной ставке 20/120
+
         :rtype: int
         """
         return self.body.get("fiscalization_vat_code")
@@ -3421,7 +3668,27 @@ class CargoItemMP(YCBase):
     def fiscalization_payment_subject(self) -> str:
         """
 
-        :return: ???
+        :return: Признак предмета расчета
+
+            * **commodity** - Товар
+            * **excise** - Подакцизный товар
+            * **job** - Работа
+            * **service** - Услуга
+            * **gambling_bet** - Ставка в азартной игре
+            * **gambling_prize** - Выигрыш в азартной игре
+            * **lottery** - Лотерейный билет
+            * **lottery_prize** - Выигрыш в лотерею
+            * **intellectual_activity** - Результаты интеллектуальной деятельности
+            * **payment** - Платеж
+            * **agent_commission** - Агентское вознаграждение
+            * **property_right** - Имущественные права
+            * **non_operating_gain** - Внереализационный доход
+            * **insurance_premium** - Страховой сбор
+            * **sales_tax** - Торговый сбор
+            * **resort_fee** - Курортный сбор
+            * **composite** - Несколько вариантов
+            * **another** - Другое
+
         :rtype: str
         """
         return self.body.get("fiscalization_payment_subject")
@@ -3430,7 +3697,16 @@ class CargoItemMP(YCBase):
     def fiscalization_payment_mode(self) -> str:
         """
 
-        :return: ???
+        :return: Признак способа расчета
+
+            * **full_prepayment** - Полная предоплата
+            * **partial_prepayment** - Частичная предоплата
+            * **advance** - Аванс
+            * **full_payment** - Полный расчет
+            * **partial_payment** - Частичный расчет и кредит
+            * **credit** - Кредит
+            * **credit_payment** - Выплата по кредиту
+
         :rtype: str
         """
         return self.body.get("fiscalization_payment_mode")
@@ -3439,7 +3715,7 @@ class CargoItemMP(YCBase):
     def fiscalization_product_code(self) -> Optional[str]:
         """
 
-        :return: ???
+        :return: Код товара
         :rtype: Optional[str]
         """
         return self.body.get("fiscalization_product_code")
@@ -3448,7 +3724,7 @@ class CargoItemMP(YCBase):
     def fiscalization_country_of_origin_code(self) -> Optional[str]:
         """
 
-        :return: ???
+        :return: Код страны происхождения товара
         :rtype: Optional[str]
         """
         return self.body.get("fiscalization_country_of_origin_code")
@@ -3457,7 +3733,7 @@ class CargoItemMP(YCBase):
     def fiscalization_customs_declaration_number(self) -> Optional[str]:
         """
 
-        :return: ???
+        :return: Номер таможенной декларации
         :rtype: Optional[str]
         """
         return self.body.get("fiscalization_customs_declaration_number")
@@ -3466,146 +3742,7 @@ class CargoItemMP(YCBase):
     def fiscalization_excise(self) -> str:
         """
 
-        :return: ???
+        :return: Decimal(19, 4)
         :rtype: str
         """
         return self.body.get("fiscalization_excise")
-
-
-class MatchedCar(YCBase):
-    """
-        ???
-        Информация о подобранной машине
-
-            :param str taxi_class: Класс такси. Возможные значения express, cargo *(Обязательный параметр)* (express)
-            :param Optional[str] client_taxi_class: Подмененный тариф (e.g., cargo, хотя в cars cargocorp) (cargo)
-            :param Optional[str] cargo_type: Тип грузовика (lcv_m)
-            :param Optional[int] cargo_type_int: Тип грузовика (2 is equal to "lcv_m")
-            :param Optional[int] cargo_loaders: Требуемое число грузчиков
-            :param Optional[bool] door_to_door: Опция "от двери до двери" для тарифа "доставка"
-            :param Optional[List['int']] cargo_points: Значение cargo_points_field, фейковое требование длятарифа
-            :param Optional[str] cargo_points_field: Название требования для мультиточек (fake_middle_point_cargo)
-    """
-
-    def __init__(self,
-                 taxi_class: str = None,
-                 client_taxi_class: Optional[str] = None,
-                 cargo_type: Optional[str] = None,
-                 cargo_type_int: Optional[int] = None,
-                 cargo_loaders: Optional[int] = None,
-                 door_to_door: Optional[bool] = None,
-                 cargo_points: Optional[List['int']] = None,
-                 cargo_points_field: Optional[str] = None,
-                 ):
-        self.body = collections.defaultdict(dict)
-
-        if taxi_class is not None:
-            self.body["taxi_class"] = validate_fields('taxi_class', taxi_class, str)
-            self.body['taxi_class'] = validate_fields('taxi_class', taxi_class, str)
-        if taxi_class is None:
-            raise InputParamError("<taxi_class> (=>taxi_class) of <MatchedCar> is a required parameter")
-
-        if client_taxi_class is not None:
-            self.body["client_taxi_class"] = validate_fields('client_taxi_class', client_taxi_class, str)
-            self.body['client_taxi_class'] = validate_fields('client_taxi_class', client_taxi_class, Optional[str])
-
-        if cargo_type is not None:
-            self.body["cargo_type"] = validate_fields('cargo_type', cargo_type, str)
-            self.body['cargo_type'] = validate_fields('cargo_type', cargo_type, Optional[str])
-
-        if cargo_type_int is not None:
-            self.body["cargo_type_int"] = validate_fields('cargo_type_int', cargo_type_int, int)
-            self.body['cargo_type_int'] = validate_fields('cargo_type_int', cargo_type_int, Optional[int])
-
-        if cargo_loaders is not None:
-            self.body["cargo_loaders"] = validate_fields('cargo_loaders', cargo_loaders, int)
-            self.body['cargo_loaders'] = validate_fields('cargo_loaders', cargo_loaders, Optional[int])
-        if cargo_loaders and cargo_loaders < 0:
-            raise InputParamError("<cargo_loaders> of <MatchedCar> should be more than 0")
-
-        if door_to_door is not None:
-            self.body["door_to_door"] = validate_fields('door_to_door', door_to_door, bool)
-            self.body['door_to_door'] = validate_fields('door_to_door', door_to_door, Optional[bool])
-
-        if cargo_points is not None:
-            self.body["cargo_points"] = validate_fields('cargo_points', cargo_points, List['int'])
-            self.body['cargo_points'] = validate_fields('cargo_points', cargo_points, Optional[List['int']])
-
-        if cargo_points_field is not None:
-            self.body["cargo_points_field"] = validate_fields('cargo_points_field', cargo_points_field, str)
-            self.body['cargo_points_field'] = validate_fields('cargo_points_field', cargo_points_field, Optional[str])
-
-    def __repr__(self):
-        return "<MatchedCar>"
-
-    @property
-    def taxi_class(self) -> str:
-        """
-
-        :return: Информация о подобранной машине
-        :rtype: str
-        """
-        return self.body.get("taxi_class")
-
-    @property
-    def client_taxi_class(self) -> Optional[str]:
-        """
-
-        :return: Информация о подобранной машине
-        :rtype: Optional[str]
-        """
-        return self.body.get("client_taxi_class")
-
-    @property
-    def cargo_type(self) -> Optional[str]:
-        """
-
-        :return: Информация о подобранной машине
-        :rtype: Optional[str]
-        """
-        return self.body.get("cargo_type")
-
-    @property
-    def cargo_type_int(self) -> Optional[int]:
-        """
-
-        :return: Информация о подобранной машине
-        :rtype: Optional[int]
-        """
-        return self.body.get("cargo_type_int")
-
-    @property
-    def cargo_loaders(self) -> Optional[int]:
-        """
-
-        :return: Информация о подобранной машине
-        :rtype: Optional[int]
-        """
-        return self.body.get("cargo_loaders")
-
-    @property
-    def door_to_door(self) -> Optional[bool]:
-        """
-
-        :return: Информация о подобранной машине
-        :rtype: Optional[bool]
-        """
-        return self.body.get("door_to_door")
-
-    @property
-    def cargo_points(self) -> Optional[List['int']]:
-        """
-
-        :return: Информация о подобранной машине
-        :rtype: Optional[List['int']]
-        """
-        return [item for item in self.body.get("cargo_points")]
-
-    @property
-    def cargo_points_field(self) -> Optional[str]:
-        """
-
-        :return: Информация о подобранной машине
-        :rtype: Optional[str]
-        """
-        return self.body.get("cargo_points_field")
