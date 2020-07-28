@@ -1,12 +1,22 @@
 # -*- coding: utf-8 -*-
+"""
+Модуль с эксепшенами сервера API
+"""
 import logging
 
 
 class NetworkAPIError(BaseException):
+    """
+        Сетевая ошибка
+    """
     pass
 
 
 class BaseAPIError(BaseException):
+    """
+        Базовая ошибка API
+    """
+
     def __init__(self, data):
         self.code = data.get('code')
         self.message = data.get('message')
@@ -52,13 +62,15 @@ class BaseAPIError(BaseException):
         logging.error('Server error: %s', self.message)
 
 
-class FieldsParamError(BaseException):
-    pass
-
-
 class NotAuthorized(BaseException):
+    """
+        Ошибка авторизации
+    """
     pass
 
 
 class InputParamError(BaseException):
+    """
+        Ошибка в передаваемых полях
+    """
     pass

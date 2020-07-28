@@ -1,2 +1,3 @@
 typeguard
 requests
+pyyaml
