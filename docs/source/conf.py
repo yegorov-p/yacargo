@@ -6,7 +6,7 @@ import sys
 import sphinx_rtd_theme
 
 sys.path.insert(0, os.path.abspath('../..'))
-from yacargo.constants import VERSION
+from yacargo import __version__
 
 extensions = ['sphinx.ext.autodoc', 'sphinx.ext.autosummary', "sphinx_rtd_theme"]
 
@@ -21,7 +21,7 @@ copyright = '2020, Pasha Yegorov'
 author = 'Pasha Yegorov'
 
 
-version = VERSION
+version = __version__
 release = ''
 
 language = 'ru'

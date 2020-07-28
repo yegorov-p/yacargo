@@ -13,14 +13,6 @@ yacargo\.objects module
     :undoc-members:
     :show-inheritance:
 
-yacargo\.response module
---------------------------
-
-.. automodule:: yacargo.response
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 yacargo\.exceptions module
 --------------------------
 
