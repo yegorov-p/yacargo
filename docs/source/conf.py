@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-import mock
 import os
 import sys
-import sphinx_rtd_theme
 
 sys.path.insert(0, os.path.abspath('../..'))
 from yacargo import __version__
@@ -19,7 +17,6 @@ master_doc = 'index'
 project = 'yacargo'
 copyright = '2020, Pasha Yegorov'
 author = 'Pasha Yegorov'
-
 
 version = __version__
 release = ''
@@ -47,35 +44,7 @@ html_sidebars = {
 
 htmlhelp_basename = 'yacargodoc'
 
-latex_elements = {
-    # The paper size ('letterpaper' or 'a4paper').
-    #
-    # 'papersize': 'letterpaper',
-
-    # The font size ('10pt', '11pt' or '12pt').
-    #
-    # 'pointsize': '10pt',
-
-    # Additional stuff for the LaTeX preamble.
-    #
-    # 'preamble': '',
-
-    # Latex figure (float) alignment
-    #
-    # 'figure_align': 'htbp',
-}
-
-latex_documents = [
-    (master_doc, 'yacargo.tex', 'yacargo Documentation',
-     'Pavel Yegorov', 'manual'),
-]
-
 man_pages = [
     (master_doc, 'yacargo', 'yacargo Documentation',
      [author], 1)
-]
-texinfo_documents = [
-    (master_doc, 'yacargo', 'yacargo Documentation',
-     author, 'yacargo', 'One line description of project.',
-     'Miscellaneous'),
 ]

@@ -23,31 +23,6 @@ __license__ = 'Apache 2.0'
 logger = logging.getLogger('yaCargo')
 
 
-def validate_fields(field_name, field, field_type):
-    """
-    Валидатор полей на соответствие ожидаемому типу
-
-    :param field_name: Название поля, передается для ошибки
-
-    :param field: Поле
-
-    :param field_type: Тип поля
-
-    :return: Объект в виде json
-    """
-    try:
-        check_type(field_name, field, field_type)
-    except TypeError as exc:
-        raise InputParamError(exc)
-    else:
-        if isinstance(field, list):
-            return [i if isinstance(i, (bool, str, int, float, tuple, list, dict)) else i.json() for i in field]
-        elif isinstance(field, (bool, str, int, float, tuple, list, dict)):
-            return field
-        else:
-            return field.json()
-
-
 class YCAPI:
     """
 
@@ -132,11 +107,15 @@ class YCAPI:
                      version: int = None,
                      ) -> CutClaimResponse:
         """
-            Подтверждение заявки
-            Подтверждает заявку при успешной оценке. После подтверждения заявки сервис запустит процесс поиска исполнителя. Предложение pricing.offer действительно в течение ограниченного времени. Если предложение более недействительно, то заказ перейдет в статус performer_not_found.
 
-                :param str claim_id: id заявки, полученный на этапе создания заявки
-                :param Optional[int] version: Версия заявки. Изменяется после редактирования заявки *(Обязательный параметр)* (1)
+        Подтверждение заявки
+
+        Подтверждает заявку при успешной оценке. После подтверждения заявки сервис запустит процесс поиска исполнителя. Предложение pricing.offer действительно в течение ограниченного времени. Если предложение более недействительно, то заказ перейдет в статус performer_not_found.
+
+        :param str claim_id: id заявки, полученный на этапе создания заявки
+        :param Optional[int] version: Версия заявки. Изменяется после редактирования заявки *(Обязательный параметр)* (1)
+
+        `Официальная документация /b2b/cargo/integration/v1/claims/accept <https://yandex.ru/dev/taxi/doc/cargo-api/ref/v1/claims/IntegrationV1ClaimsAccept-docpage/>`_
         """
         params = {}
         body = collections.defaultdict(dict)
@@ -162,16 +141,20 @@ class YCAPI:
                      cancel_state: str = None,
                      ) -> CutClaimResponse:
         """
-            Отмена заявки
-            Отменяет заявку, которая была подтверждена. Операция может быть выполнена в течение ограниченного времени. Отмена заявки может быть платной и бесплатной. Чтобы узнать тип отмены, используйте операцию получения информации по заявке claims/info в поле available_cancel_state.
 
-                :param Optional[str] claim_id: id заявки, полученный на этапе создания заявки
-                :param Optional[int] version: Версия отменяемой заявки *(Обязательный параметр)* (1)
-                :param Optional[str] cancel_state: Статус отмены (платная или бесплатная) *(Обязательный параметр)* (free)
+        Отмена заявки
 
-                    * **free** - бесплатная отмена
-                    * **paid** - платная отмена
+        Отменяет заявку, которая была подтверждена. Операция может быть выполнена в течение ограниченного времени. Отмена заявки может быть платной и бесплатной. Чтобы узнать тип отмены, используйте операцию получения информации по заявке claims/info в поле available_cancel_state.
 
+        :param Optional[str] claim_id: id заявки, полученный на этапе создания заявки
+        :param Optional[int] version: Версия отменяемой заявки *(Обязательный параметр)* (1)
+        :param Optional[str] cancel_state: Статус отмены (платная или бесплатная) *(Обязательный параметр)* (free)
+
+            * **free** - бесплатная отмена
+            * **paid** - платная отмена
+
+
+        `Официальная документация /b2b/cargo/integration/v1/claims/cancel <https://yandex.ru/dev/taxi/doc/cargo-api/ref/v1/claims/IntegrationV1ClaimsCancelC-docpage/>`_
         """
         params = {}
         body = collections.defaultdict(dict)
@@ -209,16 +192,20 @@ class YCAPI:
                        status: str = None,
                        ) -> str:
         """
-            Получение накладной или акта приема-передачи
-            Возвращает ЭТН в формате PDF. Операцию можно выполнить после того, как на заказ будет найден исполнитель. Электронные цифровые подписи добавляются в документ в процессе выполнения заказа. Если по какой-то причине требуется перейти на бумажный акт, то с помощью данной операции можно получить частично подписанный документ.
 
-                :param Optional[str] claim_id: id заявки, полученный на этапе создания заявки
-                :param str document_type: Тип документа
+        Получение накладной или акта приема-передачи
 
-                    * **act** - акт
+        Возвращает ЭТН в формате PDF. Операцию можно выполнить после того, как на заказ будет найден исполнитель. Электронные цифровые подписи добавляются в документ в процессе выполнения заказа. Если по какой-то причине требуется перейти на бумажный акт, то с помощью данной операции можно получить частично подписанный документ.
 
-                :param int version: Версия заявки
-                :param str status: Статус заявки
+        :param Optional[str] claim_id: id заявки, полученный на этапе создания заявки
+        :param str document_type: Тип документа
+
+            * **act** - акт
+
+        :param int version: Версия заявки
+        :param str status: Статус заявки
+
+        `Официальная документация /b2b/cargo/integration/v1/claims/document <https://yandex.ru/dev/taxi/doc/cargo-api/ref/v1/claims/IntegrationV1ClaimsDocument-docpage/>`_
         """
         params = {}
         body = collections.defaultdict(dict)
@@ -247,10 +234,14 @@ class YCAPI:
                       cursor: str = None,
                       ) -> ClaimsJournalResponse:
         """
-            Журнал изменений заказа
-            Возвращает историю изменения заявки. Вы можете узнать об изменении статусов и цены заказа. Для терминальных статусов возвращается поле resolution, возможные значения success, failed.
 
-                :param Optional[str] cursor: Строка с идентификатором последнего изменения, полученного клиентом. Если cursor не передан, то будут выданы все изменения для данного клиента с некоторым лимитом
+        Журнал изменений заказа
+
+        Возвращает историю изменения заявки. Вы можете узнать об изменении статусов и цены заказа. Для терминальных статусов возвращается поле resolution, возможные значения success, failed.
+
+        :param Optional[str] cursor: Строка с идентификатором последнего изменения, полученного клиентом. Если cursor не передан, то будут выданы все изменения для данного клиента с некоторым лимитом
+
+        `Официальная документация /b2b/cargo/integration/v1/claims/journal <https://yandex.ru/dev/taxi/doc/cargo-api/ref/v1/claims/IntegrationV1ClaimsJournal-docpage/>`_
         """
         params = {}
         body = collections.defaultdict(dict)
@@ -267,10 +258,14 @@ class YCAPI:
                         claim_id: str = None,
                         ) -> VoiceforwardingResponse:
         """
-            Получение номера телефона для звонка водителю
-            Возвращает номер телефона для звонка водителю, который выполняет заявку.
 
-                :param Optional[str] claim_id: ??? *(Обязательный параметр)*
+        Получение номера телефона для звонка водителю
+
+        Возвращает номер телефона для звонка водителю, который выполняет заявку.
+
+        :param Optional[str] claim_id: ??? *(Обязательный параметр)*
+
+        `Официальная документация /b2b/cargo/integration/v1/driver-voiceforwarding <https://yandex.ru/dev/taxi/doc/cargo-api/ref/v1/performer/IntegrationV1DriverVoiceForwarding-docpage/>`_
         """
         params = {}
         body = collections.defaultdict(dict)
@@ -290,10 +285,14 @@ class YCAPI:
                            claim_id: str = None,
                            ) -> PerformerPositionResponse:
         """
-            Получение позиции исполнителя заявки
-            Возвращает координаты, скорость и направления движения исполнителя заявки.
 
-                :param Optional[str] claim_id: id заявки, полученный на этапе создания заявки
+        Получение позиции исполнителя заявки
+
+        Возвращает координаты, скорость и направления движения исполнителя заявки.
+
+        :param Optional[str] claim_id: id заявки, полученный на этапе создания заявки
+
+        `Официальная документация /b2b/cargo/integration/v1/claims/performer-position <https://yandex.ru/dev/taxi/doc/cargo-api/ref/v1/performer/IntegrationV1ClaimsPerformerPosition-docpage/>`_
         """
         params = {}
         body = collections.defaultdict(dict)
@@ -318,14 +317,18 @@ class YCAPI:
                         idempotency_token: str = None,
                         ) -> ClaimsReportGenerateResponse:
         """
-            Инициализация создания отчета по заявкам за период
-            Инициализирует создания отчета. Отчет генерируется ассинхронно
 
-                :param Optional[str] since_date: ??? *(Обязательный параметр)* (2020-01-01)
-                :param Optional[str] till_date: ??? *(Обязательный параметр)* (2020-01-02)
-                :param Optional[str] lang: Язык, на котором надо генерировать отчет.Если не указан, будет использован Accept-Language (ru)
-                :param Optional[str] department_id: ID отдела (значение игнорируется). Поле нужно для совместимости с API КК
-                :param Optional[str] idempotency_token: Уникальный для данного клиента токен идемпотентности *(Обязательный параметр)* (f9b4825f45f64914affaeb07fbae9757)
+        Инициализация создания отчета по заявкам за период
+
+        Инициализирует создания отчета. Отчет генерируется ассинхронно
+
+        :param Optional[str] since_date: ??? *(Обязательный параметр)* (2020-01-01)
+        :param Optional[str] till_date: ??? *(Обязательный параметр)* (2020-01-02)
+        :param Optional[str] lang: Язык, на котором надо генерировать отчет.Если не указан, будет использован Accept-Language (ru)
+        :param Optional[str] department_id: ID отдела (значение игнорируется). Поле нужно для совместимости с API КК
+        :param Optional[str] idempotency_token: Уникальный для данного клиента токен идемпотентности *(Обязательный параметр)* (f9b4825f45f64914affaeb07fbae9757)
+
+        `Официальная документация /b2b/cargo/integration/v1/order-report/generate <https://yandex.ru/dev/taxi/doc/cargo-api/ref/v1/reports/IntegrationV1OrderReportGenerate-docpage/>`_
         """
         params = {}
         body = collections.defaultdict(dict)
@@ -359,10 +362,14 @@ class YCAPI:
                       task_id: str = None,
                       ) -> ClaimsReportStatusResponse:
         """
-            Проверка статуса отчета
-            Возвращает состояние отчета
 
-                :param Optional[str] task_id: ID, полученный в результате успешного выполнения операции v1/order-report/generate *(Обязательный параметр)* (f9b4825f45f4914affaeb07fbae9757)
+        Проверка статуса отчета
+
+        Возвращает состояние отчета
+
+        :param Optional[str] task_id: ID, полученный в результате успешного выполнения операции v1/order-report/generate *(Обязательный параметр)* (f9b4825f45f4914affaeb07fbae9757)
+
+        `Официальная документация /b2b/cargo/integration/v1/order-report/status <https://yandex.ru/dev/taxi/doc/cargo-api/ref/v1/reports/IntegrationV1OrderReportStatus-docpage/>`_
         """
         params = {}
         body = collections.defaultdict(dict)
@@ -389,10 +396,14 @@ class YCAPI:
                         report_id: str = None,
                         ) -> str:
         """
-            Получение файла отчета
-            Возвращает файл отчета
 
-                :param str report_id: ID отчета
+        Получение файла отчета
+
+        Возвращает файл отчета
+
+        :param str report_id: ID отчета
+
+        `Официальная документация /b2b/cargo/integration/v1/order-report/report <https://yandex.ru/dev/taxi/doc/cargo-api/ref/v1/reports/IntegrationV1OrderReportReport-docpage/>`_
         """
         params = {}
         body = collections.defaultdict(dict)
@@ -429,33 +440,37 @@ class YCAPI:
                      referral_source: str = None,
                      ) -> SearchedClaimMP:
         """
-            Создание заявки с мультиточками
-            Cоздает заявку с переданными параметрами. Заявка попадает в систему логистики и запускает процесс заказа. Отправка запроса не начинает обработку заказа. О результате оценки заказа можно узнать из операции v2/claims/info.
 
-                :param str request_id: Токен идемпотентности (не более 32 символов), желательно использовать uuid
-                :param Optional[str] shipping_document: Сопроводительные документы
-                :param Optional[List['CargoItemMP']] items: Перечисление наименований грузов для отправления *(Обязательный параметр)*
-                :param Optional[List['CargoPointMP']] route_points: Информация по точкам маршрута *(Обязательный параметр)*
-                :param Optional[str] emergency_contact_name: Имя контактного лица *(Обязательный параметр)* (Рик)
-                :param Optional[str] emergency_contact_phone: Телефон контактного лица *(Обязательный параметр)* (+79099999999)
-                :param Optional[str] client_requirements_taxi_class: Класс такси. Возможные значения express, cargo. *(Обязательный параметр)* (express)
-                :param Optional[str] client_requirements_cargo_type: Тип грузовика (lcv_m)
-                :param Optional[int] client_requirements_cargo_loaders: Требуемое число грузчиков
-                :param Optional[List['str']] client_requirements_cargo_options: Дополнительные опции тарифа
-                :param Optional[str] callback_properties_callback_url: URL, который будет вызываться при смене статусов по заявке.Данный механизм устарел, вместо него следует использовать операцию v1/claims/journal. *(Обязательный параметр)* (https://www.example.com)
-                :param Optional[bool] skip_door_to_door: Отказ от доставки до двери. В случае true — курьер доставит заказ только на улицу, до подъезда
-                :param Optional[bool] skip_client_notify: Не отправлять получателю нотификации, когда к нему направится курьер
-                :param Optional[bool] skip_emergency_notify: Не отправлять нотификации emergency контакту
-                :param Optional[bool] skip_act: Не показывать акт
-                :param Optional[bool] optional_return: Не требуется возврат товаров в случае отмены заказа. Курьер оставляет товар себе
-                :param Optional[str] due: Создать заказ к определенному времени (например, заказ на завтра). Согласуйте с менеджером использование опции! (2020-01-01T00:00:00+00:00)
-                :param Optional[str] comment: Общий комментарий к заказу (Ресторан)
-                :param Optional[List['ClaimRequirement']] requirements_strict_requirements: ???
-                :param Optional[List['ClaimRequirement']] requirements_soft_requirements: ???
-                :param Optional[str] c2c_data_payment_method_id: ??? (payment_method_id)
-                :param Optional[str] c2c_data_payment_type: ??? *(Обязательный параметр)* (card)
-                :param Optional[str] c2c_data_partner_tag: ??? (some_tag)
-                :param Optional[str] referral_source: Источник заявки (bitrix)
+        Создание заявки с мультиточками
+
+        Cоздает заявку с переданными параметрами. Заявка попадает в систему логистики и запускает процесс заказа. Отправка запроса не начинает обработку заказа. О результате оценки заказа можно узнать из операции v2/claims/info.
+
+        :param str request_id: Токен идемпотентности (не более 32 символов), желательно использовать uuid
+        :param Optional[str] shipping_document: Сопроводительные документы
+        :param Optional[List['CargoItemMP']] items: Перечисление наименований грузов для отправления *(Обязательный параметр)*
+        :param Optional[List['CargoPointMP']] route_points: Информация по точкам маршрута *(Обязательный параметр)*
+        :param Optional[str] emergency_contact_name: Имя контактного лица *(Обязательный параметр)* (Рик)
+        :param Optional[str] emergency_contact_phone: Телефон контактного лица *(Обязательный параметр)* (+79099999999)
+        :param Optional[str] client_requirements_taxi_class: Класс такси. Возможные значения express, cargo. *(Обязательный параметр)* (express)
+        :param Optional[str] client_requirements_cargo_type: Тип грузовика (lcv_m)
+        :param Optional[int] client_requirements_cargo_loaders: Требуемое число грузчиков
+        :param Optional[List['str']] client_requirements_cargo_options: Дополнительные опции тарифа
+        :param Optional[str] callback_properties_callback_url: URL, который будет вызываться при смене статусов по заявке.Данный механизм устарел, вместо него следует использовать операцию v1/claims/journal. *(Обязательный параметр)* (https://www.example.com)
+        :param Optional[bool] skip_door_to_door: Отказ от доставки до двери. В случае true — курьер доставит заказ только на улицу, до подъезда
+        :param Optional[bool] skip_client_notify: Не отправлять получателю нотификации, когда к нему направится курьер
+        :param Optional[bool] skip_emergency_notify: Не отправлять нотификации emergency контакту
+        :param Optional[bool] skip_act: Не показывать акт
+        :param Optional[bool] optional_return: Не требуется возврат товаров в случае отмены заказа. Курьер оставляет товар себе
+        :param Optional[str] due: Создать заказ к определенному времени (например, заказ на завтра). Согласуйте с менеджером использование опции! (2020-01-01T00:00:00+00:00)
+        :param Optional[str] comment: Общий комментарий к заказу (Ресторан)
+        :param Optional[List['ClaimRequirement']] requirements_strict_requirements: ???
+        :param Optional[List['ClaimRequirement']] requirements_soft_requirements: ???
+        :param Optional[str] c2c_data_payment_method_id: ??? (payment_method_id)
+        :param Optional[str] c2c_data_payment_type: ??? *(Обязательный параметр)* (card)
+        :param Optional[str] c2c_data_partner_tag: ??? (some_tag)
+        :param Optional[str] referral_source: Источник заявки (bitrix)
+
+        `Официальная документация /b2b/cargo/integration/v2/claims/create <https://yandex.ru/dev/taxi/doc/cargo-api/ref/v2/claims/IntegrationV2ClaimsCreate-docpage/>`_
         """
         params = {}
         body = collections.defaultdict(dict)
@@ -635,34 +650,38 @@ class YCAPI:
                    referral_source: str = None,
                    ) -> SearchedClaimMP:
         """
-            Редактирование заявки с мультиточками
-            Изменяет параметры заявки. Операция доступна до принятия оффера клиентом.
 
-                :param Optional[str] claim_id: id заявки, полученный на этапе создания заявки
-                :param int version: Версия, с которой идет изменение
-                :param Optional[str] shipping_document: Сопроводительные документы
-                :param List['CargoItemMP'] items: Перечисление наименований грузов для отправления *(Обязательный параметр)*
-                :param List['CargoPointMP'] route_points: Информация по точкам маршрута *(Обязательный параметр)*
-                :param str emergency_contact_name: Имя контактного лица *(Обязательный параметр)* (Рик)
-                :param str emergency_contact_phone: Телефон контактного лица *(Обязательный параметр)* (+79099999999)
-                :param str client_requirements_taxi_class: Класс такси. Возможные значения express, cargo. *(Обязательный параметр)* (express)
-                :param Optional[str] client_requirements_cargo_type: Тип грузовика (lcv_m)
-                :param Optional[int] client_requirements_cargo_loaders: Требуемое число грузчиков
-                :param Optional[List['str']] client_requirements_cargo_options: Дополнительные опции тарифа
-                :param str callback_properties_callback_url: URL, который будет вызываться при смене статусов по заявке.Данный механизм устарел, вместо него следует использовать операцию v1/claims/journal. *(Обязательный параметр)* (https://www.example.com)
-                :param Optional[bool] skip_door_to_door: Отказ от доставки до двери. В случае true — курьер доставит заказ только на улицу, до подъезда
-                :param Optional[bool] skip_client_notify: Не отправлять получателю нотификации, когда к нему направится курьер
-                :param Optional[bool] skip_emergency_notify: Не отправлять нотификации emergency контакту
-                :param Optional[bool] skip_act: Не показывать акт
-                :param Optional[bool] optional_return: Не требуется возврат товаров в случае отмены заказа. Курьер оставляет товар себе
-                :param Optional[str] due: Создать заказ к определенному времени (например, заказ на завтра). Согласуйте с менеджером использование опции! (2020-01-01T00:00:00+00:00)
-                :param Optional[str] comment: Общий комментарий к заказу (Ресторан)
-                :param Optional[List['ClaimRequirement']] requirements_strict_requirements: ???
-                :param Optional[List['ClaimRequirement']] requirements_soft_requirements: ???
-                :param Optional[str] c2c_data_payment_method_id: ??? (payment_method_id)
-                :param str c2c_data_payment_type: ??? *(Обязательный параметр)* (card)
-                :param Optional[str] c2c_data_partner_tag: ??? (some_tag)
-                :param Optional[str] referral_source: Источник заявки (bitrix)
+        Редактирование заявки с мультиточками
+
+        Изменяет параметры заявки. Операция доступна до принятия оффера клиентом.
+
+        :param Optional[str] claim_id: id заявки, полученный на этапе создания заявки
+        :param int version: Версия, с которой идет изменение
+        :param Optional[str] shipping_document: Сопроводительные документы
+        :param List['CargoItemMP'] items: Перечисление наименований грузов для отправления *(Обязательный параметр)*
+        :param List['CargoPointMP'] route_points: Информация по точкам маршрута *(Обязательный параметр)*
+        :param str emergency_contact_name: Имя контактного лица *(Обязательный параметр)* (Рик)
+        :param str emergency_contact_phone: Телефон контактного лица *(Обязательный параметр)* (+79099999999)
+        :param str client_requirements_taxi_class: Класс такси. Возможные значения express, cargo. *(Обязательный параметр)* (express)
+        :param Optional[str] client_requirements_cargo_type: Тип грузовика (lcv_m)
+        :param Optional[int] client_requirements_cargo_loaders: Требуемое число грузчиков
+        :param Optional[List['str']] client_requirements_cargo_options: Дополнительные опции тарифа
+        :param str callback_properties_callback_url: URL, который будет вызываться при смене статусов по заявке.Данный механизм устарел, вместо него следует использовать операцию v1/claims/journal. *(Обязательный параметр)* (https://www.example.com)
+        :param Optional[bool] skip_door_to_door: Отказ от доставки до двери. В случае true — курьер доставит заказ только на улицу, до подъезда
+        :param Optional[bool] skip_client_notify: Не отправлять получателю нотификации, когда к нему направится курьер
+        :param Optional[bool] skip_emergency_notify: Не отправлять нотификации emergency контакту
+        :param Optional[bool] skip_act: Не показывать акт
+        :param Optional[bool] optional_return: Не требуется возврат товаров в случае отмены заказа. Курьер оставляет товар себе
+        :param Optional[str] due: Создать заказ к определенному времени (например, заказ на завтра). Согласуйте с менеджером использование опции! (2020-01-01T00:00:00+00:00)
+        :param Optional[str] comment: Общий комментарий к заказу (Ресторан)
+        :param Optional[List['ClaimRequirement']] requirements_strict_requirements: ???
+        :param Optional[List['ClaimRequirement']] requirements_soft_requirements: ???
+        :param Optional[str] c2c_data_payment_method_id: ??? (payment_method_id)
+        :param str c2c_data_payment_type: ??? *(Обязательный параметр)* (card)
+        :param Optional[str] c2c_data_partner_tag: ??? (some_tag)
+        :param Optional[str] referral_source: Источник заявки (bitrix)
+
+        `Официальная документация /b2b/cargo/integration/v2/claims/edit <https://yandex.ru/dev/taxi/doc/cargo-api/ref/v2/claims/IntegrationV2ClaimsEdit-docpage/>`_
         """
         params = {}
         body = collections.defaultdict(dict)
@@ -819,10 +838,14 @@ class YCAPI:
                    claim_id: str = None,
                    ) -> SearchedClaimMP:
         """
-            Получение информации по заявкам с учетом мультиточек
-            Возвращает основную информацию по заявке с учетом мультиточек (статус, стоимость, возможность бесплатной отмены и пр.). Вы можете использовать операцию для получения информации по заявке, созданной через v1/claims/create.
 
-                :param Optional[str] claim_id: id заявки, полученный на этапе создания заявки
+        Получение информации по заявкам с учетом мультиточек
+
+        Возвращает основную информацию по заявке с учетом мультиточек (статус, стоимость, возможность бесплатной отмены и пр.). Вы можете использовать операцию для получения информации по заявке, созданной через v1/claims/create.
+
+        :param Optional[str] claim_id: id заявки, полученный на этапе создания заявки
+
+        `Официальная документация /b2b/cargo/integration/v2/claims/info <https://yandex.ru/dev/taxi/doc/cargo-api/ref/v2/claims/IntegrationV2ClaimsInfo-docpage/>`_
         """
         params = {}
         body = collections.defaultdict(dict)
@@ -897,52 +920,56 @@ class YCAPI:
                      external_order_id: str = None,
                      ) -> SearchClaimsResponseMP:
         """
-            Поиск заявок
-            Выполняет поиск произвольных заявок с учетом мультиточек. Вы можете использовать операцию для получения информации по заявке, созданной через v1/claims/create. Найденные заявки сортируются по дате создания, выдача сегментирована для пагинации.
 
-                :param Optional[int] offset: Смещение (пагинация) выдачи заявок по заданному фильтру (заявки отсортированы по дате создания) *(Обязательный параметр)* (50)
-                :param Optional[int] limit: Максимальное число заявок в ответе *(Обязательный параметр)* (50)
-                :param str claim_id: id заявки, полученный на этапе создания заявки (741cedf82cd464fa6fa16d87155c636)
-                :param Optional[str] phone: Фильтр по номеру телефона (+79099999998)
-                :param str status: Статус заявки (new)
+        Поиск заявок
 
-                    * **new** - новая заявка
-                    * **estimating** - идет процесс оценки заявки (подбор типа автомобиля по параметрам груза и расчет стоимости)
-                    * **estimating_failed** - не удалось оценить заявку. Причину можно увидеть в error_messages в ответе ручки /info
-                    * **ready_for_approval** - заявка успешно оценена и ожидает подтверждения от клиента
-                    * **accepted** - заявка подтверждена клиентом
-                    * **performer_lookup** - заявка взята в обработку. Промежуточный статус перед созданием заказа
-                    * **performer_draft** - идет поиск водителя
-                    * **performer_found** - водитель найден и едет в точку А
-                    * **performer_not_found** - не удалось найти водителя. Можно попробовать снова через некоторое время
-                    * **pickup_arrived** - водитель приехал на точку А
-                    * **ready_for_pickup_confirmation** - водитель ждет, когда отправитель назовет ему код подтверждения
-                    * **pickuped** - водитель успешно забрал груз
-                    * **delivery_arrived** - водитель приехал на точку Б
-                    * **ready_for_delivery_confirmation** - водитель ждет, когда получатель назовет ему код подтверждения
-                    * **pay_waiting** - заказ ожидает оплаты (актуально для оплаты при получении)
-                    * **delivered** - водитель успешно доставил груз (ввел смс код). Код приходит после оплаты, если была оплата при получении.
-                    * **delivered_finish** - заказ завершен
-                    * **returning** -  водителю пришлось вернуть груз и он едет в точку возврата
-                    * **return_arrived** - водитель приехал на точку возврата
-                    * **ready_for_return_confirmation** - водитель в точке возврата ожидает, когда ему назовут код подтверждения
-                    * **returned** - водитель успешно вернул груз (ввел смс код)
-                    * **returned_finish** - заказ завершен
-                    * **failed** - терминальный статус, не удалось начать выполнение заказа
-                    * **cancelled** - заказ был отменен клиентом бесплатно
-                    * **cancelled_with_payment** - заказ был отменен клиентом платно (водитель уже приехал)
-                    * **cancelled_by_taxi** - водитель отменил заказ (до получения груза)
-                    * **cancelled_with_items_on_hands** - клиент платно отменил заявку без необходимости возврата груза (заявка была создана с флагом optional_return)
+        Выполняет поиск произвольных заявок с учетом мультиточек. Вы можете использовать операцию для получения информации по заявке, созданной через v1/claims/create. Найденные заявки сортируются по дате создания, выдача сегментирована для пагинации.
 
-                :param Optional[str] created_from: Начало периода поиска (isoformat) (2020-01-01T00:00:00+00:00)
-                :param Optional[str] created_to: Окончание периода поиска (isoformat) (2020-01-02T00:00:00+00:00)
-                :param Optional[str] state: Фильтр по состоянию заявки (active)
+        :param Optional[int] offset: Смещение (пагинация) выдачи заявок по заданному фильтру (заявки отсортированы по дате создания) *(Обязательный параметр)* (50)
+        :param Optional[int] limit: Максимальное число заявок в ответе *(Обязательный параметр)* (50)
+        :param str claim_id: id заявки, полученный на этапе создания заявки (741cedf82cd464fa6fa16d87155c636)
+        :param Optional[str] phone: Фильтр по номеру телефона (+79099999998)
+        :param str status: Статус заявки (new)
 
-                    * **active** - ???
+            * **new** - новая заявка
+            * **estimating** - идет процесс оценки заявки (подбор типа автомобиля по параметрам груза и расчет стоимости)
+            * **estimating_failed** - не удалось оценить заявку. Причину можно увидеть в error_messages в ответе ручки /info
+            * **ready_for_approval** - заявка успешно оценена и ожидает подтверждения от клиента
+            * **accepted** - заявка подтверждена клиентом
+            * **performer_lookup** - заявка взята в обработку. Промежуточный статус перед созданием заказа
+            * **performer_draft** - идет поиск водителя
+            * **performer_found** - водитель найден и едет в точку А
+            * **performer_not_found** - не удалось найти водителя. Можно попробовать снова через некоторое время
+            * **pickup_arrived** - водитель приехал на точку А
+            * **ready_for_pickup_confirmation** - водитель ждет, когда отправитель назовет ему код подтверждения
+            * **pickuped** - водитель успешно забрал груз
+            * **delivery_arrived** - водитель приехал на точку Б
+            * **ready_for_delivery_confirmation** - водитель ждет, когда получатель назовет ему код подтверждения
+            * **pay_waiting** - заказ ожидает оплаты (актуально для оплаты при получении)
+            * **delivered** - водитель успешно доставил груз (ввел смс код). Код приходит после оплаты, если была оплата при получении.
+            * **delivered_finish** - заказ завершен
+            * **returning** -  водителю пришлось вернуть груз и он едет в точку возврата
+            * **return_arrived** - водитель приехал на точку возврата
+            * **ready_for_return_confirmation** - водитель в точке возврата ожидает, когда ему назовут код подтверждения
+            * **returned** - водитель успешно вернул груз (ввел смс код)
+            * **returned_finish** - заказ завершен
+            * **failed** - терминальный статус, не удалось начать выполнение заказа
+            * **cancelled** - заказ был отменен клиентом бесплатно
+            * **cancelled_with_payment** - заказ был отменен клиентом платно (водитель уже приехал)
+            * **cancelled_by_taxi** - водитель отменил заказ (до получения груза)
+            * **cancelled_with_items_on_hands** - клиент платно отменил заявку без необходимости возврата груза (заявка была создана с флагом optional_return)
 
-                :param Optional[str] due_from: Начало периода поиска (isoformat) (2020-01-01T00:00:00+00:00)
-                :param Optional[str] due_to: Окончание периода поиска (isoformat) (2020-01-02T00:00:00+00:00)
-                :param Optional[str] external_order_id: ID внешнего заказа, привязанное к точке (100)
+        :param Optional[str] created_from: Начало периода поиска (isoformat) (2020-01-01T00:00:00+00:00)
+        :param Optional[str] created_to: Окончание периода поиска (isoformat) (2020-01-02T00:00:00+00:00)
+        :param Optional[str] state: Фильтр по состоянию заявки (active)
+
+            * **active** - ???
+
+        :param Optional[str] due_from: Начало периода поиска (isoformat) (2020-01-01T00:00:00+00:00)
+        :param Optional[str] due_to: Окончание периода поиска (isoformat) (2020-01-02T00:00:00+00:00)
+        :param Optional[str] external_order_id: ID внешнего заказа, привязанное к точке (100)
+
+        `Официальная документация /b2b/cargo/integration/v2/claims/search <https://yandex.ru/dev/taxi/doc/cargo-api/ref/v2/claims/IntegrationV2ClaimsSearch-docpage/>`_
         """
         params = {}
         body = collections.defaultdict(dict)
@@ -1019,11 +1046,15 @@ class YCAPI:
                       limit: int = None,
                       ) -> SearchClaimsResponseMP:
         """
-            Поиск активных заявок
-            Возвращает информацию по заявкам с учетом мультиточек, которые находятся в исполнении. Вы можете использовать операцию для получения информации по заявке, созданной через v1/claims/create. Найденные заявки сортируются по дате создания, выдача сегментирована для пагинации.
 
-                :param int offset: Смещение (пагинация) выдачи заявок по заданному фильтру (заявки отсортированы по дате создания) *(Обязательный параметр)* (50)
-                :param int limit: Максимальное число заявок в ответе *(Обязательный параметр)* (50)
+        Поиск активных заявок
+
+        Возвращает информацию по заявкам с учетом мультиточек, которые находятся в исполнении. Вы можете использовать операцию для получения информации по заявке, созданной через v1/claims/create. Найденные заявки сортируются по дате создания, выдача сегментирована для пагинации.
+
+        :param int offset: Смещение (пагинация) выдачи заявок по заданному фильтру (заявки отсортированы по дате создания) *(Обязательный параметр)* (50)
+        :param int limit: Максимальное число заявок в ответе *(Обязательный параметр)* (50)
+
+        `Официальная документация /b2b/cargo/integration/v2/claims/search/active <https://yandex.ru/dev/taxi/doc/cargo-api/ref/v2/claims/IntegrationV2ClaimsSearchActive-docpage/>`_
         """
         params = {}
         body = collections.defaultdict(dict)
@@ -1052,10 +1083,14 @@ class YCAPI:
                                 claim_id: str = None,
                                 ) -> ConfirmationCodeResponse:
         """
-            Получение кода подтверждения
-            Возвращает код подтверждения в текущей точке (если это возможно)
 
-                :param Optional[str] claim_id: id заявки, полученный на этапе создания заявки *(Обязательный параметр)* (741cedf82cd464fa6fa16d87155c636)
+        Получение кода подтверждения
+
+        Возвращает код подтверждения в текущей точке (если это возможно)
+
+        :param Optional[str] claim_id: id заявки, полученный на этапе создания заявки *(Обязательный параметр)* (741cedf82cd464fa6fa16d87155c636)
+
+        `Официальная документация /b2b/cargo/integration/v2/claims/confirmation_code <https://yandex.ru/dev/taxi/doc/cargo-api/ref/v2/claims/IntegrationV2ClaimsConfirmationCode-docpage/>`_
         """
         params = {}
         body = collections.defaultdict(dict)
@@ -1074,10 +1109,14 @@ class YCAPI:
                    claim_ids: List['str'] = None,
                    ) -> SearchClaimsResponseMP:
         """
-            Получение информации по нескольким заявкам
-            Возвращает информацию по нескольким заявкам с учетом мультиточек. Вы можете использовать операцию для получения информации по заявке, созданной через v1/claims/create.
 
-                :param Optional[List['str']] claim_ids: Массив идентификаторов заявки для которых нужно получить информацию *(Обязательный параметр)*
+        Получение информации по нескольким заявкам
+
+        Возвращает информацию по нескольким заявкам с учетом мультиточек. Вы можете использовать операцию для получения информации по заявке, созданной через v1/claims/create.
+
+        :param Optional[List['str']] claim_ids: Массив идентификаторов заявки для которых нужно получить информацию *(Обязательный параметр)*
+
+        `Официальная документация /b2b/cargo/integration/v2/claims/bulk_info <https://yandex.ru/dev/taxi/doc/cargo-api/ref/v2/claims/IntegrationV2ClaimsBulkInfo-docpage/>`_
         """
         params = {}
         body = collections.defaultdict(dict)
