@@ -102,13 +102,13 @@ class CargoItemMP(YCBase):
 
     :param str fiscalization_payment_mode: Признак способа расчета *(Обязательный параметр)* (full_payment)
 
-                * **full_prepayment** - Полная предоплата
-                * **partial_prepayment** - Частичная предоплата
-                * **advance** - Аванс
-                * **full_payment** - Полный расчет
-                * **partial_payment** - Частичный расчет и кредит
-                * **credit** - Кредит
-                * **credit_payment** - Выплата по кредиту
+        * **full_prepayment** - Полная предоплата
+        * **partial_prepayment** - Частичная предоплата
+        * **advance** - Аванс
+        * **full_payment** - Полный расчет
+        * **partial_payment** - Частичный расчет и кредит
+        * **credit** - Кредит
+        * **credit_payment** - Выплата по кредиту
 
     :param Optional[str] fiscalization_product_code: Код товара
     :param Optional[str] fiscalization_country_of_origin_code: Код страны происхождения товара (RU)
@@ -1256,6 +1256,12 @@ class ClaimsReportStatusResponse(YCBase):
         """
 
         :return: ???
+
+            * **in_progress** - ???
+            * **retry** - ???
+            * **complete** - ???
+            * **failed** - ???
+
         :rtype: str
         """
         return self.body.get("status")
@@ -1744,6 +1750,10 @@ class Event(YCBase):
         """
 
         :return: Резолюция терминального статуса
+
+            * **success** - ???
+            * **failed** - ???
+
         :rtype: Optional[str]
         """
         return self.body.get("resolution")
@@ -2468,6 +2478,11 @@ class ResponseCargoPointMP(YCBase):
         """
 
         :return: Тип точки
+
+            * **source** - ???
+            * **destination** - ???
+            * **return** - ???
+
         :rtype: str
         """
         return self.body.get("type")
