@@ -359,7 +359,17 @@ class SearchedClaimMP(YCBase):
         * **paid** - платная отмена
 
     :param str client_requirements_taxi_class: Класс такси. Возможные значения express, cargo. *(Обязательный параметр)* (express)
+
+        * **express** - Легковое авто
+        * **courier** - Курьер
+        * **cargo** - Грузовое авто
+
     :param Optional[str] client_requirements_cargo_type: Тип грузовика (lcv_m)
+
+        * **van** - 190см в длину, 100 в шириру, 90 в высоту
+        * **lcv_m** - 260см в длину, 160 в ширину, 150 в высоту
+        * **lcv_l** - 400 см в длину, 190 в ширину, 200 в высоту
+
     :param Optional[int] client_requirements_cargo_loaders: Требуемое число грузчиков
     :param Optional[List['str']] client_requirements_cargo_options: Дополнительные опции тарифа
     :param Optional[List['MatchedCar']] matched_cars: Информация об исполнителе (массив, на данный момент всегда 1 элемент)
@@ -999,6 +1009,11 @@ class SearchedClaimMP(YCBase):
         """
 
         :return: Класс такси. Возможные значения express, cargo.
+
+            * **express** - Легковое авто
+            * **courier** - Курьер
+            * **cargo** - Грузовое авто
+
         :rtype: str
         """
         return self.body.get("client_requirements_taxi_class")
@@ -1008,6 +1023,11 @@ class SearchedClaimMP(YCBase):
         """
 
         :return: Тип грузовика
+
+            * **van** - 190см в длину, 100 в шириру, 90 в высоту
+            * **lcv_m** - 260см в длину, 160 в ширину, 150 в высоту
+            * **lcv_l** - 400 см в длину, 190 в ширину, 200 в высоту
+
         :rtype: Optional[str]
         """
         return self.body.get("client_requirements_cargo_type")
@@ -1657,8 +1677,32 @@ class CargoItemMP(YCBase):
     :param str cost_currency: Валюта цены за штуку в формате ISO 4217 (используется в оплате при получении товара) *(Обязательный параметр)* (RUB)
     :param int quantity: Количество указанного товара *(Обязательный параметр)* (1)
     :param int fiscalization_vat_code: Ставка НДС *(Обязательный параметр)* (1)
+
+        * **1** - Без НДС
+        * **2** - НДС по ставке 0%
+        * **3** - НДС по ставке 10%
+        * **4** - НДС чека по ставке 20%
+        * **5**	- НДС чека по расчетной ставке 10/110
+        * **6** - НДС чека по расчетной ставке 20/120
+
     :param str fiscalization_payment_subject: Признак предмета расчета *(Обязательный параметр)* (commodity)
+
+        * **1** - Без НДС
+        * **2** - НДС по ставке 0%
+        * **3** - НДС по ставке 10%
+        * **4** - НДС чека по ставке 20%
+        * **5**	- НДС чека по расчетной ставке 10/110
+        * **6** - НДС чека по расчетной ставке 20/120
+
     :param str fiscalization_payment_mode: Признак способа расчета *(Обязательный параметр)* (full_payment)
+
+        * **1** - Без НДС
+        * **2** - НДС по ставке 0%
+        * **3** - НДС по ставке 10%
+        * **4** - НДС чека по ставке 20%
+        * **5**	- НДС чека по расчетной ставке 10/110
+        * **6** - НДС чека по расчетной ставке 20/120
+
     :param Optional[str] fiscalization_product_code: Код товара
     :param Optional[str] fiscalization_country_of_origin_code: Код страны происхождения товара (RU)
     :param Optional[str] fiscalization_customs_declaration_number: Номер таможенной декларации (10702030/260917/0080123)
@@ -1886,6 +1930,14 @@ class CargoItemMP(YCBase):
         """
 
         :return: Ставка НДС
+
+            * **1** - Без НДС
+            * **2** - НДС по ставке 0%
+            * **3** - НДС по ставке 10%
+            * **4** - НДС чека по ставке 20%
+            * **5**	- НДС чека по расчетной ставке 10/110
+            * **6** - НДС чека по расчетной ставке 20/120
+
         :rtype: int
         """
         return self.body.get("fiscalization_vat_code")
@@ -1895,6 +1947,14 @@ class CargoItemMP(YCBase):
         """
 
         :return: Признак предмета расчета
+
+            * **1** - Без НДС
+            * **2** - НДС по ставке 0%
+            * **3** - НДС по ставке 10%
+            * **4** - НДС чека по ставке 20%
+            * **5**	- НДС чека по расчетной ставке 10/110
+            * **6** - НДС чека по расчетной ставке 20/120
+
         :rtype: str
         """
         return self.body.get("fiscalization_payment_subject")
@@ -1904,6 +1964,14 @@ class CargoItemMP(YCBase):
         """
 
         :return: Признак способа расчета
+
+            * **1** - Без НДС
+            * **2** - НДС по ставке 0%
+            * **3** - НДС по ставке 10%
+            * **4** - НДС чека по ставке 20%
+            * **5**	- НДС чека по расчетной ставке 10/110
+            * **6** - НДС чека по расчетной ставке 20/120
+
         :rtype: str
         """
         return self.body.get("fiscalization_payment_mode")
@@ -1986,6 +2054,14 @@ class CargoPointMP(YCBase):
     :param Optional[str] payment_on_delivery_customer_email: Электронная почта пользователя. Если не указано, будет использована почта получателя из точки (morty@yandex.ru)
     :param Optional[str] payment_on_delivery_customer_phone: Телефон пользователя. Если не указано, будет использован телефон получателя из точки (79000000000)
     :param Optional[int] payment_on_delivery_tax_system_code: Система налогообложения магазина (1)
+
+        * **1** - Общая система налогообложения
+        * **2** - Упрощенная (УСН, доходы)
+        * **3** - Упрощенная (УСН, доходы минус расходы)
+        * **4** - Единый налог на вмененный доход (ЕНВД)
+        * **5** - Единый сельскохозяйственный налог (ЕСН)
+        * **6** - Патентная система налогообложения
+
     :param Optional[str] payment_on_delivery_currency: Трехзначный код валюты, в которой ведется расчет (RUB)
     :param Optional[str] external_order_id: Номер заказа клиента (100)
     :param Optional[str] pickup_code: Код выдачи товара (ПВЗ) (8934)
@@ -2353,6 +2429,11 @@ class CargoPointMP(YCBase):
         """
 
         :return: Тип точки
+
+            * **source** — точка получения отправления (ровно одна)
+            * **destination** — точка доставки отправления
+            * **return** — точка возврата части товаров, опциональная (не более одной)
+
         :rtype: str
         """
         return self.body.get("type")
@@ -2416,6 +2497,14 @@ class CargoPointMP(YCBase):
         """
 
         :return: Система налогообложения магазина
+
+            * **1** - Общая система налогообложения
+            * **2** - Упрощенная (УСН, доходы)
+            * **3** - Упрощенная (УСН, доходы минус расходы)
+            * **4** - Единый налог на вмененный доход (ЕНВД)
+            * **5** - Единый сельскохозяйственный налог (ЕСН)
+            * **6** - Патентная система налогообложения
+
         :rtype: Optional[int]
         """
         return self.body.get("payment_on_delivery_tax_system_code")
@@ -2519,6 +2608,10 @@ class ClaimWarning(YCBase):
         """
 
         :return: Источник предупреждения (ex. client_requirements)
+
+            * **client_requirements** - Требования клиента
+            * **taxi_requirements** - Требования такси
+
         :rtype: str
         """
         return self.body.get("source")
@@ -2528,6 +2621,10 @@ class ClaimWarning(YCBase):
         """
 
         :return: Тип предупреждения (ex. not_fit_in_car)
+
+            * **not_fit_in_car** - Товар не помещается в заявленное транспортное средство
+            * **requirement_unavailable** - Некоторые из пожеланий недоступны на выбранном тарифе
+
         :rtype: str
         """
         return self.body.get("code")
@@ -3356,6 +3453,12 @@ class ResponseCargoPointMP(YCBase):
         """
 
         :return: Статус посещения данной точки pending - точка еще не посещена arrived - водитель прибыл на точку visited - водитель передал/забрал груз на точке skipped - точка пропущена (в случае возврата, когда клиент не смог принять груз)
+
+            * **pending** - ждет исполнения
+            * **arrived** - курьер прибыл на точку, но еще не передал/забрал товар
+            * **visited** - передали/забрали товар из точки
+            * **skipped** - возврат (то есть клиент в этой точке не принял посылку и ее повезут в точку возврата. не значит, что товар уже вернули на склад)
+
         :rtype: str
         """
         return self.body.get("visit_status")
@@ -3437,6 +3540,12 @@ class ResponseCargoPointMP(YCBase):
         """
 
         :return: Система налогообложения магазина
+
+            * **pending** - ждет исполнения
+            * **arrived** - курьер прибыл на точку, но еще не передал/забрал товар
+            * **visited** - передали/забрали товар из точки
+            * **skipped** - возврат (то есть клиент в этой точке не принял посылку и ее повезут в точку возврата. не значит, что товар уже вернули на склад)
+
         :rtype: Optional[int]
         """
         return self.body.get("payment_on_delivery_tax_system_code")
