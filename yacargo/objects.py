@@ -55,9 +55,9 @@ class YCBase:
 class CargoItemMP(YCBase):
     """
 
-    ???
+    Информация о единице груза для отправления
 
-    ???
+    Груз для отправления
 
     :param Optional[str] extra_id: Краткий уникальный идентификатор item'а (в рамках заявки) (БП-208)
     :param int pickup_point: id точки, откуда нужно забрать товар (отличается от id в заявке) *(Обязательный параметр)* (1)
@@ -438,7 +438,7 @@ class CargoItemMP(YCBase):
 class CargoPointMP(YCBase):
     """
 
-    ???
+    Точка маршрута
 
     Описание точки в заявке с мультиточками
 
@@ -919,14 +919,6 @@ class CargoPointMP(YCBase):
         """
 
         :return: Система налогообложения магазина
-
-            * **1** - Общая система налогообложения
-            * **2** - Упрощенная (УСН, доходы)
-            * **3** - Упрощенная (УСН, доходы минус расходы)
-            * **4** - Единый налог на вмененный доход (ЕНВД)
-            * **5** - Единый сельскохозяйственный налог (ЕСН)
-            * **6** - Патентная система налогообложения
-
         :rtype: Optional[int]
         """
         return self.body.get("payment_on_delivery_tax_system_code")
@@ -962,9 +954,9 @@ class CargoPointMP(YCBase):
 class ClaimRequirement(YCBase):
     """
 
-    ???
-
     Дополнительные требования к заявке
+
+    Информация о дополнительных требованиях к заявке
 
     """
 
@@ -979,9 +971,9 @@ class ClaimRequirement(YCBase):
 class ClaimWarning(YCBase):
     """
 
-    ???
+    Предупреждение
 
-    ???
+    Информация о предупреждении
 
     :param str source: Источник предупреждения (ex. client_requirements) *(Обязательный параметр)* (client_requirements)
 
@@ -1064,12 +1056,12 @@ class ClaimWarning(YCBase):
 class ClaimsJournalResponse(YCBase):
     """
 
-    ???
+    Журнал изменений заказа
 
-    ???
+    Информация об событиях в журнале изменений заказа
 
     :param str cursor: Идентификатор последнего изменения *(Обязательный параметр)*
-    :param List['Event'] events: ??? *(Обязательный параметр)*
+    :param List['Event'] events: Список изменений заказа *(Обязательный параметр)*
     """
 
     def __init__(self,
@@ -1104,7 +1096,7 @@ class ClaimsJournalResponse(YCBase):
     def events(self) -> List['Event']:
         """
 
-        :return: ???
+        :return: Список изменений заказа
         :rtype: List['Event']
         """
         return [Event(operation_id=item.get("operation_id", None),
@@ -1123,9 +1115,9 @@ class ClaimsJournalResponse(YCBase):
 class ClaimsReportGenerateResponse(YCBase):
     """
 
-    ???
+    Статус генерации отчета
 
-    ???
+    Информация о статусе генерации отчета
 
     :param str task_id: ID, по которому можно запрашивать статус *(Обязательный параметр)* (f9b4825f45f64914affaeb07fbae9757)
     """
@@ -1156,12 +1148,12 @@ class ClaimsReportGenerateResponse(YCBase):
 class ClaimsReportStatusResponse(YCBase):
     """
 
-    ???
+    Проверка статуса отчета
 
-    ???
+    Информация о статусе отчета
 
     :param str task_id: task_id из запроса *(Обязательный параметр)* (f9b4825f45f4914affaeb07fbae9757)
-    :param str status: ??? *(Обязательный параметр)* (in_progress)
+    :param str status: Информация о статусе отчета *(Обязательный параметр)* (in_progress)
 
         * **in_progress** - ???
         * **retry** - ???
@@ -1169,9 +1161,9 @@ class ClaimsReportStatusResponse(YCBase):
         * **failed** - ???
 
     :param str author: Yandex Login автора отчета *(Обязательный параметр)* (morty)
-    :param str created_at: ??? *(Обязательный параметр)* (2020-01-01T00:00:00+00:00)
-    :param str request_since_date: ??? *(Обязательный параметр)* (2020-01-01)
-    :param str request_till_date: ??? *(Обязательный параметр)* (2020-01-02)
+    :param str created_at: Дата формирования отчета *(Обязательный параметр)* (2020-01-01T00:00:00+00:00)
+    :param str request_since_date: Дата начала отчетного периода *(Обязательный параметр)* (2020-01-01)
+    :param str request_till_date: Дата конца отчетного периода *(Обязательный параметр)* (2020-01-02)
     :param Optional[str] request_lang: Язык, на котором надо генерировать отчет.Если не указан, будет использован Accept-Language (ru)
     :param Optional[str] request_department_id: ID отдела (значение игнорируется). Поле нужно для совместимости с API КК
     :param str request_idempotency_token: Уникальный для данного клиента токен идемпотентности *(Обязательный параметр)* (f9b4825f45f64914affaeb07fbae9757)
@@ -1255,7 +1247,7 @@ class ClaimsReportStatusResponse(YCBase):
     def status(self) -> str:
         """
 
-        :return: ???
+        :return: Информация о статусе отчета
 
             * **in_progress** - ???
             * **retry** - ???
@@ -1279,7 +1271,7 @@ class ClaimsReportStatusResponse(YCBase):
     def created_at(self) -> str:
         """
 
-        :return: ???
+        :return: Дата формирования отчета
         :rtype: str
         """
         return self.body.get("created_at")
@@ -1288,7 +1280,7 @@ class ClaimsReportStatusResponse(YCBase):
     def request_since_date(self) -> str:
         """
 
-        :return: ???
+        :return: Дата начала отчетного периода
         :rtype: str
         """
         return self.body.get("request_since_date")
@@ -1297,7 +1289,7 @@ class ClaimsReportStatusResponse(YCBase):
     def request_till_date(self) -> str:
         """
 
-        :return: ???
+        :return: Дата конца отчетного периода
         :rtype: str
         """
         return self.body.get("request_till_date")
@@ -1342,9 +1334,9 @@ class ClaimsReportStatusResponse(YCBase):
 class ConfirmationCodeResponse(YCBase):
     """
 
-    ???
+    Код подтверждения
 
-    ???
+    Информация о коде подтверждения
 
     :param str code: Код подтверждения *(Обязательный параметр)* (2000)
     :param int attempts: Число оставшихся попыток ввода кода *(Обязательный параметр)* (1)
@@ -1391,9 +1383,9 @@ class ConfirmationCodeResponse(YCBase):
 class CutClaimResponse(YCBase):
     """
 
-    ???
+    Измененная заявка
 
-    ???
+    Информация об измененной заявке
 
     :param str id: id заявки, полученный на этапе создания заявки *(Обязательный параметр)* (741cedf82cd464fa6fa16d87155c636)
     :param str status: Статус заявки *(Обязательный параметр)* (new)
@@ -1535,11 +1527,11 @@ class CutClaimResponse(YCBase):
 class Event(YCBase):
     """
 
-    ???
+    Изменение в рамках заказа
 
-    ???
+    Информация об изменении заказа
 
-    :param int operation_id: ??? *(Обязательный параметр)* (1)
+    :param int operation_id: Идентификатор операции *(Обязательный параметр)* (1)
     :param str claim_id: Идентификатор заявки claim_id *(Обязательный параметр)* (3b8d1af142664fde824626a7c19e2bd9)
     :param str change_type: Тип изменения. Возможные значения status_changed — изменение статуса; price_changed — изменение цены *(Обязательный параметр)* (status_changed)
     :param str updated_ts: Время события в формате ISO 8601 *(Обязательный параметр)* (2020-01-01T00:00:00+00:00)
@@ -1573,15 +1565,15 @@ class Event(YCBase):
         * **cancelled_by_taxi** - водитель отменил заказ (до получения груза)
         * **cancelled_with_items_on_hands** - клиент платно отменил заявку без необходимости возврата груза (заявка была создана с флагом optional_return)
 
-    :param Optional[str] new_price: ??? (20.00)
-    :param Optional[str] new_currency: ??? (RUB)
+    :param Optional[str] new_price: Цена заказа (20.00)
+    :param Optional[str] new_currency: Код валюты заказа (RUB)
     :param Optional[str] resolution: Резолюция терминального статуса (success)
 
         * **success** - ???
         * **failed** - ???
 
     :param int revision: Версия изменения заявки *(Обязательный параметр)* (1)
-    :param Optional[str] client_id: ??? (95d010b2471041499b8cb1bfa282692f)
+    :param Optional[str] client_id: Идентификатор клиента (95d010b2471041499b8cb1bfa282692f)
     """
 
     def __init__(self,
@@ -1657,7 +1649,7 @@ class Event(YCBase):
     def operation_id(self) -> int:
         """
 
-        :return: ???
+        :return: Идентификатор операции
         :rtype: int
         """
         return self.body.get("operation_id")
@@ -1731,7 +1723,7 @@ class Event(YCBase):
     def new_price(self) -> Optional[str]:
         """
 
-        :return: ???
+        :return: Цена заказа
         :rtype: Optional[str]
         """
         return self.body.get("new_price")
@@ -1740,7 +1732,7 @@ class Event(YCBase):
     def new_currency(self) -> Optional[str]:
         """
 
-        :return: ???
+        :return: Код валюты заказа
         :rtype: Optional[str]
         """
         return self.body.get("new_currency")
@@ -1771,7 +1763,7 @@ class Event(YCBase):
     def client_id(self) -> Optional[str]:
         """
 
-        :return: ???
+        :return: Идентификатор клиента
         :rtype: Optional[str]
         """
         return self.body.get("client_id")
@@ -1780,9 +1772,9 @@ class Event(YCBase):
 class HumanErrorMessage(YCBase):
     """
 
-    ???
+    Человеко-понятная ошибка
 
-    ???
+    Информация о человеко-понятной ошибке
 
     :param str code: Машино-понятный код ошибки *(Обязательный параметр)* (some_error)
     :param str message: Человеко-понятный локализованный текст ошибки *(Обязательный параметр)* (Some error)
@@ -1829,7 +1821,7 @@ class HumanErrorMessage(YCBase):
 class MatchedCar(YCBase):
     """
 
-    ???
+    Подобранная машина
 
     Информация о подобранной машине
 
@@ -1962,9 +1954,9 @@ class MatchedCar(YCBase):
 class PerformerPositionResponse(YCBase):
     """
 
-    ???
+    Позиция исполнителя
 
-    performer position info
+    Информация о позиции исполнителя
 
     :param int position_lat: Широта *(Обязательный параметр)*
     :param int position_lon: Долгота *(Обязательный параметр)*
@@ -2077,7 +2069,7 @@ class PerformerPositionResponse(YCBase):
 class ResponseCargoPointMP(YCBase):
     """
 
-    ???
+    Точка в заявке с мультиточками
 
     Описание точки в заявке с мультиточками
 
@@ -2620,11 +2612,11 @@ class ResponseCargoPointMP(YCBase):
 class SearchClaimsResponseMP(YCBase):
     """
 
-    ???
+    Найденные заявки
 
-    Результат поиска
+    Информация о результатах поиска
 
-    :param List['SearchedClaimMP'] claims: ??? *(Обязательный параметр)*
+    :param List['SearchedClaimMP'] claims: Список найденных заявок *(Обязательный параметр)*
     """
 
     def __init__(self,
@@ -2644,7 +2636,7 @@ class SearchClaimsResponseMP(YCBase):
     def claims(self) -> List['SearchedClaimMP']:
         """
 
-        :return: ???
+        :return: Список найденных заявок
         :rtype: List['SearchedClaimMP']
         """
         return [SearchedClaimMP(id=item.get("id", None),
@@ -2703,9 +2695,9 @@ class SearchClaimsResponseMP(YCBase):
 class SearchedClaimMP(YCBase):
     """
 
-    ???
+    Заявка
 
-    ???
+    Информация о заявке
 
     :param str id: id заявки, полученный на этапе создания заявки *(Обязательный параметр)* (741cedf82cd464fa6fa16d87155c636)
     :param Optional[str] corp_client_id: id корпоративного клиента (из OAuth токена) (cd8cc018bde34597932855e3cfdce927)
@@ -2743,8 +2735,8 @@ class SearchedClaimMP(YCBase):
         * **cancelled_by_taxi** - водитель отменил заказ (до получения груза)
         * **cancelled_with_items_on_hands** - клиент платно отменил заявку без необходимости возврата груза (заявка была создана с флагом optional_return)
 
-    :param int version: ??? *(Обязательный параметр)*
-    :param Optional[List['HumanErrorMessage']] error_messages: ???
+    :param int version: Версия *(Обязательный параметр)*
+    :param Optional[List['HumanErrorMessage']] error_messages: Список сообщений об ошибках
     :param str emergency_contact_name: Имя контактного лица *(Обязательный параметр)* (Рик)
     :param str emergency_contact_phone: Телефон контактного лица *(Обязательный параметр)* (+79099999999)
     :param Optional[bool] skip_door_to_door: Отказ от доставки до двери. В случае true — курьер доставит заказ только на улицу, до подъезда
@@ -2762,10 +2754,10 @@ class SearchedClaimMP(YCBase):
     :param int pricing_offer_price_raw: (deprecated) Цена по офферу в валюте, указанной в договоре *(Обязательный параметр)* (12)
     :param str pricing_offer_price: Decimal(19, 4) *(Обязательный параметр)* (12.50)
     :param Optional[str] pricing_currency: Трехзначный код валюты, в которой ведется расчет (например, RUB) (RUB)
-    :param str pricing_currency_rules_code: ??? *(Обязательный параметр)* (RUB)
-    :param str pricing_currency_rules_text: ??? *(Обязательный параметр)* (руб.)
-    :param str pricing_currency_rules_template: ??? *(Обязательный параметр)* ($VALUE$ $SIGN$$CURRENCY$)
-    :param Optional[str] pricing_currency_rules_sign: ??? (₽)
+    :param str pricing_currency_rules_code: Код валюты *(Обязательный параметр)* (RUB)
+    :param str pricing_currency_rules_text: Сокращенное наименование валюты *(Обязательный параметр)* (руб.)
+    :param str pricing_currency_rules_template: Шаблон *(Обязательный параметр)* ($VALUE$ $SIGN$$CURRENCY$)
+    :param Optional[str] pricing_currency_rules_sign: Символ валюты (₽)
     :param str pricing_final_price: Decimal(19, 4) *(Обязательный параметр)* (12.50)
     :param Optional[str] available_cancel_state: Признак возможности платной/бесплатной отмены (free)
 
@@ -3182,33 +3174,33 @@ class SearchedClaimMP(YCBase):
 
         :return: Статус заявки
 
-            * **new** - новая заявка
-            * **estimating** - идет процесс оценки заявки (подбор типа автомобиля по параметрам груза и расчет стоимости)
-            * **estimating_failed** - не удалось оценить заявку. Причину можно увидеть в error_messages в ответе ручки /info
-            * **ready_for_approval** - заявка успешно оценена и ожидает подтверждения от клиента
-            * **accepted** - заявка подтверждена клиентом
-            * **performer_lookup** - заявка взята в обработку. Промежуточный статус перед созданием заказа
-            * **performer_draft** - идет поиск водителя
-            * **performer_found** - водитель найден и едет в точку А
-            * **performer_not_found** - не удалось найти водителя. Можно попробовать снова через некоторое время
-            * **pickup_arrived** - водитель приехал на точку А
-            * **ready_for_pickup_confirmation** - водитель ждет, когда отправитель назовет ему код подтверждения
-            * **pickuped** - водитель успешно забрал груз
-            * **delivery_arrived** - водитель приехал на точку Б
-            * **ready_for_delivery_confirmation** - водитель ждет, когда получатель назовет ему код подтверждения
-            * **pay_waiting** - заказ ожидает оплаты (актуально для оплаты при получении)
-            * **delivered** - водитель успешно доставил груз (ввел смс код). Код приходит после оплаты, если была оплата при получении.
-            * **delivered_finish** - заказ завершен
-            * **returning** -  водителю пришлось вернуть груз и он едет в точку возврата
-            * **return_arrived** - водитель приехал на точку возврата
-            * **ready_for_return_confirmation** - водитель в точке возврата ожидает, когда ему назовут код подтверждения
-            * **returned** - водитель успешно вернул груз (ввел смс код)
-            * **returned_finish** - заказ завершен
-            * **failed** - терминальный статус, не удалось начать выполнение заказа
-            * **cancelled** - заказ был отменен клиентом бесплатно
-            * **cancelled_with_payment** - заказ был отменен клиентом платно (водитель уже приехал)
-            * **cancelled_by_taxi** - водитель отменил заказ (до получения груза)
-            * **cancelled_with_items_on_hands** - клиент платно отменил заявку без необходимости возврата груза (заявка была создана с флагом optional_return)
+            * **new** - ???
+            * **estimating** - ???
+            * **estimating_failed** - ???
+            * **ready_for_approval** - ???
+            * **accepted** - ???
+            * **performer_lookup** - ???
+            * **performer_draft** - ???
+            * **performer_found** - ???
+            * **performer_not_found** - ???
+            * **pickup_arrived** - ???
+            * **ready_for_pickup_confirmation** - ???
+            * **pickuped** - ???
+            * **delivery_arrived** - ???
+            * **ready_for_delivery_confirmation** - ???
+            * **pay_waiting** - ???
+            * **delivered** - ???
+            * **delivered_finish** - ???
+            * **returning** - ???
+            * **return_arrived** - ???
+            * **ready_for_return_confirmation** - ???
+            * **returned** - ???
+            * **returned_finish** - ???
+            * **failed** - ???
+            * **cancelled** - ???
+            * **cancelled_with_payment** - ???
+            * **cancelled_by_taxi** - ???
+            * **cancelled_with_items_on_hands** - ???
 
         :rtype: str
         """
@@ -3218,7 +3210,7 @@ class SearchedClaimMP(YCBase):
     def version(self) -> int:
         """
 
-        :return: ???
+        :return: Версия
         :rtype: int
         """
         return self.body.get("version")
@@ -3227,7 +3219,7 @@ class SearchedClaimMP(YCBase):
     def error_messages(self) -> Optional[List['HumanErrorMessage']]:
         """
 
-        :return: ???
+        :return: Список сообщений об ошибках
         :rtype: Optional[List['HumanErrorMessage']]
         """
         return [HumanErrorMessage(code=item.get("code", None),
@@ -3391,7 +3383,7 @@ class SearchedClaimMP(YCBase):
     def pricing_currency_rules_code(self) -> str:
         """
 
-        :return: ???
+        :return: Код валюты
         :rtype: str
         """
         return self.body.get("pricing_currency_rules_code")
@@ -3400,7 +3392,7 @@ class SearchedClaimMP(YCBase):
     def pricing_currency_rules_text(self) -> str:
         """
 
-        :return: ???
+        :return: Сокращенное наименование валюты
         :rtype: str
         """
         return self.body.get("pricing_currency_rules_text")
@@ -3409,7 +3401,7 @@ class SearchedClaimMP(YCBase):
     def pricing_currency_rules_template(self) -> str:
         """
 
-        :return: ???
+        :return: Шаблон
         :rtype: str
         """
         return self.body.get("pricing_currency_rules_template")
@@ -3418,7 +3410,7 @@ class SearchedClaimMP(YCBase):
     def pricing_currency_rules_sign(self) -> Optional[str]:
         """
 
-        :return: ???
+        :return: Символ валюты
         :rtype: Optional[str]
         """
         return self.body.get("pricing_currency_rules_sign")
@@ -3622,9 +3614,9 @@ class SearchedClaimMP(YCBase):
 class VoiceforwardingResponse(YCBase):
     """
 
-    ???
+    Номер телефона для звонка водителю
 
-    ???
+    Информация о номере телефона для звонка водителю
 
     :param str phone: Номер телефона *(Обязательный параметр)* (+79099999998)
     :param str ext: Добавочный номер *(Обязательный параметр)* (0163)

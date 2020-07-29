@@ -269,7 +269,7 @@ class YCAPI:
 
         Возвращает номер телефона для звонка водителю, который выполняет заявку.
 
-        :param str claim_id: ??? *(Обязательный параметр)*
+        :param str claim_id: id заявки, полученный на этапе создания заявки *(Обязательный параметр)*
 
         `Официальная документация /b2b/cargo/integration/v1/driver-voiceforwarding <https://yandex.ru/dev/taxi/doc/cargo-api/ref/v1/performer/IntegrationV1DriverVoiceForwarding-docpage/>`_
         """
@@ -330,8 +330,8 @@ class YCAPI:
 
         Инициализирует создания отчета. Отчет генерируется ассинхронно
 
-        :param str since_date: ??? *(Обязательный параметр)* (2020-01-01)
-        :param str till_date: ??? *(Обязательный параметр)* (2020-01-02)
+        :param str since_date: Дата начала отчетного периода *(Обязательный параметр)* (2020-01-01)
+        :param str till_date: Дата конца отчетного периода *(Обязательный параметр)* (2020-01-02)
         :param Optional[str] lang: Язык, на котором надо генерировать отчет.Если не указан, будет использован Accept-Language (ru)
         :param Optional[str] department_id: ID отдела (значение игнорируется). Поле нужно для совместимости с API КК
         :param str idempotency_token: Уникальный для данного клиента токен идемпотентности *(Обязательный параметр)* (f9b4825f45f64914affaeb07fbae9757)
