@@ -16,7 +16,7 @@ DOMAIN = 'b2b.taxi.yandex.net'
 DOMAIN_TEST = 'b2b.taxi.tst.yandex.net'
 
 __title__ = 'yaCargo'
-__version__ = '0.0.4'
+__version__ = '0.0.5'
 __author__ = 'Pasha Yegorov'
 __license__ = 'Apache 2.0'
 
@@ -112,8 +112,8 @@ class YCAPI:
 
         Подтверждает заявку при успешной оценке. После подтверждения заявки сервис запустит процесс поиска исполнителя. Предложение pricing.offer действительно в течение ограниченного времени. Если предложение более недействительно, то заказ перейдет в статус performer_not_found.
 
-        :param str claim_id: id заявки, полученный на этапе создания заявки
-        :param Optional[int] version: Версия заявки. Изменяется после редактирования заявки *(Обязательный параметр)* (1)
+        :param str claim_id: id заявки, полученный на этапе создания заявки *(Обязательный параметр)*
+        :param int version: Версия заявки. Изменяется после редактирования заявки *(Обязательный параметр)* (1)
 
         `Официальная документация /b2b/cargo/integration/v1/claims/accept <https://yandex.ru/dev/taxi/doc/cargo-api/ref/v1/claims/IntegrationV1ClaimsAccept-docpage/>`_
         """
@@ -122,6 +122,8 @@ class YCAPI:
 
         if claim_id is not None:
             params["claim_id"] = validate_fields('claim_id', claim_id, str)
+        if claim_id is None:
+            raise InputParamError("<claim_id> (=>claim_id) of <claim_accept> is a required parameter")
 
         if version is not None:
             body["version"] = validate_fields('version', version, int)
@@ -146,9 +148,9 @@ class YCAPI:
 
         Отменяет заявку, которая была подтверждена. Операция может быть выполнена в течение ограниченного времени. Отмена заявки может быть платной и бесплатной. Чтобы узнать тип отмены, используйте операцию получения информации по заявке claims/info в поле available_cancel_state.
 
-        :param Optional[str] claim_id: id заявки, полученный на этапе создания заявки
-        :param Optional[int] version: Версия отменяемой заявки *(Обязательный параметр)* (1)
-        :param Optional[str] cancel_state: Статус отмены (платная или бесплатная) *(Обязательный параметр)* (free)
+        :param str claim_id: id заявки, полученный на этапе создания заявки *(Обязательный параметр)*
+        :param int version: Версия отменяемой заявки *(Обязательный параметр)* (1)
+        :param str cancel_state: Статус отмены (платная или бесплатная) *(Обязательный параметр)* (free)
 
             * **free** - бесплатная отмена
             * **paid** - платная отмена
@@ -161,6 +163,8 @@ class YCAPI:
 
         if claim_id is not None:
             params["claim_id"] = validate_fields('claim_id', claim_id, str)
+        if claim_id is None:
+            raise InputParamError("<claim_id> (=>claim_id) of <claim_cancel> is a required parameter")
 
         if version is not None:
             body["version"] = validate_fields('version', version, int)
@@ -171,9 +175,6 @@ class YCAPI:
             body["cancel_state"] = validate_fields('cancel_state', cancel_state, str)
         if cancel_state is None:
             raise InputParamError("<cancel_state> (=>cancel_state) of <claim_cancel> is a required parameter")
-
-        if cancel_state not in ['free', 'paid']:
-            raise InputParamError("<cancel_state> should be in <free, paid>")
 
         if cancel_state not in ['free', 'paid']:
             raise InputParamError("<cancel_state> of <claim_cancel> should be in <free, paid>")
@@ -197,13 +198,13 @@ class YCAPI:
 
         Возвращает ЭТН в формате PDF. Операцию можно выполнить после того, как на заказ будет найден исполнитель. Электронные цифровые подписи добавляются в документ в процессе выполнения заказа. Если по какой-то причине требуется перейти на бумажный акт, то с помощью данной операции можно получить частично подписанный документ.
 
-        :param Optional[str] claim_id: id заявки, полученный на этапе создания заявки
-        :param str document_type: Тип документа
+        :param str claim_id: id заявки, полученный на этапе создания заявки *(Обязательный параметр)*
+        :param str document_type: Тип документа *(Обязательный параметр)*
 
             * **act** - акт
 
-        :param int version: Версия заявки
-        :param str status: Статус заявки
+        :param int version: Версия заявки *(Обязательный параметр)*
+        :param str status: Статус заявки *(Обязательный параметр)*
 
         `Официальная документация /b2b/cargo/integration/v1/claims/document <https://yandex.ru/dev/taxi/doc/cargo-api/ref/v1/claims/IntegrationV1ClaimsDocument-docpage/>`_
         """
@@ -212,21 +213,26 @@ class YCAPI:
 
         if claim_id is not None:
             params["claim_id"] = validate_fields('claim_id', claim_id, str)
+        if claim_id is None:
+            raise InputParamError("<claim_id> (=>claim_id) of <claim_document> is a required parameter")
 
         if document_type is not None:
             params["document_type"] = validate_fields('document_type', document_type, str)
-
-        if document_type not in ['act']:
-            raise InputParamError("<document_type> should be in <act>")
+        if document_type is None:
+            raise InputParamError("<document_type> (=>document_type) of <claim_document> is a required parameter")
 
         if document_type not in ['act']:
             raise InputParamError("<document_type> of <claim_document> should be in <act>")
 
         if version is not None:
             params["version"] = validate_fields('version', version, int)
+        if version is None:
+            raise InputParamError("<version> (=>version) of <claim_document> is a required parameter")
 
         if status is not None:
             params["status"] = validate_fields('status', status, str)
+        if status is None:
+            raise InputParamError("<status> (=>status) of <claim_document> is a required parameter")
 
         return self._request(resource="/b2b/cargo/integration/v1/claims/document", params=params, body=body, method="get")
 
@@ -263,7 +269,7 @@ class YCAPI:
 
         Возвращает номер телефона для звонка водителю, который выполняет заявку.
 
-        :param Optional[str] claim_id: ??? *(Обязательный параметр)*
+        :param str claim_id: ??? *(Обязательный параметр)*
 
         `Официальная документация /b2b/cargo/integration/v1/driver-voiceforwarding <https://yandex.ru/dev/taxi/doc/cargo-api/ref/v1/performer/IntegrationV1DriverVoiceForwarding-docpage/>`_
         """
@@ -290,7 +296,7 @@ class YCAPI:
 
         Возвращает координаты, скорость и направления движения исполнителя заявки.
 
-        :param Optional[str] claim_id: id заявки, полученный на этапе создания заявки
+        :param str claim_id: id заявки, полученный на этапе создания заявки *(Обязательный параметр)*
 
         `Официальная документация /b2b/cargo/integration/v1/claims/performer-position <https://yandex.ru/dev/taxi/doc/cargo-api/ref/v1/performer/IntegrationV1ClaimsPerformerPosition-docpage/>`_
         """
@@ -299,6 +305,8 @@ class YCAPI:
 
         if claim_id is not None:
             params["claim_id"] = validate_fields('claim_id', claim_id, str)
+        if claim_id is None:
+            raise InputParamError("<claim_id> (=>claim_id) of <performer_position> is a required parameter")
 
         item = self._request(resource="/b2b/cargo/integration/v1/claims/performer-position", params=params, body=body, method="get")
         return PerformerPositionResponse(position_lat=item.get("position", {}).get("lat", None),
@@ -322,11 +330,11 @@ class YCAPI:
 
         Инициализирует создания отчета. Отчет генерируется ассинхронно
 
-        :param Optional[str] since_date: ??? *(Обязательный параметр)* (2020-01-01)
-        :param Optional[str] till_date: ??? *(Обязательный параметр)* (2020-01-02)
+        :param str since_date: ??? *(Обязательный параметр)* (2020-01-01)
+        :param str till_date: ??? *(Обязательный параметр)* (2020-01-02)
         :param Optional[str] lang: Язык, на котором надо генерировать отчет.Если не указан, будет использован Accept-Language (ru)
         :param Optional[str] department_id: ID отдела (значение игнорируется). Поле нужно для совместимости с API КК
-        :param Optional[str] idempotency_token: Уникальный для данного клиента токен идемпотентности *(Обязательный параметр)* (f9b4825f45f64914affaeb07fbae9757)
+        :param str idempotency_token: Уникальный для данного клиента токен идемпотентности *(Обязательный параметр)* (f9b4825f45f64914affaeb07fbae9757)
 
         `Официальная документация /b2b/cargo/integration/v1/order-report/generate <https://yandex.ru/dev/taxi/doc/cargo-api/ref/v1/reports/IntegrationV1OrderReportGenerate-docpage/>`_
         """
@@ -367,7 +375,7 @@ class YCAPI:
 
         Возвращает состояние отчета
 
-        :param Optional[str] task_id: ID, полученный в результате успешного выполнения операции v1/order-report/generate *(Обязательный параметр)* (f9b4825f45f4914affaeb07fbae9757)
+        :param str task_id: ID, полученный в результате успешного выполнения операции v1/order-report/generate *(Обязательный параметр)* (f9b4825f45f4914affaeb07fbae9757)
 
         `Официальная документация /b2b/cargo/integration/v1/order-report/status <https://yandex.ru/dev/taxi/doc/cargo-api/ref/v1/reports/IntegrationV1OrderReportStatus-docpage/>`_
         """
@@ -401,7 +409,7 @@ class YCAPI:
 
         Возвращает файл отчета
 
-        :param str report_id: ID отчета
+        :param str report_id: ID отчета *(Обязательный параметр)*
 
         `Официальная документация /b2b/cargo/integration/v1/order-report/report <https://yandex.ru/dev/taxi/doc/cargo-api/ref/v1/reports/IntegrationV1OrderReportReport-docpage/>`_
         """
@@ -410,6 +418,8 @@ class YCAPI:
 
         if report_id is not None:
             params["report_id"] = validate_fields('report_id', report_id, str)
+        if report_id is None:
+            raise InputParamError("<report_id> (=>report_id) of <report_download> is a required parameter")
 
         return self._request(resource="/b2b/cargo/integration/v1/order-report/report", params=params, body=body, method="get")
 
@@ -445,17 +455,17 @@ class YCAPI:
 
         Cоздает заявку с переданными параметрами. Заявка попадает в систему логистики и запускает процесс заказа. Отправка запроса не начинает обработку заказа. О результате оценки заказа можно узнать из операции v2/claims/info.
 
-        :param str request_id: Токен идемпотентности (не более 32 символов), желательно использовать uuid
+        :param str request_id: Токен идемпотентности (не более 32 символов), желательно использовать uuid *(Обязательный параметр)*
         :param Optional[str] shipping_document: Сопроводительные документы
-        :param Optional[List['CargoItemMP']] items: Перечисление наименований грузов для отправления *(Обязательный параметр)*
-        :param Optional[List['CargoPointMP']] route_points: Информация по точкам маршрута *(Обязательный параметр)*
-        :param Optional[str] emergency_contact_name: Имя контактного лица *(Обязательный параметр)* (Рик)
-        :param Optional[str] emergency_contact_phone: Телефон контактного лица *(Обязательный параметр)* (+79099999999)
-        :param Optional[str] client_requirements_taxi_class: Класс такси. Возможные значения express, cargo. *(Обязательный параметр)* (express)
+        :param List['CargoItemMP'] items: Перечисление наименований грузов для отправления *(Обязательный параметр)*
+        :param List['CargoPointMP'] route_points: Информация по точкам маршрута *(Обязательный параметр)*
+        :param str emergency_contact_name: Имя контактного лица *(Обязательный параметр)* (Рик)
+        :param str emergency_contact_phone: Телефон контактного лица *(Обязательный параметр)* (+79099999999)
+        :param str client_requirements_taxi_class: Класс такси. Возможные значения express, cargo. *(Обязательный параметр)* (express)
         :param Optional[str] client_requirements_cargo_type: Тип грузовика (lcv_m)
         :param Optional[int] client_requirements_cargo_loaders: Требуемое число грузчиков
         :param Optional[List['str']] client_requirements_cargo_options: Дополнительные опции тарифа
-        :param Optional[str] callback_properties_callback_url: URL, который будет вызываться при смене статусов по заявке.Данный механизм устарел, вместо него следует использовать операцию v1/claims/journal. *(Обязательный параметр)* (https://www.example.com)
+        :param str callback_properties_callback_url: URL, который будет вызываться при смене статусов по заявке.Данный механизм устарел, вместо него следует использовать операцию v1/claims/journal. *(Обязательный параметр)* (https://www.example.com)
         :param Optional[bool] skip_door_to_door: Отказ от доставки до двери. В случае true — курьер доставит заказ только на улицу, до подъезда
         :param Optional[bool] skip_client_notify: Не отправлять получателю нотификации, когда к нему направится курьер
         :param Optional[bool] skip_emergency_notify: Не отправлять нотификации emergency контакту
@@ -466,7 +476,7 @@ class YCAPI:
         :param Optional[List['ClaimRequirement']] requirements_strict_requirements: ???
         :param Optional[List['ClaimRequirement']] requirements_soft_requirements: ???
         :param Optional[str] c2c_data_payment_method_id: ??? (payment_method_id)
-        :param Optional[str] c2c_data_payment_type: ??? *(Обязательный параметр)* (card)
+        :param str c2c_data_payment_type: ??? *(Обязательный параметр)* (card)
         :param Optional[str] c2c_data_partner_tag: ??? (some_tag)
         :param Optional[str] referral_source: Источник заявки (bitrix)
 
@@ -477,8 +487,8 @@ class YCAPI:
 
         if request_id is not None:
             params["request_id"] = validate_fields('request_id', request_id, str)
-        if request_id and len(request_id) > 32:
-            raise InputParamError("<request_id> of <claim_create> should not contain more than 32 element")
+        if request_id is None:
+            raise InputParamError("<request_id> (=>request_id) of <claim_create> is a required parameter")
 
         if shipping_document is not None:
             body["shipping_document"] = validate_fields('shipping_document', shipping_document, str)
@@ -655,8 +665,8 @@ class YCAPI:
 
         Изменяет параметры заявки. Операция доступна до принятия оффера клиентом.
 
-        :param Optional[str] claim_id: id заявки, полученный на этапе создания заявки
-        :param int version: Версия, с которой идет изменение
+        :param str claim_id: id заявки, полученный на этапе создания заявки *(Обязательный параметр)*
+        :param int version: Версия, с которой идет изменение *(Обязательный параметр)*
         :param Optional[str] shipping_document: Сопроводительные документы
         :param List['CargoItemMP'] items: Перечисление наименований грузов для отправления *(Обязательный параметр)*
         :param List['CargoPointMP'] route_points: Информация по точкам маршрута *(Обязательный параметр)*
@@ -688,9 +698,13 @@ class YCAPI:
 
         if claim_id is not None:
             params["claim_id"] = validate_fields('claim_id', claim_id, str)
+        if claim_id is None:
+            raise InputParamError("<claim_id> (=>claim_id) of <claim_edit> is a required parameter")
 
         if version is not None:
             params["version"] = validate_fields('version', version, int)
+        if version is None:
+            raise InputParamError("<version> (=>version) of <claim_edit> is a required parameter")
 
         if shipping_document is not None:
             body["shipping_document"] = validate_fields('shipping_document', shipping_document, str)
@@ -843,7 +857,7 @@ class YCAPI:
 
         Возвращает основную информацию по заявке с учетом мультиточек (статус, стоимость, возможность бесплатной отмены и пр.). Вы можете использовать операцию для получения информации по заявке, созданной через v1/claims/create.
 
-        :param Optional[str] claim_id: id заявки, полученный на этапе создания заявки
+        :param str claim_id: id заявки, полученный на этапе создания заявки *(Обязательный параметр)*
 
         `Официальная документация /b2b/cargo/integration/v2/claims/info <https://yandex.ru/dev/taxi/doc/cargo-api/ref/v2/claims/IntegrationV2ClaimsInfo-docpage/>`_
         """
@@ -852,6 +866,8 @@ class YCAPI:
 
         if claim_id is not None:
             params["claim_id"] = validate_fields('claim_id', claim_id, str)
+        if claim_id is None:
+            raise InputParamError("<claim_id> (=>claim_id) of <claim_info> is a required parameter")
 
         item = self._request(resource="/b2b/cargo/integration/v2/claims/info", params=params, body=body, method="post")
         return SearchedClaimMP(id=item.get("id", None),
@@ -925,11 +941,11 @@ class YCAPI:
 
         Выполняет поиск произвольных заявок с учетом мультиточек. Вы можете использовать операцию для получения информации по заявке, созданной через v1/claims/create. Найденные заявки сортируются по дате создания, выдача сегментирована для пагинации.
 
-        :param Optional[int] offset: Смещение (пагинация) выдачи заявок по заданному фильтру (заявки отсортированы по дате создания) *(Обязательный параметр)* (50)
-        :param Optional[int] limit: Максимальное число заявок в ответе *(Обязательный параметр)* (50)
-        :param str claim_id: id заявки, полученный на этапе создания заявки (741cedf82cd464fa6fa16d87155c636)
+        :param int offset: Смещение (пагинация) выдачи заявок по заданному фильтру (заявки отсортированы по дате создания) *(Обязательный параметр)* (50)
+        :param int limit: Максимальное число заявок в ответе *(Обязательный параметр)* (50)
+        :param str claim_id: id заявки, полученный на этапе создания заявки *(Обязательный параметр)* (741cedf82cd464fa6fa16d87155c636)
         :param Optional[str] phone: Фильтр по номеру телефона (+79099999998)
-        :param str status: Статус заявки (new)
+        :param str status: Статус заявки *(Обязательный параметр)* (new)
 
             * **new** - новая заявка
             * **estimating** - идет процесс оценки заявки (подбор типа автомобиля по параметрам груза и расчет стоимости)
@@ -992,19 +1008,16 @@ class YCAPI:
 
         if claim_id is not None:
             body["claim_id"] = validate_fields('claim_id', claim_id, str)
+        if claim_id is None:
+            raise InputParamError("<claim_id> (=>claim_id) of <claim_search> is a required parameter")
 
         if phone is not None:
             body["phone"] = validate_fields('phone', phone, str)
 
         if status is not None:
             body["status"] = validate_fields('status', status, str)
-
-        if status not in ['new', 'estimating', 'estimating_failed', 'ready_for_approval', 'accepted', 'performer_lookup', 'performer_draft', 'performer_found', 'performer_not_found', 'pickup_arrived',
-                          'ready_for_pickup_confirmation', 'pickuped', 'delivery_arrived', 'ready_for_delivery_confirmation', 'pay_waiting', 'delivered', 'delivered_finish', 'returning',
-                          'return_arrived', 'ready_for_return_confirmation', 'returned', 'returned_finish', 'failed', 'cancelled', 'cancelled_with_payment', 'cancelled_by_taxi',
-                          'cancelled_with_items_on_hands']:
-            raise InputParamError(
-                "<status> should be in <new, estimating, estimating_failed, ready_for_approval, accepted, performer_lookup, performer_draft, performer_found, performer_not_found, pickup_arrived, ready_for_pickup_confirmation, pickuped, delivery_arrived, ready_for_delivery_confirmation, pay_waiting, delivered, delivered_finish, returning, return_arrived, ready_for_return_confirmation, returned, returned_finish, failed, cancelled, cancelled_with_payment, cancelled_by_taxi, cancelled_with_items_on_hands>")
+        if status is None:
+            raise InputParamError("<status> (=>status) of <claim_search> is a required parameter")
 
         if status not in ['new', 'estimating', 'estimating_failed', 'ready_for_approval', 'accepted', 'performer_lookup', 'performer_draft', 'performer_found', 'performer_not_found', 'pickup_arrived',
                           'ready_for_pickup_confirmation', 'pickuped', 'delivery_arrived', 'ready_for_delivery_confirmation', 'pay_waiting', 'delivered', 'delivered_finish', 'returning',
@@ -1021,9 +1034,6 @@ class YCAPI:
 
         if state is not None:
             body["state"] = validate_fields('state', state, str)
-
-        if state not in ['active']:
-            raise InputParamError("<state> should be in <active>")
 
         if state not in ['active']:
             raise InputParamError("<state> of <claim_search> should be in <active>")
@@ -1088,7 +1098,7 @@ class YCAPI:
 
         Возвращает код подтверждения в текущей точке (если это возможно)
 
-        :param Optional[str] claim_id: id заявки, полученный на этапе создания заявки *(Обязательный параметр)* (741cedf82cd464fa6fa16d87155c636)
+        :param str claim_id: id заявки, полученный на этапе создания заявки *(Обязательный параметр)* (741cedf82cd464fa6fa16d87155c636)
 
         `Официальная документация /b2b/cargo/integration/v2/claims/confirmation_code <https://yandex.ru/dev/taxi/doc/cargo-api/ref/v2/claims/IntegrationV2ClaimsConfirmationCode-docpage/>`_
         """
@@ -1114,7 +1124,7 @@ class YCAPI:
 
         Возвращает информацию по нескольким заявкам с учетом мультиточек. Вы можете использовать операцию для получения информации по заявке, созданной через v1/claims/create.
 
-        :param Optional[List['str']] claim_ids: Массив идентификаторов заявки для которых нужно получить информацию *(Обязательный параметр)*
+        :param List['str'] claim_ids: Массив идентификаторов заявки для которых нужно получить информацию *(Обязательный параметр)*
 
         `Официальная документация /b2b/cargo/integration/v2/claims/bulk_info <https://yandex.ru/dev/taxi/doc/cargo-api/ref/v2/claims/IntegrationV2ClaimsBulkInfo-docpage/>`_
         """
