@@ -55,18 +55,16 @@ class YCBase:
 class CargoItemMP(YCBase):
     """
 
-    Информация о единице груза для отправления
-
     Груз для отправления
 
     :param Optional[str] extra_id: Краткий уникальный идентификатор item'а (в рамках заявки) (БП-208)
-    :param int pickup_point: id точки, откуда нужно забрать товар (отличается от id в заявке) *(Обязательный параметр)* (1)
-    :param int droppof_point: id точки, куда нужно доставить товар (отличается от id в заявке) *(Обязательный параметр)* (2)
+    :param int pickup_point: Идентификатор точки, откуда нужно забрать товар (отличается от идентификатора в заявке) *(Обязательный параметр)* (1)
+    :param int droppof_point: Идентификатор точки, куда нужно доставить товар (отличается от идентификатора в заявке) *(Обязательный параметр)* (2)
     :param str title: Наименование единицы товара *(Обязательный параметр)* (Плюмбус)
-    :param int size_length: Размер в метрах *(Обязательный параметр)* (0.1)
-    :param int size_width: Размер в метрах *(Обязательный параметр)* (0.1)
-    :param int size_height: Размер в метрах *(Обязательный параметр)* (0.1)
-    :param Optional[int] weight: Вес единицы товара в кг. (2.0)
+    :param float size_length: Размер в метрах *(Обязательный параметр)* (0.1)
+    :param float size_width: Размер в метрах *(Обязательный параметр)* (0.1)
+    :param float size_height: Размер в метрах *(Обязательный параметр)* (0.1)
+    :param Optional[float] weight: Вес единицы товара в кг. (2.0)
     :param str cost_value: Цена за штуку в валюте cost_currency *(Обязательный параметр)* (2.00)
     :param str cost_currency: Валюта цены за штуку в формате ISO 4217 (используется в оплате при получении товара) *(Обязательный параметр)* (RUB)
     :param int quantity: Количество указанного товара *(Обязательный параметр)* (1)
@@ -113,7 +111,7 @@ class CargoItemMP(YCBase):
     :param Optional[str] fiscalization_product_code: Код товара
     :param Optional[str] fiscalization_country_of_origin_code: Код страны происхождения товара (RU)
     :param Optional[str] fiscalization_customs_declaration_number: Номер таможенной декларации (10702030/260917/0080123)
-    :param str fiscalization_excise: Decimal(19, 4) *(Обязательный параметр)* (12.50)
+    :param str fiscalization_excise: Цена *(Обязательный параметр)* (12.50)
     """
 
     def __init__(self,
@@ -121,10 +119,10 @@ class CargoItemMP(YCBase):
                  pickup_point: int = None,
                  droppof_point: int = None,
                  title: str = None,
-                 size_length: int = None,
-                 size_width: int = None,
-                 size_height: int = None,
-                 weight: Optional[int] = None,
+                 size_length: float = None,
+                 size_width: float = None,
+                 size_height: float = None,
+                 weight: Optional[float] = None,
                  cost_value: str = None,
                  cost_currency: str = None,
                  quantity: int = None,
@@ -157,22 +155,22 @@ class CargoItemMP(YCBase):
             raise InputParamError("<title> (=>title) of <CargoItemMP> is a required parameter")
 
         if size_length is not None:
-            self.body["size"]["length"] = validate_fields('size_length', size_length, int)
+            self.body["size"]["length"] = validate_fields('size_length', size_length, float)
         if size_length is None:
             raise InputParamError("<size_length> (size=>length) of <CargoItemMP> is a required parameter")
 
         if size_width is not None:
-            self.body["size"]["width"] = validate_fields('size_width', size_width, int)
+            self.body["size"]["width"] = validate_fields('size_width', size_width, float)
         if size_width is None:
             raise InputParamError("<size_width> (size=>width) of <CargoItemMP> is a required parameter")
 
         if size_height is not None:
-            self.body["size"]["height"] = validate_fields('size_height', size_height, int)
+            self.body["size"]["height"] = validate_fields('size_height', size_height, float)
         if size_height is None:
             raise InputParamError("<size_height> (size=>height) of <CargoItemMP> is a required parameter")
 
         if weight is not None:
-            self.body["weight"] = validate_fields('weight', weight, int)
+            self.body["weight"] = validate_fields('weight', weight, float)
 
         if cost_value is not None:
             self.body["cost_value"] = validate_fields('cost_value', cost_value, str)
@@ -248,7 +246,7 @@ class CargoItemMP(YCBase):
     def pickup_point(self) -> int:
         """
 
-        :return: id точки, откуда нужно забрать товар (отличается от id в заявке)
+        :return: Идентификатор точки, откуда нужно забрать товар (отличается от идентификатора в заявке)
         :rtype: int
         """
         return self.body.get("pickup_point")
@@ -257,7 +255,7 @@ class CargoItemMP(YCBase):
     def droppof_point(self) -> int:
         """
 
-        :return: id точки, куда нужно доставить товар (отличается от id в заявке)
+        :return: Идентификатор точки, куда нужно доставить товар (отличается от идентификатора в заявке)
         :rtype: int
         """
         return self.body.get("droppof_point")
@@ -272,38 +270,38 @@ class CargoItemMP(YCBase):
         return self.body.get("title")
 
     @property
-    def size_length(self) -> int:
+    def size_length(self) -> float:
         """
 
         :return: Размер в метрах
-        :rtype: int
+        :rtype: float
         """
         return self.body.get("size_length")
 
     @property
-    def size_width(self) -> int:
+    def size_width(self) -> float:
         """
 
         :return: Размер в метрах
-        :rtype: int
+        :rtype: float
         """
         return self.body.get("size_width")
 
     @property
-    def size_height(self) -> int:
+    def size_height(self) -> float:
         """
 
         :return: Размер в метрах
-        :rtype: int
+        :rtype: float
         """
         return self.body.get("size_height")
 
     @property
-    def weight(self) -> Optional[int]:
+    def weight(self) -> Optional[float]:
         """
 
         :return: Вес единицы товара в кг.
-        :rtype: Optional[int]
+        :rtype: Optional[float]
         """
         return self.body.get("weight")
 
@@ -429,7 +427,7 @@ class CargoItemMP(YCBase):
     def fiscalization_excise(self) -> str:
         """
 
-        :return: Decimal(19, 4)
+        :return: Цена
         :rtype: str
         """
         return self.body.get("fiscalization_excise")
@@ -438,8 +436,6 @@ class CargoItemMP(YCBase):
 class CargoPointMP(YCBase):
     """
 
-    Точка маршрута
-
     Описание точки в заявке с мультиточками
 
     :param int point_id: Целочисленный идентификатор точки *(Обязательный параметр)* (6987)
@@ -447,9 +443,9 @@ class CargoPointMP(YCBase):
     :param str contact_name: Имя контактного лица *(Обязательный параметр)* (Морти)
     :param str contact_phone: Телефон контактного лица *(Обязательный параметр)* (+79099999998)
     :param Optional[str] contact_email: Email — обязательный параметр для точек source и return (morty@yandex.ru)
-    :param str address_fullname: Полное название с указанием города (Москва, Садовническая набережная, 82с2, БЦ Аврора) *(Обязательный параметр)* (Санкт-Петербург Большая Монетная улица 1к1А)
+    :param str address_fullname: Полное название с указанием города (Москва, Садовническая набережная, 82с2, БЦ Аврора) *(Обязательный параметр)* (Санкт-Петербург, Большая Монетная улица, 1к1А)
     :param Optional[str] address_shortname: Адрес в пределах города, как показывается на Таксометре (Садовническая набережная, 82с2, БЦ Аврора) (Большая Монетная улица, 1к1А)
-    :param List['int'] address_coordinates: Массив из двух вещественных чисел [долгота, широта]. Порядок важен! *(Обязательный параметр)*
+    :param List['float'] address_coordinates: Массив из двух вещественных чисел [долгота, широта]. Порядок важен! *(Обязательный параметр)*
     :param Optional[str] address_country: Страна (Российская Федерация)
     :param Optional[str] address_city: Город (Санкт-Петербург)
     :param Optional[str] address_street: Улица (Большая Монетная улица)
@@ -460,7 +456,7 @@ class CargoPointMP(YCBase):
     :param Optional[str] address_sfloor: Этаж (1)
     :param Optional[str] address_sflat: Квартира (1)
     :param Optional[str] address_door_code: Код домофона (169)
-    :param Optional[str] address_comment: Комментарий для доставщика (Домофон не работает)
+    :param Optional[str] address_comment: Комментарий для курьера (Домофон не работает)
     :param Optional[str] address_uri: Карточный uri геообъекта (ymapsbm1://geo?ll=38.805%2C55.084)
     :param Optional[bool] skip_confirmation: Пропускать подтверждение через SMS в данной точке
     :param str type: Тип точки *(Обязательный параметр)* (source)
@@ -469,8 +465,8 @@ class CargoPointMP(YCBase):
         * **destination** — точка доставки отправления
         * **return** — точка возврата части товаров, опциональная (не более одной)
 
-    :param str payment_on_delivery_client_order_id: id заказа *(Обязательный параметр)* (100)
-    :param str payment_on_delivery_cost: Decimal(19, 4) *(Обязательный параметр)* (12.50)
+    :param str payment_on_delivery_client_order_id: Идентификатор заказа *(Обязательный параметр)* (100)
+    :param str payment_on_delivery_cost: Цена *(Обязательный параметр)* (12.50)
     :param Optional[str] payment_on_delivery_customer_full_name: Для юридического лица — название организации, для ИП и физического лица — ФИО (Morty)
     :param Optional[str] payment_on_delivery_customer_inn: ИНН пользователя (10 или 12 цифр) (3664069397)
     :param Optional[str] payment_on_delivery_customer_email: Электронная почта пользователя. Если не указано, будет использована почта получателя из точки (morty@yandex.ru)
@@ -497,7 +493,7 @@ class CargoPointMP(YCBase):
                  contact_email: Optional[str] = None,
                  address_fullname: str = None,
                  address_shortname: Optional[str] = None,
-                 address_coordinates: List['int'] = None,
+                 address_coordinates: List['float'] = None,
                  address_country: Optional[str] = None,
                  address_city: Optional[str] = None,
                  address_street: Optional[str] = None,
@@ -557,7 +553,7 @@ class CargoPointMP(YCBase):
             self.body["address"]["shortname"] = validate_fields('address_shortname', address_shortname, str)
 
         if address_coordinates is not None:
-            self.body["address"]["coordinates"] = validate_fields('address_coordinates', address_coordinates, List['int'])
+            self.body["address"]["coordinates"] = validate_fields('address_coordinates', address_coordinates, List['float'])
         if address_coordinates and len(address_coordinates) < 2:
             raise InputParamError("<address_coordinates> of <CargoPointMP> should contain at least 2 element")
         if address_coordinates and len(address_coordinates) > 2:
@@ -610,7 +606,7 @@ class CargoPointMP(YCBase):
             raise InputParamError("<type> (=>type) of <CargoPointMP> is a required parameter")
 
         if type not in ['source', 'destination', 'return']:
-            raise InputParamError("<type> of <CargoPointMP> should be in <source, destination, return>")
+            raise InputParamError("<type> of <CargoPointMP> should be in ['source', 'destination', 'return']")
 
         if payment_on_delivery_client_order_id is not None:
             self.body["payment_on_delivery"]["client_order_id"] = validate_fields('payment_on_delivery_client_order_id', payment_on_delivery_client_order_id, str)
@@ -721,11 +717,11 @@ class CargoPointMP(YCBase):
         return self.body.get("address_shortname")
 
     @property
-    def address_coordinates(self) -> List['int']:
+    def address_coordinates(self) -> List['float']:
         """
 
         :return: Массив из двух вещественных чисел [долгота, широта]. Порядок важен!
-        :rtype: List['int']
+        :rtype: List['float']
         """
         return [item for item in self.body.get("address_coordinates")]
 
@@ -823,7 +819,7 @@ class CargoPointMP(YCBase):
     def address_comment(self) -> Optional[str]:
         """
 
-        :return: Комментарий для доставщика
+        :return: Комментарий для курьера
         :rtype: Optional[str]
         """
         return self.body.get("address_comment")
@@ -864,7 +860,7 @@ class CargoPointMP(YCBase):
     def payment_on_delivery_client_order_id(self) -> str:
         """
 
-        :return: id заказа
+        :return: Идентификатор заказа
         :rtype: str
         """
         return self.body.get("payment_on_delivery_client_order_id")
@@ -873,7 +869,7 @@ class CargoPointMP(YCBase):
     def payment_on_delivery_cost(self) -> str:
         """
 
-        :return: Decimal(19, 4)
+        :return: Цена
         :rtype: str
         """
         return self.body.get("payment_on_delivery_cost")
@@ -954,8 +950,6 @@ class CargoPointMP(YCBase):
 class ClaimRequirement(YCBase):
     """
 
-    Дополнительные требования к заявке
-
     Информация о дополнительных требованиях к заявке
 
     """
@@ -971,16 +965,14 @@ class ClaimRequirement(YCBase):
 class ClaimWarning(YCBase):
     """
 
-    Предупреждение
-
     Информация о предупреждении
 
-    :param str source: Источник предупреждения (ex. client_requirements) *(Обязательный параметр)* (client_requirements)
+    :param str source: Источник предупреждения *(Обязательный параметр)* (client_requirements)
 
         * **client_requirements** - Требования клиента
         * **taxi_requirements** - Требования такси
 
-    :param str code: Тип предупреждения (ex. not_fit_in_car) *(Обязательный параметр)* (not_fit_in_car)
+    :param str code: Тип предупреждения *(Обязательный параметр)* (not_fit_in_car)
 
         * **not_fit_in_car** - Товар не помещается в заявленное транспортное средство
         * **requirement_unavailable** - Некоторые из пожеланий недоступны на выбранном тарифе
@@ -1001,7 +993,7 @@ class ClaimWarning(YCBase):
             raise InputParamError("<source> (=>source) of <ClaimWarning> is a required parameter")
 
         if source not in ['client_requirements', 'taxi_requirements']:
-            raise InputParamError("<source> of <ClaimWarning> should be in <client_requirements, taxi_requirements>")
+            raise InputParamError("<source> of <ClaimWarning> should be in ['client_requirements', 'taxi_requirements']")
 
         if code is not None:
             self.body["code"] = validate_fields('code', code, str)
@@ -1009,7 +1001,7 @@ class ClaimWarning(YCBase):
             raise InputParamError("<code> (=>code) of <ClaimWarning> is a required parameter")
 
         if code not in ['not_fit_in_car', 'requirement_unavailable']:
-            raise InputParamError("<code> of <ClaimWarning> should be in <not_fit_in_car, requirement_unavailable>")
+            raise InputParamError("<code> of <ClaimWarning> should be in ['not_fit_in_car', 'requirement_unavailable']")
 
         if message is not None:
             self.body["message"] = validate_fields('message', message, str)
@@ -1021,7 +1013,7 @@ class ClaimWarning(YCBase):
     def source(self) -> str:
         """
 
-        :return: Источник предупреждения (ex. client_requirements)
+        :return: Источник предупреждения
 
             * **client_requirements** - Требования клиента
             * **taxi_requirements** - Требования такси
@@ -1034,7 +1026,7 @@ class ClaimWarning(YCBase):
     def code(self) -> str:
         """
 
-        :return: Тип предупреждения (ex. not_fit_in_car)
+        :return: Тип предупреждения
 
             * **not_fit_in_car** - Товар не помещается в заявленное транспортное средство
             * **requirement_unavailable** - Некоторые из пожеланий недоступны на выбранном тарифе
@@ -1055,8 +1047,6 @@ class ClaimWarning(YCBase):
 
 class ClaimsJournalResponse(YCBase):
     """
-
-    Журнал изменений заказа
 
     Информация об событиях в журнале изменений заказа
 
@@ -1115,8 +1105,6 @@ class ClaimsJournalResponse(YCBase):
 class ClaimsReportGenerateResponse(YCBase):
     """
 
-    Статус генерации отчета
-
     Информация о статусе генерации отчета
 
     :param str task_id: ID, по которому можно запрашивать статус *(Обязательный параметр)* (f9b4825f45f64914affaeb07fbae9757)
@@ -1148,17 +1136,15 @@ class ClaimsReportGenerateResponse(YCBase):
 class ClaimsReportStatusResponse(YCBase):
     """
 
-    Проверка статуса отчета
-
     Информация о статусе отчета
 
     :param str task_id: task_id из запроса *(Обязательный параметр)* (f9b4825f45f4914affaeb07fbae9757)
     :param str status: Информация о статусе отчета *(Обязательный параметр)* (in_progress)
 
-        * **in_progress** - ???
-        * **retry** - ???
-        * **complete** - ???
-        * **failed** - ???
+        * **in_progress** - в процессе формирования
+        * **retry** - повторная попытка формирования
+        * **complete** - сформирован
+        * **failed** - ошибка при формировании
 
     :param str author: Yandex Login автора отчета *(Обязательный параметр)* (morty)
     :param str created_at: Дата формирования отчета *(Обязательный параметр)* (2020-01-01T00:00:00+00:00)
@@ -1195,7 +1181,7 @@ class ClaimsReportStatusResponse(YCBase):
             raise InputParamError("<status> (=>status) of <ClaimsReportStatusResponse> is a required parameter")
 
         if status not in ['in_progress', 'retry', 'complete', 'failed']:
-            raise InputParamError("<status> of <ClaimsReportStatusResponse> should be in <in_progress, retry, complete, failed>")
+            raise InputParamError("<status> of <ClaimsReportStatusResponse> should be in ['in_progress', 'retry', 'complete', 'failed']")
 
         if author is not None:
             self.body["author"] = validate_fields('author', author, str)
@@ -1249,10 +1235,10 @@ class ClaimsReportStatusResponse(YCBase):
 
         :return: Информация о статусе отчета
 
-            * **in_progress** - ???
-            * **retry** - ???
-            * **complete** - ???
-            * **failed** - ???
+            * **in_progress** - в процессе формирования
+            * **retry** - повторная попытка формирования
+            * **complete** - сформирован
+            * **failed** - ошибка при формировании
 
         :rtype: str
         """
@@ -1334,8 +1320,6 @@ class ClaimsReportStatusResponse(YCBase):
 class ConfirmationCodeResponse(YCBase):
     """
 
-    Код подтверждения
-
     Информация о коде подтверждения
 
     :param str code: Код подтверждения *(Обязательный параметр)* (2000)
@@ -1383,11 +1367,9 @@ class ConfirmationCodeResponse(YCBase):
 class CutClaimResponse(YCBase):
     """
 
-    Измененная заявка
-
     Информация об измененной заявке
 
-    :param str id: id заявки, полученный на этапе создания заявки *(Обязательный параметр)* (741cedf82cd464fa6fa16d87155c636)
+    :param str id: Идентификатор заявки, полученный на этапе создания заявки *(Обязательный параметр)* (741cedf82cd464fa6fa16d87155c636)
     :param str status: Статус заявки *(Обязательный параметр)* (new)
 
         * **new** - новая заявка
@@ -1445,7 +1427,7 @@ class CutClaimResponse(YCBase):
                           'return_arrived', 'ready_for_return_confirmation', 'returned', 'returned_finish', 'failed', 'cancelled', 'cancelled_with_payment', 'cancelled_by_taxi',
                           'cancelled_with_items_on_hands']:
             raise InputParamError(
-                "<status> of <CutClaimResponse> should be in <new, estimating, estimating_failed, ready_for_approval, accepted, performer_lookup, performer_draft, performer_found, performer_not_found, pickup_arrived, ready_for_pickup_confirmation, pickuped, delivery_arrived, ready_for_delivery_confirmation, pay_waiting, delivered, delivered_finish, returning, return_arrived, ready_for_return_confirmation, returned, returned_finish, failed, cancelled, cancelled_with_payment, cancelled_by_taxi, cancelled_with_items_on_hands>")
+                "<status> of <CutClaimResponse> should be in ['new', 'estimating', 'estimating_failed', 'ready_for_approval', 'accepted', 'performer_lookup', 'performer_draft', 'performer_found', 'performer_not_found', 'pickup_arrived', 'ready_for_pickup_confirmation', 'pickuped', 'delivery_arrived', 'ready_for_delivery_confirmation', 'pay_waiting', 'delivered', 'delivered_finish', 'returning', 'return_arrived', 'ready_for_return_confirmation', 'returned', 'returned_finish', 'failed', 'cancelled', 'cancelled_with_payment', 'cancelled_by_taxi', 'cancelled_with_items_on_hands']")
 
         if version is not None:
             self.body["version"] = validate_fields('version', version, int)
@@ -1462,7 +1444,7 @@ class CutClaimResponse(YCBase):
     def id(self) -> str:
         """
 
-        :return: id заявки, полученный на этапе создания заявки
+        :return: Идентификатор заявки, полученный на этапе создания заявки
         :rtype: str
         """
         return self.body.get("id")
@@ -1527,8 +1509,6 @@ class CutClaimResponse(YCBase):
 class Event(YCBase):
     """
 
-    Изменение в рамках заказа
-
     Информация об изменении заказа
 
     :param int operation_id: Идентификатор операции *(Обязательный параметр)* (1)
@@ -1569,8 +1549,8 @@ class Event(YCBase):
     :param Optional[str] new_currency: Код валюты заказа (RUB)
     :param Optional[str] resolution: Резолюция терминального статуса (success)
 
-        * **success** - ???
-        * **failed** - ???
+        * **success** - завершился успешно
+        * **failed** - завершился с ошибкой
 
     :param int revision: Версия изменения заявки *(Обязательный параметр)* (1)
     :param Optional[str] client_id: Идентификатор клиента (95d010b2471041499b8cb1bfa282692f)
@@ -1620,7 +1600,7 @@ class Event(YCBase):
                               'returning', 'return_arrived', 'ready_for_return_confirmation', 'returned', 'returned_finish', 'failed', 'cancelled', 'cancelled_with_payment', 'cancelled_by_taxi',
                               'cancelled_with_items_on_hands']:
             raise InputParamError(
-                "<new_status> of <Event> should be in <new, estimating, estimating_failed, ready_for_approval, accepted, performer_lookup, performer_draft, performer_found, performer_not_found, pickup_arrived, ready_for_pickup_confirmation, pickuped, delivery_arrived, ready_for_delivery_confirmation, pay_waiting, delivered, delivered_finish, returning, return_arrived, ready_for_return_confirmation, returned, returned_finish, failed, cancelled, cancelled_with_payment, cancelled_by_taxi, cancelled_with_items_on_hands>")
+                "<new_status> of <Event> should be in ['new', 'estimating', 'estimating_failed', 'ready_for_approval', 'accepted', 'performer_lookup', 'performer_draft', 'performer_found', 'performer_not_found', 'pickup_arrived', 'ready_for_pickup_confirmation', 'pickuped', 'delivery_arrived', 'ready_for_delivery_confirmation', 'pay_waiting', 'delivered', 'delivered_finish', 'returning', 'return_arrived', 'ready_for_return_confirmation', 'returned', 'returned_finish', 'failed', 'cancelled', 'cancelled_with_payment', 'cancelled_by_taxi', 'cancelled_with_items_on_hands']")
 
         if new_price is not None:
             self.body["new_price"] = validate_fields('new_price', new_price, str)
@@ -1632,7 +1612,7 @@ class Event(YCBase):
             self.body["resolution"] = validate_fields('resolution', resolution, str)
 
         if resolution not in ['success', 'failed']:
-            raise InputParamError("<resolution> of <Event> should be in <success, failed>")
+            raise InputParamError("<resolution> of <Event> should be in ['success', 'failed']")
 
         if revision is not None:
             self.body["revision"] = validate_fields('revision', revision, int)
@@ -1743,8 +1723,8 @@ class Event(YCBase):
 
         :return: Резолюция терминального статуса
 
-            * **success** - ???
-            * **failed** - ???
+            * **success** - завершился успешно
+            * **failed** - завершился с ошибкой
 
         :rtype: Optional[str]
         """
@@ -1771,8 +1751,6 @@ class Event(YCBase):
 
 class HumanErrorMessage(YCBase):
     """
-
-    Человеко-понятная ошибка
 
     Информация о человеко-понятной ошибке
 
@@ -1820,8 +1798,6 @@ class HumanErrorMessage(YCBase):
 
 class MatchedCar(YCBase):
     """
-
-    Подобранная машина
 
     Информация о подобранной машине
 
@@ -1954,30 +1930,28 @@ class MatchedCar(YCBase):
 class PerformerPositionResponse(YCBase):
     """
 
-    Позиция исполнителя
-
     Информация о позиции исполнителя
 
-    :param int position_lat: Широта *(Обязательный параметр)*
-    :param int position_lon: Долгота *(Обязательный параметр)*
+    :param float position_lat: Широта *(Обязательный параметр)*
+    :param float position_lon: Долгота *(Обязательный параметр)*
     :param int position_timestamp: Время снятия сигнала GPS, unix-time *(Обязательный параметр)*
-    :param Optional[int] position_accuracy: Точность GPS. Пока запрещена к передаче т.к. не решилис единицами измерения.
-    :param Optional[int] position_speed: Средняя скорость, в м/с
-    :param Optional[int] position_direction: Направление. Угол от 0 градусов до 360 градусов от направления на север,по часовой стрелке. 0 - север, 90 - восток, 180 - юг,270 - запад.
+    :param Optional[float] position_accuracy: Точность GPS. Пока запрещена к передаче т.к. не решилис единицами измерения.
+    :param Optional[float] position_speed: Средняя скорость, в м/с
+    :param Optional[float] position_direction: Направление. Угол от 0 градусов до 360 градусов от направления на север,по часовой стрелке. 0 - север, 90 - восток, 180 - юг,270 - запад.
     """
 
     def __init__(self,
-                 position_lat: int = None,
-                 position_lon: int = None,
+                 position_lat: float = None,
+                 position_lon: float = None,
                  position_timestamp: int = None,
-                 position_accuracy: Optional[int] = None,
-                 position_speed: Optional[int] = None,
-                 position_direction: Optional[int] = None,
+                 position_accuracy: Optional[float] = None,
+                 position_speed: Optional[float] = None,
+                 position_direction: Optional[float] = None,
                  ):
         self.body = collections.defaultdict(dict)
 
         if position_lat is not None:
-            self.body["position"]["lat"] = validate_fields('position_lat', position_lat, int)
+            self.body["position"]["lat"] = validate_fields('position_lat', position_lat, float)
         if position_lat and position_lat < -90:
             raise InputParamError("<position_lat> of <PerformerPositionResponse> should be more than -90")
         if position_lat and position_lat > 90:
@@ -1986,7 +1960,7 @@ class PerformerPositionResponse(YCBase):
             raise InputParamError("<position_lat> (position=>lat) of <PerformerPositionResponse> is a required parameter")
 
         if position_lon is not None:
-            self.body["position"]["lon"] = validate_fields('position_lon', position_lon, int)
+            self.body["position"]["lon"] = validate_fields('position_lon', position_lon, float)
         if position_lon and position_lon < -180:
             raise InputParamError("<position_lon> of <PerformerPositionResponse> should be more than -180")
         if position_lon and position_lon > 180:
@@ -2000,32 +1974,32 @@ class PerformerPositionResponse(YCBase):
             raise InputParamError("<position_timestamp> (position=>timestamp) of <PerformerPositionResponse> is a required parameter")
 
         if position_accuracy is not None:
-            self.body["position"]["accuracy"] = validate_fields('position_accuracy', position_accuracy, int)
+            self.body["position"]["accuracy"] = validate_fields('position_accuracy', position_accuracy, float)
 
         if position_speed is not None:
-            self.body["position"]["speed"] = validate_fields('position_speed', position_speed, int)
+            self.body["position"]["speed"] = validate_fields('position_speed', position_speed, float)
 
         if position_direction is not None:
-            self.body["position"]["direction"] = validate_fields('position_direction', position_direction, int)
+            self.body["position"]["direction"] = validate_fields('position_direction', position_direction, float)
 
     def __repr__(self):
         return "<PerformerPositionResponse>"
 
     @property
-    def position_lat(self) -> int:
+    def position_lat(self) -> float:
         """
 
         :return: Широта
-        :rtype: int
+        :rtype: float
         """
         return self.body.get("position_lat")
 
     @property
-    def position_lon(self) -> int:
+    def position_lon(self) -> float:
         """
 
         :return: Долгота
-        :rtype: int
+        :rtype: float
         """
         return self.body.get("position_lon")
 
@@ -2039,29 +2013,29 @@ class PerformerPositionResponse(YCBase):
         return self.body.get("position_timestamp")
 
     @property
-    def position_accuracy(self) -> Optional[int]:
+    def position_accuracy(self) -> Optional[float]:
         """
 
         :return: Точность GPS. Пока запрещена к передаче т.к. не решилис единицами измерения.
-        :rtype: Optional[int]
+        :rtype: Optional[float]
         """
         return self.body.get("position_accuracy")
 
     @property
-    def position_speed(self) -> Optional[int]:
+    def position_speed(self) -> Optional[float]:
         """
 
         :return: Средняя скорость, в м/с
-        :rtype: Optional[int]
+        :rtype: Optional[float]
         """
         return self.body.get("position_speed")
 
     @property
-    def position_direction(self) -> Optional[int]:
+    def position_direction(self) -> Optional[float]:
         """
 
         :return: Направление. Угол от 0 градусов до 360 градусов от направления на север,по часовой стрелке. 0 - север, 90 - восток, 180 - юг,270 - запад.
-        :rtype: Optional[int]
+        :rtype: Optional[float]
         """
         return self.body.get("position_direction")
 
@@ -2069,17 +2043,15 @@ class PerformerPositionResponse(YCBase):
 class ResponseCargoPointMP(YCBase):
     """
 
-    Точка в заявке с мультиточками
-
     Описание точки в заявке с мультиточками
 
     :param int id: Целочисленный идентификатор точки *(Обязательный параметр)* (1)
     :param str contact_name: Имя контактного лица *(Обязательный параметр)* (Морти)
     :param str contact_phone: Телефон контактного лица *(Обязательный параметр)* (+79099999998)
     :param Optional[str] contact_email: Email — обязательный параметр для точек source и return (morty@yandex.ru)
-    :param str address_fullname: Полное название с указанием города (Москва, Садовническая набережная, 82с2, БЦ Аврора) *(Обязательный параметр)* (Санкт-Петербург Большая Монетная улица 1к1А)
+    :param str address_fullname: Полное название с указанием города (Москва, Садовническая набережная, 82с2, БЦ Аврора) *(Обязательный параметр)* (Санкт-Петербург, Большая Монетная улица, 1к1А)
     :param Optional[str] address_shortname: Адрес в пределах города, как показывается на Таксометре (Садовническая набережная, 82с2, БЦ Аврора) (Большая Монетная улица, 1к1А)
-    :param List['int'] address_coordinates: Массив из двух вещественных чисел [долгота, широта]. Порядок важен! *(Обязательный параметр)*
+    :param List['float'] address_coordinates: Массив из двух вещественных чисел [долгота, широта]. Порядок важен! *(Обязательный параметр)*
     :param Optional[str] address_country: Страна (Российская Федерация)
     :param Optional[str] address_city: Город (Санкт-Петербург)
     :param Optional[str] address_street: Улица (Большая Монетная улица)
@@ -2090,7 +2062,7 @@ class ResponseCargoPointMP(YCBase):
     :param Optional[str] address_sfloor: Этаж (1)
     :param Optional[str] address_sflat: Квартира (1)
     :param Optional[str] address_door_code: Код домофона (169)
-    :param Optional[str] address_comment: Комментарий для доставщика (Домофон не работает)
+    :param Optional[str] address_comment: Комментарий для курьера (Домофон не работает)
     :param Optional[str] address_uri: Карточный uri геообъекта (ymapsbm1://geo?ll=38.805%2C55.084)
     :param str type: Тип точки *(Обязательный параметр)* (source)
 
@@ -2107,9 +2079,9 @@ class ResponseCargoPointMP(YCBase):
         * **skipped** - возврат (то есть клиент в этой точке не принял посылку и ее повезут в точку возврата. не значит, что товар уже вернули на склад)
 
     :param Optional[bool] skip_confirmation: Пропускать подтверждение через SMS в данной точке
-    :param str payment_on_delivery_client_order_id: id заказа *(Обязательный параметр)* (100)
-    :param bool payment_on_delivery_is_paid: Оплачен ли заказ *(Обязательный параметр)*
-    :param str payment_on_delivery_cost: Decimal(19, 4) *(Обязательный параметр)* (12.50)
+    :param str payment_on_delivery_client_order_id: Идентификатор заказа *(Обязательный параметр)* (100)
+    :param bool payment_on_delivery_is_paid: Признак оплаты заказа *(Обязательный параметр)*
+    :param str payment_on_delivery_cost: Цена *(Обязательный параметр)* (12.50)
     :param Optional[str] payment_on_delivery_customer_full_name: Для юридического лица — название организации, для ИП и физического лица — ФИО (Morty)
     :param Optional[str] payment_on_delivery_customer_inn: ИНН пользователя (10 или 12 цифр) (3664069397)
     :param Optional[str] payment_on_delivery_customer_email: Электронная почта пользователя. Если не указано, будет использована почта получателя из точки (morty@yandex.ru)
@@ -2126,7 +2098,7 @@ class ResponseCargoPointMP(YCBase):
                  contact_email: Optional[str] = None,
                  address_fullname: str = None,
                  address_shortname: Optional[str] = None,
-                 address_coordinates: List['int'] = None,
+                 address_coordinates: List['float'] = None,
                  address_country: Optional[str] = None,
                  address_city: Optional[str] = None,
                  address_street: Optional[str] = None,
@@ -2183,7 +2155,7 @@ class ResponseCargoPointMP(YCBase):
             self.body["address"]["shortname"] = validate_fields('address_shortname', address_shortname, str)
 
         if address_coordinates is not None:
-            self.body["address"]["coordinates"] = validate_fields('address_coordinates', address_coordinates, List['int'])
+            self.body["address"]["coordinates"] = validate_fields('address_coordinates', address_coordinates, List['float'])
         if address_coordinates and len(address_coordinates) < 2:
             raise InputParamError("<address_coordinates> of <ResponseCargoPointMP> should contain at least 2 element")
         if address_coordinates and len(address_coordinates) > 2:
@@ -2233,7 +2205,7 @@ class ResponseCargoPointMP(YCBase):
             raise InputParamError("<type> (=>type) of <ResponseCargoPointMP> is a required parameter")
 
         if type not in ['source', 'destination', 'return']:
-            raise InputParamError("<type> of <ResponseCargoPointMP> should be in <source, destination, return>")
+            raise InputParamError("<type> of <ResponseCargoPointMP> should be in ['source', 'destination', 'return']")
 
         if visit_order is not None:
             self.body["visit_order"] = validate_fields('visit_order', visit_order, int)
@@ -2246,7 +2218,7 @@ class ResponseCargoPointMP(YCBase):
             raise InputParamError("<visit_status> (=>visit_status) of <ResponseCargoPointMP> is a required parameter")
 
         if visit_status not in ['pending', 'arrived', 'visited', 'skipped']:
-            raise InputParamError("<visit_status> of <ResponseCargoPointMP> should be in <pending, arrived, visited, skipped>")
+            raise InputParamError("<visit_status> of <ResponseCargoPointMP> should be in ['pending', 'arrived', 'visited', 'skipped']")
 
         if skip_confirmation is not None:
             self.body["skip_confirmation"] = validate_fields('skip_confirmation', skip_confirmation, bool)
@@ -2349,11 +2321,11 @@ class ResponseCargoPointMP(YCBase):
         return self.body.get("address_shortname")
 
     @property
-    def address_coordinates(self) -> List['int']:
+    def address_coordinates(self) -> List['float']:
         """
 
         :return: Массив из двух вещественных чисел [долгота, широта]. Порядок важен!
-        :rtype: List['int']
+        :rtype: List['float']
         """
         return [item for item in self.body.get("address_coordinates")]
 
@@ -2451,7 +2423,7 @@ class ResponseCargoPointMP(YCBase):
     def address_comment(self) -> Optional[str]:
         """
 
-        :return: Комментарий для доставщика
+        :return: Комментарий для курьера
         :rtype: Optional[str]
         """
         return self.body.get("address_comment")
@@ -2471,9 +2443,9 @@ class ResponseCargoPointMP(YCBase):
 
         :return: Тип точки
 
-            * **source** - ???
-            * **destination** - ???
-            * **return** - ???
+            * **source** — точка получения отправления (ровно одна)
+            * **destination** — точка доставки отправления
+            * **return** — точка возврата части товаров, опциональная (не более одной)
 
         :rtype: str
         """
@@ -2516,7 +2488,7 @@ class ResponseCargoPointMP(YCBase):
     def payment_on_delivery_client_order_id(self) -> str:
         """
 
-        :return: id заказа
+        :return: Идентификатор заказа
         :rtype: str
         """
         return self.body.get("payment_on_delivery_client_order_id")
@@ -2525,7 +2497,7 @@ class ResponseCargoPointMP(YCBase):
     def payment_on_delivery_is_paid(self) -> bool:
         """
 
-        :return: Оплачен ли заказ
+        :return: Признак оплаты заказа
         :rtype: bool
         """
         return self.body.get("payment_on_delivery_is_paid")
@@ -2534,7 +2506,7 @@ class ResponseCargoPointMP(YCBase):
     def payment_on_delivery_cost(self) -> str:
         """
 
-        :return: Decimal(19, 4)
+        :return: Цена
         :rtype: str
         """
         return self.body.get("payment_on_delivery_cost")
@@ -2580,12 +2552,6 @@ class ResponseCargoPointMP(YCBase):
         """
 
         :return: Система налогообложения магазина
-
-            * **pending** - ждет исполнения
-            * **arrived** - курьер прибыл на точку, но еще не передал/забрал товар
-            * **visited** - передали/забрали товар из точки
-            * **skipped** - возврат (то есть клиент в этой точке не принял посылку и ее повезут в точку возврата. не значит, что товар уже вернули на склад)
-
         :rtype: Optional[int]
         """
         return self.body.get("payment_on_delivery_tax_system_code")
@@ -2611,8 +2577,6 @@ class ResponseCargoPointMP(YCBase):
 
 class SearchClaimsResponseMP(YCBase):
     """
-
-    Найденные заявки
 
     Информация о результатах поиска
 
@@ -2695,12 +2659,10 @@ class SearchClaimsResponseMP(YCBase):
 class SearchedClaimMP(YCBase):
     """
 
-    Заявка
-
     Информация о заявке
 
-    :param str id: id заявки, полученный на этапе создания заявки *(Обязательный параметр)* (741cedf82cd464fa6fa16d87155c636)
-    :param Optional[str] corp_client_id: id корпоративного клиента (из OAuth токена) (cd8cc018bde34597932855e3cfdce927)
+    :param str id: Идентификатор заявки, полученный на этапе создания заявки *(Обязательный параметр)* (741cedf82cd464fa6fa16d87155c636)
+    :param Optional[str] corp_client_id: Идентификатор корпоративного клиента (из OAuth токена) (cd8cc018bde34597932855e3cfdce927)
     :param Optional[str] yandex_uid: yandex uid (3a4e06e733a3433880e4900ffeaf7b62)
     :param List['CargoItemMP'] items: Перечисление наименований грузов для отправления *(Обязательный параметр)*
     :param List['ResponseCargoPointMP'] route_points: Информация по точкам маршрута *(Обязательный параметр)*
@@ -2743,22 +2705,22 @@ class SearchedClaimMP(YCBase):
     :param Optional[bool] skip_client_notify: Не отправлять получателю нотификации, когда к нему направится курьер
     :param Optional[bool] skip_emergency_notify: Не отправлять нотификации emergency контакту
     :param Optional[bool] skip_act: Не показывать акт
-    :param Optional[bool] optional_return: Не требуется возврат товаров в случае отмены заказа. Курьер оставляет товар себе
+    :param Optional[bool] optional_return: Не требуется возврат товаров в случае отмены заказа. В случае true — курьер оставляет товар себе
     :param Optional[int] eta: Ожидаемое время исполнения заказа в минутах (10)
     :param str created_ts: Дата-время создания *(Обязательный параметр)* (2020-01-01T00:00:00+00:00)
     :param str updated_ts: Дата-время последнего обновления *(Обязательный параметр)* (2020-01-01T00:00:00+00:00)
-    :param str taxi_offer_offer_id: Идентификатор оффера *(Обязательный параметр)* (28ae5f1d72364468be3f5e26cd6a66bf)
+    :param str taxi_offer_offer_id: Идентификатор предложения *(Обязательный параметр)* (28ae5f1d72364468be3f5e26cd6a66bf)
     :param int taxi_offer_price_raw: Цена по офферу в валюте, указанной в договоре *(Обязательный параметр)* (12)
-    :param str taxi_offer_price: Decimal(19, 4) *(Обязательный параметр)* (12.50)
-    :param str pricing_offer_offer_id: Идентификатор оффера *(Обязательный параметр)* (28ae5f1d72364468be3f5e26cd6a66bf)
-    :param int pricing_offer_price_raw: (deprecated) Цена по офферу в валюте, указанной в договоре *(Обязательный параметр)* (12)
-    :param str pricing_offer_price: Decimal(19, 4) *(Обязательный параметр)* (12.50)
-    :param Optional[str] pricing_currency: Трехзначный код валюты, в которой ведется расчет (например, RUB) (RUB)
-    :param str pricing_currency_rules_code: Код валюты *(Обязательный параметр)* (RUB)
+    :param str taxi_offer_price: Цена *(Обязательный параметр)* (12.50)
+    :param str pricing_offer_offer_id: Идентификатор предложения *(Обязательный параметр)* (28ae5f1d72364468be3f5e26cd6a66bf)
+    :param int pricing_offer_price_raw: (deprecated) Цена по предложению в валюте, указанной в договоре *(Обязательный параметр)* (12)
+    :param str pricing_offer_price: Цена *(Обязательный параметр)* (12.50)
+    :param Optional[str] pricing_currency: Трехзначный код валюты, в которой ведется расчет (RUB)
+    :param str pricing_currency_rules_code: Трехзначный код валюты, в которой ведется расчет *(Обязательный параметр)* (RUB)
     :param str pricing_currency_rules_text: Сокращенное наименование валюты *(Обязательный параметр)* (руб.)
     :param str pricing_currency_rules_template: Шаблон *(Обязательный параметр)* ($VALUE$ $SIGN$$CURRENCY$)
     :param Optional[str] pricing_currency_rules_sign: Символ валюты (₽)
-    :param str pricing_final_price: Decimal(19, 4) *(Обязательный параметр)* (12.50)
+    :param str pricing_final_price: Цена *(Обязательный параметр)* (12.50)
     :param Optional[str] available_cancel_state: Признак возможности платной/бесплатной отмены (free)
 
         * **free** - платная отмена
@@ -2771,7 +2733,7 @@ class SearchedClaimMP(YCBase):
     :param Optional[List['MatchedCar']] matched_cars: Информация об исполнителе (массив, на данный момент всегда 1 элемент)
     :param Optional[List['ClaimWarning']] warnings: Предупреждения по циклу заявки
     :param str performer_info_courier_name: Имя курьера, доставляющего посылку *(Обязательный параметр)* (Личность)
-    :param str performer_info_legal_name: Данные о юр. лице, осуществляющем доставку *(Обязательный параметр)* (ИП Птичья личность)
+    :param str performer_info_legal_name: Данные о юридическом лице, которое осуществляет доставку *(Обязательный параметр)* (ИП Птичья личность)
     :param Optional[str] performer_info_car_model: Модель машины (Hyundai Solaris)
     :param Optional[str] performer_info_car_number: Номер машины (А100РА100)
     :param str callback_properties_callback_url: URL, который будет вызываться при смене статусов по заявке.Данный механизм устарел, вместо него следует использовать операцию v1/claims/journal. *(Обязательный параметр)* (https://www.example.com)
@@ -2882,7 +2844,7 @@ class SearchedClaimMP(YCBase):
                           'return_arrived', 'ready_for_return_confirmation', 'returned', 'returned_finish', 'failed', 'cancelled', 'cancelled_with_payment', 'cancelled_by_taxi',
                           'cancelled_with_items_on_hands']:
             raise InputParamError(
-                "<status> of <SearchedClaimMP> should be in <new, estimating, estimating_failed, ready_for_approval, accepted, performer_lookup, performer_draft, performer_found, performer_not_found, pickup_arrived, ready_for_pickup_confirmation, pickuped, delivery_arrived, ready_for_delivery_confirmation, pay_waiting, delivered, delivered_finish, returning, return_arrived, ready_for_return_confirmation, returned, returned_finish, failed, cancelled, cancelled_with_payment, cancelled_by_taxi, cancelled_with_items_on_hands>")
+                "<status> of <SearchedClaimMP> should be in ['new', 'estimating', 'estimating_failed', 'ready_for_approval', 'accepted', 'performer_lookup', 'performer_draft', 'performer_found', 'performer_not_found', 'pickup_arrived', 'ready_for_pickup_confirmation', 'pickuped', 'delivery_arrived', 'ready_for_delivery_confirmation', 'pay_waiting', 'delivered', 'delivered_finish', 'returning', 'return_arrived', 'ready_for_return_confirmation', 'returned', 'returned_finish', 'failed', 'cancelled', 'cancelled_with_payment', 'cancelled_by_taxi', 'cancelled_with_items_on_hands']")
 
         if version is not None:
             self.body["version"] = validate_fields('version', version, int)
@@ -2990,7 +2952,7 @@ class SearchedClaimMP(YCBase):
             self.body["available_cancel_state"] = validate_fields('available_cancel_state', available_cancel_state, str)
 
         if available_cancel_state not in ['free', 'paid']:
-            raise InputParamError("<available_cancel_state> of <SearchedClaimMP> should be in <free, paid>")
+            raise InputParamError("<available_cancel_state> of <SearchedClaimMP> should be in ['free', 'paid']")
 
         if client_requirements_taxi_class is not None:
             self.body["client_requirements"]["taxi_class"] = validate_fields('client_requirements_taxi_class', client_requirements_taxi_class, str)
@@ -3067,7 +3029,7 @@ class SearchedClaimMP(YCBase):
     def id(self) -> str:
         """
 
-        :return: id заявки, полученный на этапе создания заявки
+        :return: Идентификатор заявки, полученный на этапе создания заявки
         :rtype: str
         """
         return self.body.get("id")
@@ -3076,7 +3038,7 @@ class SearchedClaimMP(YCBase):
     def corp_client_id(self) -> Optional[str]:
         """
 
-        :return: id корпоративного клиента (из OAuth токена)
+        :return: Идентификатор корпоративного клиента (из OAuth токена)
         :rtype: Optional[str]
         """
         return self.body.get("corp_client_id")
@@ -3174,33 +3136,33 @@ class SearchedClaimMP(YCBase):
 
         :return: Статус заявки
 
-            * **new** - ???
-            * **estimating** - ???
-            * **estimating_failed** - ???
-            * **ready_for_approval** - ???
-            * **accepted** - ???
-            * **performer_lookup** - ???
-            * **performer_draft** - ???
-            * **performer_found** - ???
-            * **performer_not_found** - ???
-            * **pickup_arrived** - ???
-            * **ready_for_pickup_confirmation** - ???
-            * **pickuped** - ???
-            * **delivery_arrived** - ???
-            * **ready_for_delivery_confirmation** - ???
-            * **pay_waiting** - ???
-            * **delivered** - ???
-            * **delivered_finish** - ???
-            * **returning** - ???
-            * **return_arrived** - ???
-            * **ready_for_return_confirmation** - ???
-            * **returned** - ???
-            * **returned_finish** - ???
-            * **failed** - ???
-            * **cancelled** - ???
-            * **cancelled_with_payment** - ???
-            * **cancelled_by_taxi** - ???
-            * **cancelled_with_items_on_hands** - ???
+            * **new** - новая заявка
+            * **estimating** - идет процесс оценки заявки (подбор типа автомобиля по параметрам груза и расчет стоимости)
+            * **estimating_failed** - не удалось оценить заявку. Причину можно увидеть в error_messages в ответе ручки /info
+            * **ready_for_approval** - заявка успешно оценена и ожидает подтверждения от клиента
+            * **accepted** - заявка подтверждена клиентом
+            * **performer_lookup** - заявка взята в обработку. Промежуточный статус перед созданием заказа
+            * **performer_draft** - идет поиск водителя
+            * **performer_found** - водитель найден и едет в точку А
+            * **performer_not_found** - не удалось найти водителя. Можно попробовать снова через некоторое время
+            * **pickup_arrived** - водитель приехал на точку А
+            * **ready_for_pickup_confirmation** - водитель ждет, когда отправитель назовет ему код подтверждения
+            * **pickuped** - водитель успешно забрал груз
+            * **delivery_arrived** - водитель приехал на точку Б
+            * **ready_for_delivery_confirmation** - водитель ждет, когда получатель назовет ему код подтверждения
+            * **pay_waiting** - заказ ожидает оплаты (актуально для оплаты при получении)
+            * **delivered** - водитель успешно доставил груз (ввел смс код). Код приходит после оплаты, если была оплата при получении.
+            * **delivered_finish** - заказ завершен
+            * **returning** -  водителю пришлось вернуть груз и он едет в точку возврата
+            * **return_arrived** - водитель приехал на точку возврата
+            * **ready_for_return_confirmation** - водитель в точке возврата ожидает, когда ему назовут код подтверждения
+            * **returned** - водитель успешно вернул груз (ввел смс код)
+            * **returned_finish** - заказ завершен
+            * **failed** - терминальный статус, не удалось начать выполнение заказа
+            * **cancelled** - заказ был отменен клиентом бесплатно
+            * **cancelled_with_payment** - заказ был отменен клиентом платно (водитель уже приехал)
+            * **cancelled_by_taxi** - водитель отменил заказ (до получения груза)
+            * **cancelled_with_items_on_hands** - клиент платно отменил заявку без необходимости возврата груза (заявка была создана с флагом optional_return)
 
         :rtype: str
         """
@@ -3284,7 +3246,7 @@ class SearchedClaimMP(YCBase):
     def optional_return(self) -> Optional[bool]:
         """
 
-        :return: Не требуется возврат товаров в случае отмены заказа. Курьер оставляет товар себе
+        :return: Не требуется возврат товаров в случае отмены заказа. В случае true — курьер оставляет товар себе
         :rtype: Optional[bool]
         """
         return self.body.get("optional_return")
@@ -3320,7 +3282,7 @@ class SearchedClaimMP(YCBase):
     def taxi_offer_offer_id(self) -> str:
         """
 
-        :return: Идентификатор оффера
+        :return: Идентификатор предложения
         :rtype: str
         """
         return self.body.get("taxi_offer_offer_id")
@@ -3338,7 +3300,7 @@ class SearchedClaimMP(YCBase):
     def taxi_offer_price(self) -> str:
         """
 
-        :return: Decimal(19, 4)
+        :return: Цена
         :rtype: str
         """
         return self.body.get("taxi_offer_price")
@@ -3347,7 +3309,7 @@ class SearchedClaimMP(YCBase):
     def pricing_offer_offer_id(self) -> str:
         """
 
-        :return: Идентификатор оффера
+        :return: Идентификатор предложения
         :rtype: str
         """
         return self.body.get("pricing_offer_offer_id")
@@ -3356,7 +3318,7 @@ class SearchedClaimMP(YCBase):
     def pricing_offer_price_raw(self) -> int:
         """
 
-        :return: (deprecated) Цена по офферу в валюте, указанной в договоре
+        :return: (deprecated) Цена по предложению в валюте, указанной в договоре
         :rtype: int
         """
         return self.body.get("pricing_offer_price_raw")
@@ -3365,7 +3327,7 @@ class SearchedClaimMP(YCBase):
     def pricing_offer_price(self) -> str:
         """
 
-        :return: Decimal(19, 4)
+        :return: Цена
         :rtype: str
         """
         return self.body.get("pricing_offer_price")
@@ -3374,7 +3336,7 @@ class SearchedClaimMP(YCBase):
     def pricing_currency(self) -> Optional[str]:
         """
 
-        :return: Трехзначный код валюты, в которой ведется расчет (например, RUB)
+        :return: Трехзначный код валюты, в которой ведется расчет
         :rtype: Optional[str]
         """
         return self.body.get("pricing_currency")
@@ -3383,7 +3345,7 @@ class SearchedClaimMP(YCBase):
     def pricing_currency_rules_code(self) -> str:
         """
 
-        :return: Код валюты
+        :return: Трехзначный код валюты, в которой ведется расчет
         :rtype: str
         """
         return self.body.get("pricing_currency_rules_code")
@@ -3419,7 +3381,7 @@ class SearchedClaimMP(YCBase):
     def pricing_final_price(self) -> str:
         """
 
-        :return: Decimal(19, 4)
+        :return: Цена
         :rtype: str
         """
         return self.body.get("pricing_final_price")
@@ -3515,7 +3477,7 @@ class SearchedClaimMP(YCBase):
     def performer_info_legal_name(self) -> str:
         """
 
-        :return: Данные о юр. лице, осуществляющем доставку
+        :return: Данные о юридическом лице, которое осуществляет доставку
         :rtype: str
         """
         return self.body.get("performer_info_legal_name")
@@ -3613,8 +3575,6 @@ class SearchedClaimMP(YCBase):
 
 class VoiceforwardingResponse(YCBase):
     """
-
-    Номер телефона для звонка водителю
 
     Информация о номере телефона для звонка водителю
 
