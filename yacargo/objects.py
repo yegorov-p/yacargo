@@ -202,6 +202,9 @@ class CargoItemMP(YCBase):
         if fiscalization_vat_code is None:
             raise InputParamError("<fiscalization_vat_code> (fiscalization=>vat_code) of <CargoItemMP> is a required parameter")
 
+        if fiscalization_vat_code not in [1, 2, 3, 4, 5, 6]:
+            raise InputParamError("<fiscalization_vat_code> of <CargoItemMP> should be in [1, 2, 3, 4, 5, 6]")
+
         if fiscalization_payment_subject is not None:
             self.body["fiscalization"]["payment_subject"] = validate_fields('fiscalization_payment_subject', fiscalization_payment_subject, str)
         if fiscalization_payment_subject is None:
@@ -632,10 +635,9 @@ class CargoPointMP(YCBase):
 
         if payment_on_delivery_tax_system_code is not None:
             self.body["payment_on_delivery"]["tax_system_code"] = validate_fields('payment_on_delivery_tax_system_code', payment_on_delivery_tax_system_code, int)
-        if payment_on_delivery_tax_system_code and payment_on_delivery_tax_system_code < 1:
-            raise InputParamError("<payment_on_delivery_tax_system_code> of <CargoPointMP> should be more than 1")
-        if payment_on_delivery_tax_system_code and payment_on_delivery_tax_system_code > 6:
-            raise InputParamError("<payment_on_delivery_tax_system_code> of <CargoPointMP> should be less than 6")
+
+        if payment_on_delivery_tax_system_code not in [1, 2, 3, 4, 5, 6]:
+            raise InputParamError("<payment_on_delivery_tax_system_code> of <CargoPointMP> should be in [1, 2, 3, 4, 5, 6]")
 
         if payment_on_delivery_currency is not None:
             self.body["payment_on_delivery"]["currency"] = validate_fields('payment_on_delivery_currency', payment_on_delivery_currency, str)
@@ -915,6 +917,14 @@ class CargoPointMP(YCBase):
         """
 
         :return: Система налогообложения магазина
+
+            * **1** - Общая система налогообложения
+            * **2** - Упрощенная (УСН, доходы)
+            * **3** - Упрощенная (УСН, доходы минус расходы)
+            * **4** - Единый налог на вмененный доход (ЕНВД)
+            * **5** - Единый сельскохозяйственный налог (ЕСН)
+            * **6** - Патентная система налогообложения
+
         :rtype: Optional[int]
         """
         return self.body.get("payment_on_delivery_tax_system_code")
@@ -952,14 +962,60 @@ class ClaimRequirement(YCBase):
 
     Информация о дополнительных требованиях к заявке
 
+    :param str type: ??? *(Обязательный параметр)* (performer_group)
+    :param str logistic_group: ??? *(Обязательный параметр)* (ya_eats_group)
+    :param Optional[str] meta_group: ??? (lavka)
     """
 
     def __init__(self,
+                 type: str = None,
+                 logistic_group: str = None,
+                 meta_group: Optional[str] = None,
                  ):
         self.body = collections.defaultdict(dict)
 
+        if type is not None:
+            self.body["type"] = validate_fields('type', type, str)
+        if type is None:
+            raise InputParamError("<type> (=>type) of <ClaimRequirement> is a required parameter")
+
+        if logistic_group is not None:
+            self.body["logistic_group"] = validate_fields('logistic_group', logistic_group, str)
+        if logistic_group is None:
+            raise InputParamError("<logistic_group> (=>logistic_group) of <ClaimRequirement> is a required parameter")
+
+        if meta_group is not None:
+            self.body["meta_group"] = validate_fields('meta_group', meta_group, str)
+
     def __repr__(self):
         return "<ClaimRequirement>"
+
+    @property
+    def type(self) -> str:
+        """
+
+        :return: ???
+        :rtype: str
+        """
+        return self.body.get("type")
+
+    @property
+    def logistic_group(self) -> str:
+        """
+
+        :return: ???
+        :rtype: str
+        """
+        return self.body.get("logistic_group")
+
+    @property
+    def meta_group(self) -> Optional[str]:
+        """
+
+        :return: ???
+        :rtype: Optional[str]
+        """
+        return self.body.get("meta_group")
 
 
 class ClaimWarning(YCBase):
@@ -2087,6 +2143,14 @@ class ResponseCargoPointMP(YCBase):
     :param Optional[str] payment_on_delivery_customer_email: Электронная почта пользователя. Если не указано, будет использована почта получателя из точки (morty@yandex.ru)
     :param Optional[str] payment_on_delivery_customer_phone: Телефон пользователя. Если не указано, будет использован телефон получателя из точки (79000000000)
     :param Optional[int] payment_on_delivery_tax_system_code: Система налогообложения магазина (1)
+
+        * **1** - Общая система налогообложения
+        * **2** - Упрощенная (УСН, доходы)
+        * **3** - Упрощенная (УСН, доходы минус расходы)
+        * **4** - Единый налог на вмененный доход (ЕНВД)
+        * **5** - Единый сельскохозяйственный налог (ЕСН)
+        * **6** - Патентная система налогообложения
+
     :param Optional[str] external_order_id: Номер заказа клиента (100)
     :param Optional[str] pickup_code: Код выдачи товара (ПВЗ) (2397)
     """
@@ -2252,10 +2316,9 @@ class ResponseCargoPointMP(YCBase):
 
         if payment_on_delivery_tax_system_code is not None:
             self.body["payment_on_delivery"]["tax_system_code"] = validate_fields('payment_on_delivery_tax_system_code', payment_on_delivery_tax_system_code, int)
-        if payment_on_delivery_tax_system_code and payment_on_delivery_tax_system_code < 1:
-            raise InputParamError("<payment_on_delivery_tax_system_code> of <ResponseCargoPointMP> should be more than 1")
-        if payment_on_delivery_tax_system_code and payment_on_delivery_tax_system_code > 6:
-            raise InputParamError("<payment_on_delivery_tax_system_code> of <ResponseCargoPointMP> should be less than 6")
+
+        if payment_on_delivery_tax_system_code not in [1, 2, 3, 4, 5, 6]:
+            raise InputParamError("<payment_on_delivery_tax_system_code> of <ResponseCargoPointMP> should be in [1, 2, 3, 4, 5, 6]")
 
         if external_order_id is not None:
             self.body["external_order_id"] = validate_fields('external_order_id', external_order_id, str)
@@ -2552,6 +2615,14 @@ class ResponseCargoPointMP(YCBase):
         """
 
         :return: Система налогообложения магазина
+
+        * **1** - Общая система налогообложения
+        * **2** - Упрощенная (УСН, доходы)
+        * **3** - Упрощенная (УСН, доходы минус расходы)
+        * **4** - Единый налог на вмененный доход (ЕНВД)
+        * **5** - Единый сельскохозяйственный налог (ЕСН)
+        * **6** - Патентная система налогообложения
+
         :rtype: Optional[int]
         """
         return self.body.get("payment_on_delivery_tax_system_code")
