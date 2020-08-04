@@ -111,7 +111,7 @@ class CargoItemMP(YCBase):
     :param Optional[str] fiscalization_product_code: Код товара
     :param Optional[str] fiscalization_country_of_origin_code: Код страны происхождения товара (RU)
     :param Optional[str] fiscalization_customs_declaration_number: Номер таможенной декларации (10702030/260917/0080123)
-    :param str fiscalization_excise: Цена *(Обязательный параметр)* (12.50)
+    :param str fiscalization_excise: Цена Decimal(19, 4) *(Обязательный параметр)* (12.50)
     """
 
     def __init__(self,
@@ -201,9 +201,6 @@ class CargoItemMP(YCBase):
             raise InputParamError("<fiscalization_vat_code> of <CargoItemMP> should be less than 6")
         if fiscalization_vat_code is None:
             raise InputParamError("<fiscalization_vat_code> (fiscalization=>vat_code) of <CargoItemMP> is a required parameter")
-
-        if fiscalization_vat_code not in [1, 2, 3, 4, 5, 6]:
-            raise InputParamError("<fiscalization_vat_code> of <CargoItemMP> should be in [1, 2, 3, 4, 5, 6]")
 
         if fiscalization_payment_subject is not None:
             self.body["fiscalization"]["payment_subject"] = validate_fields('fiscalization_payment_subject', fiscalization_payment_subject, str)
@@ -430,7 +427,7 @@ class CargoItemMP(YCBase):
     def fiscalization_excise(self) -> str:
         """
 
-        :return: Цена
+        :return: Цена Decimal(19, 4)
         :rtype: str
         """
         return self.body.get("fiscalization_excise")
@@ -635,9 +632,10 @@ class CargoPointMP(YCBase):
 
         if payment_on_delivery_tax_system_code is not None:
             self.body["payment_on_delivery"]["tax_system_code"] = validate_fields('payment_on_delivery_tax_system_code', payment_on_delivery_tax_system_code, int)
-
-        if payment_on_delivery_tax_system_code not in [1, 2, 3, 4, 5, 6]:
-            raise InputParamError("<payment_on_delivery_tax_system_code> of <CargoPointMP> should be in [1, 2, 3, 4, 5, 6]")
+        if payment_on_delivery_tax_system_code and payment_on_delivery_tax_system_code < 1:
+            raise InputParamError("<payment_on_delivery_tax_system_code> of <CargoPointMP> should be more than 1")
+        if payment_on_delivery_tax_system_code and payment_on_delivery_tax_system_code > 6:
+            raise InputParamError("<payment_on_delivery_tax_system_code> of <CargoPointMP> should be less than 6")
 
         if payment_on_delivery_currency is not None:
             self.body["payment_on_delivery"]["currency"] = validate_fields('payment_on_delivery_currency', payment_on_delivery_currency, str)
@@ -871,7 +869,7 @@ class CargoPointMP(YCBase):
     def payment_on_delivery_cost(self) -> str:
         """
 
-        :return: Цена
+        :return: Цена Decimal(19, 4)
         :rtype: str
         """
         return self.body.get("payment_on_delivery_cost")
@@ -2137,7 +2135,7 @@ class ResponseCargoPointMP(YCBase):
     :param Optional[bool] skip_confirmation: Пропускать подтверждение через SMS в данной точке
     :param str payment_on_delivery_client_order_id: Идентификатор заказа *(Обязательный параметр)* (100)
     :param bool payment_on_delivery_is_paid: Признак оплаты заказа *(Обязательный параметр)*
-    :param str payment_on_delivery_cost: Цена *(Обязательный параметр)* (12.50)
+    :param str payment_on_delivery_cost: Цена Decimal(19, 4) *(Обязательный параметр)* (12.50)
     :param Optional[str] payment_on_delivery_customer_full_name: Для юридического лица — название организации, для ИП и физического лица — ФИО (Morty)
     :param Optional[str] payment_on_delivery_customer_inn: ИНН пользователя (10 или 12 цифр) (3664069397)
     :param Optional[str] payment_on_delivery_customer_email: Электронная почта пользователя. Если не указано, будет использована почта получателя из точки (morty@yandex.ru)
@@ -2316,9 +2314,10 @@ class ResponseCargoPointMP(YCBase):
 
         if payment_on_delivery_tax_system_code is not None:
             self.body["payment_on_delivery"]["tax_system_code"] = validate_fields('payment_on_delivery_tax_system_code', payment_on_delivery_tax_system_code, int)
-
-        if payment_on_delivery_tax_system_code not in [1, 2, 3, 4, 5, 6]:
-            raise InputParamError("<payment_on_delivery_tax_system_code> of <ResponseCargoPointMP> should be in [1, 2, 3, 4, 5, 6]")
+        if payment_on_delivery_tax_system_code and payment_on_delivery_tax_system_code < 1:
+            raise InputParamError("<payment_on_delivery_tax_system_code> of <ResponseCargoPointMP> should be more than 1")
+        if payment_on_delivery_tax_system_code and payment_on_delivery_tax_system_code > 6:
+            raise InputParamError("<payment_on_delivery_tax_system_code> of <ResponseCargoPointMP> should be less than 6")
 
         if external_order_id is not None:
             self.body["external_order_id"] = validate_fields('external_order_id', external_order_id, str)
@@ -2569,7 +2568,7 @@ class ResponseCargoPointMP(YCBase):
     def payment_on_delivery_cost(self) -> str:
         """
 
-        :return: Цена
+        :return: Цена Decimal(19, 4)
         :rtype: str
         """
         return self.body.get("payment_on_delivery_cost")
@@ -2782,16 +2781,16 @@ class SearchedClaimMP(YCBase):
     :param str updated_ts: Дата-время последнего обновления *(Обязательный параметр)* (2020-01-01T00:00:00+00:00)
     :param str taxi_offer_offer_id: Идентификатор предложения *(Обязательный параметр)* (28ae5f1d72364468be3f5e26cd6a66bf)
     :param int taxi_offer_price_raw: Цена по офферу в валюте, указанной в договоре *(Обязательный параметр)* (12)
-    :param str taxi_offer_price: Цена *(Обязательный параметр)* (12.50)
+    :param str taxi_offer_price: Цена Decimal(19, 4) *(Обязательный параметр)* (12.50)
     :param str pricing_offer_offer_id: Идентификатор предложения *(Обязательный параметр)* (28ae5f1d72364468be3f5e26cd6a66bf)
     :param int pricing_offer_price_raw: (deprecated) Цена по предложению в валюте, указанной в договоре *(Обязательный параметр)* (12)
-    :param str pricing_offer_price: Цена *(Обязательный параметр)* (12.50)
+    :param str pricing_offer_price: Цена Decimal(19, 4) *(Обязательный параметр)* (12.50)
     :param Optional[str] pricing_currency: Трехзначный код валюты, в которой ведется расчет (RUB)
     :param str pricing_currency_rules_code: Трехзначный код валюты, в которой ведется расчет *(Обязательный параметр)* (RUB)
     :param str pricing_currency_rules_text: Сокращенное наименование валюты *(Обязательный параметр)* (руб.)
     :param str pricing_currency_rules_template: Шаблон *(Обязательный параметр)* ($VALUE$ $SIGN$$CURRENCY$)
     :param Optional[str] pricing_currency_rules_sign: Символ валюты (₽)
-    :param str pricing_final_price: Цена *(Обязательный параметр)* (12.50)
+    :param str pricing_final_price: Цена Decimal(19, 4) *(Обязательный параметр)* (12.50)
     :param Optional[str] available_cancel_state: Признак возможности платной/бесплатной отмены (free)
 
         * **free** - платная отмена
@@ -3371,7 +3370,7 @@ class SearchedClaimMP(YCBase):
     def taxi_offer_price(self) -> str:
         """
 
-        :return: Цена
+        :return: Цена Decimal(19, 4)
         :rtype: str
         """
         return self.body.get("taxi_offer_price")
@@ -3398,7 +3397,7 @@ class SearchedClaimMP(YCBase):
     def pricing_offer_price(self) -> str:
         """
 
-        :return: Цена
+        :return: Цена Decimal(19, 4)
         :rtype: str
         """
         return self.body.get("pricing_offer_price")
@@ -3452,7 +3451,7 @@ class SearchedClaimMP(YCBase):
     def pricing_final_price(self) -> str:
         """
 
-        :return: Цена
+        :return: Цена Decimal(19, 4)
         :rtype: str
         """
         return self.body.get("pricing_final_price")
