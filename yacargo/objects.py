@@ -1855,7 +1855,7 @@ class MatchedCar(YCBase):
 
     Информация о подобранной машине
 
-    :param str taxi_class: Класс такси. Возможные значения express, cargo *(Обязательный параметр)* (express)
+    :param str taxi_class: Класс такси. Возможные значения courier, express, cargo *(Обязательный параметр)* (express)
     :param Optional[str] client_taxi_class: Подмененный тариф (e.g., cargo, хотя в cars cargocorp) (cargo)
     :param Optional[str] cargo_type: Тип грузовика (lcv_m)
     :param Optional[int] cargo_type_int: Тип грузовика (2 is equal to "lcv_m")
@@ -1912,7 +1912,7 @@ class MatchedCar(YCBase):
     def taxi_class(self) -> str:
         """
 
-        :return: Класс такси. Возможные значения express, cargo
+        :return: Класс такси. Возможные значения courier, express, cargo
         :rtype: str
         """
         return self.body.get("taxi_class")
@@ -2796,7 +2796,7 @@ class SearchedClaimMP(YCBase):
         * **free** - платная отмена
         * **paid** - бесплатная отмена
 
-    :param str client_requirements_taxi_class: Класс такси. Возможные значения express, cargo. *(Обязательный параметр)* (express)
+    :param str client_requirements_taxi_class: Класс такси. Возможные значения courier, express, cargo. *(Обязательный параметр)* (express)
     :param Optional[str] client_requirements_cargo_type: Тип грузовика (lcv_m)
     :param Optional[int] client_requirements_cargo_loaders: Требуемое число грузчиков
     :param Optional[List['str']] client_requirements_cargo_options: Дополнительные опции тарифа
@@ -3473,7 +3473,7 @@ class SearchedClaimMP(YCBase):
     def client_requirements_taxi_class(self) -> str:
         """
 
-        :return: Класс такси. Возможные значения express, cargo.
+        :return: Класс такси. Возможные значения courier, express, cargo.
         :rtype: str
         """
         return self.body.get("client_requirements_taxi_class")

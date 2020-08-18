@@ -461,7 +461,7 @@ class YCAPI:
         :param List['CargoPointMP'] route_points: Информация по точкам маршрута *(Обязательный параметр)*
         :param str emergency_contact_name: Имя контактного лица *(Обязательный параметр)* (Рик)
         :param str emergency_contact_phone: Телефон контактного лица *(Обязательный параметр)* (+79099999999)
-        :param str client_requirements_taxi_class: Класс такси. Возможные значения express, cargo. *(Обязательный параметр)* (express)
+        :param str client_requirements_taxi_class: Класс такси. Возможные значения courier, express, cargo. *(Обязательный параметр)* (express)
         :param Optional[str] client_requirements_cargo_type: Тип грузовика (lcv_m)
         :param Optional[int] client_requirements_cargo_loaders: Требуемое число грузчиков
         :param Optional[List['str']] client_requirements_cargo_options: Дополнительные опции тарифа
@@ -672,7 +672,7 @@ class YCAPI:
         :param List['CargoPointMP'] route_points: Информация по точкам маршрута *(Обязательный параметр)*
         :param str emergency_contact_name: Имя контактного лица *(Обязательный параметр)* (Рик)
         :param str emergency_contact_phone: Телефон контактного лица *(Обязательный параметр)* (+79099999999)
-        :param str client_requirements_taxi_class: Класс такси. Возможные значения express, cargo. *(Обязательный параметр)* (express)
+        :param str client_requirements_taxi_class: Класс такси. Возможные значения courier, express, cargo. *(Обязательный параметр)* (express)
         :param Optional[str] client_requirements_cargo_type: Тип грузовика (lcv_m)
         :param Optional[int] client_requirements_cargo_loaders: Требуемое число грузчиков
         :param Optional[List['str']] client_requirements_cargo_options: Дополнительные опции тарифа
