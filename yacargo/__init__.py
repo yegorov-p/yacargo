@@ -16,7 +16,7 @@ DOMAIN = 'b2b.taxi.yandex.net'
 DOMAIN_TEST = 'b2b.taxi.tst.yandex.net'
 
 __title__ = 'yaCargo'
-__version__ = '0.0.5'
+__version__ = '0.0.6'
 __author__ = 'Pasha Yegorov'
 __license__ = 'Apache 2.0'
 
@@ -199,7 +199,7 @@ class YCAPI:
         Возвращает ЭТН в формате PDF. Операцию можно выполнить после того, как на заказ будет найден исполнитель. Электронные цифровые подписи добавляются в документ в процессе выполнения заказа. Если по какой-то причине требуется перейти на бумажный акт, то с помощью данной операции можно получить частично подписанный документ.
 
         :param str claim_id: Идентификатор заявки, полученный на этапе создания заявки *(Обязательный параметр)*
-        :param str document_type: Тип документа *(Обязательный параметр)*
+        :param str document_type: Тип документа (на данный момент поддерживается только act) *(Обязательный параметр)*
 
             * **act** - акт
 
@@ -328,15 +328,15 @@ class YCAPI:
 
         Инициализация создания отчета по заявкам за период
 
-        Инициализирует создания отчета. Отчет генерируется ассинхронно
+        Инициализирует создания отчета. Отчет генерируется ассинхронно 
 
         :param str since_date: Дата начала отчетного периода *(Обязательный параметр)* (2020-01-01)
         :param str till_date: Дата конца отчетного периода *(Обязательный параметр)* (2020-01-02)
-        :param Optional[str] lang: Язык, на котором надо генерировать отчет.Если не указан, будет использован Accept-Language (ru)
+        :param Optional[str] lang: Язык, на котором надо генерировать отчет. Если не указан, будет использован Accept-Language  (ru)
         :param Optional[str] department_id: ID отдела (значение игнорируется). Поле нужно для совместимости с API КК
         :param str idempotency_token: Уникальный для данного клиента токен идемпотентности *(Обязательный параметр)* (f9b4825f45f64914affaeb07fbae9757)
 
-        `Официальная документация /b2b/cargo/integration/v1/order-report/generate <https://yandex.ru/dev/taxi/doc/cargo-api/ref/v1/reports/IntegrationV1OrderReportGenerate-docpage/>`_
+        `Официальная документация /api/integration/v1/order-report/generate <https://yandex.ru/dev/taxi/doc/cargo-api/ref/v1/reports/IntegrationV1OrderReportGenerate-docpage/>`_
         """
         params = {}
         body = collections.defaultdict(dict)
@@ -377,7 +377,7 @@ class YCAPI:
 
         :param str task_id: ID, полученный в результате успешного выполнения операции v1/order-report/generate *(Обязательный параметр)* (f9b4825f45f4914affaeb07fbae9757)
 
-        `Официальная документация /b2b/cargo/integration/v1/order-report/status <https://yandex.ru/dev/taxi/doc/cargo-api/ref/v1/reports/IntegrationV1OrderReportStatus-docpage/>`_
+        `Официальная документация /api/integration/v1/order-report/status <https://yandex.ru/dev/taxi/doc/cargo-api/ref/v1/reports/IntegrationV1OrderReportStatus-docpage/>`_
         """
         params = {}
         body = collections.defaultdict(dict)
@@ -411,7 +411,7 @@ class YCAPI:
 
         :param str report_id: Идентификатор отчета *(Обязательный параметр)*
 
-        `Официальная документация /b2b/cargo/integration/v1/order-report/report <https://yandex.ru/dev/taxi/doc/cargo-api/ref/v1/reports/IntegrationV1OrderReportReport-docpage/>`_
+        `Официальная документация /api/integration/v1/order-report/report <https://yandex.ru/dev/taxi/doc/cargo-api/ref/v1/reports/IntegrationV1OrderReportReport-docpage/>`_
         """
         params = {}
         body = collections.defaultdict(dict)
@@ -444,9 +444,6 @@ class YCAPI:
                      comment: str = None,
                      requirements_strict_requirements: List['ClaimRequirement'] = None,
                      requirements_soft_requirements: List['ClaimRequirement'] = None,
-                     c2c_data_payment_method_id: str = None,
-                     c2c_data_payment_type: str = None,
-                     c2c_data_partner_tag: str = None,
                      referral_source: str = None,
                      ) -> SearchedClaimMP:
         """
@@ -465,7 +462,7 @@ class YCAPI:
         :param Optional[str] client_requirements_cargo_type: Тип грузовика (lcv_m)
         :param Optional[int] client_requirements_cargo_loaders: Требуемое число грузчиков
         :param Optional[List['str']] client_requirements_cargo_options: Дополнительные опции тарифа
-        :param str callback_properties_callback_url: URL, который будет вызываться при смене статусов по заявке.Данный механизм устарел, вместо него следует использовать операцию v1/claims/journal. *(Обязательный параметр)* (https://www.example.com)
+        :param str callback_properties_callback_url: URL, который будет вызываться при смене статусов по заявке.  Данный механизм устарел, вместо него следует использовать операцию v1/claims/journal.  *(Обязательный параметр)* (https://www.example.com)
         :param Optional[bool] skip_door_to_door: Отказ от доставки до двери. В случае true — курьер доставит заказ только на улицу, до подъезда
         :param Optional[bool] skip_client_notify: Не отправлять получателю нотификации, когда к нему направится курьер
         :param Optional[bool] skip_emergency_notify: Не отправлять нотификации emergency контакту
@@ -475,9 +472,6 @@ class YCAPI:
         :param Optional[str] comment: Общий комментарий к заказу (Ресторан)
         :param Optional[List['ClaimRequirement']] requirements_strict_requirements: Список дополнительных требований к заявке
         :param Optional[List['ClaimRequirement']] requirements_soft_requirements: Список дополнительных требований к заявке
-        :param Optional[str] c2c_data_payment_method_id: ??? (payment_method_id)
-        :param str c2c_data_payment_type: ??? *(Обязательный параметр)* (card)
-        :param Optional[str] c2c_data_partner_tag: ??? (some_tag)
         :param Optional[str] referral_source: Источник заявки (bitrix)
 
         `Официальная документация /b2b/cargo/integration/v2/claims/create <https://yandex.ru/dev/taxi/doc/cargo-api/ref/v2/claims/IntegrationV2ClaimsCreate-docpage/>`_
@@ -565,17 +559,6 @@ class YCAPI:
         if requirements_soft_requirements is not None:
             body["requirements"]["soft_requirements"] = validate_fields('requirements_soft_requirements', requirements_soft_requirements, List['ClaimRequirement'])
 
-        if c2c_data_payment_method_id is not None:
-            body["c2c_data"]["payment_method_id"] = validate_fields('c2c_data_payment_method_id', c2c_data_payment_method_id, str)
-
-        if c2c_data_payment_type is not None:
-            body["c2c_data"]["payment_type"] = validate_fields('c2c_data_payment_type', c2c_data_payment_type, str)
-        if c2c_data_payment_type is None:
-            raise InputParamError("<c2c_data_payment_type> (c2c_data=>payment_type) of <claim_create> is a required parameter")
-
-        if c2c_data_partner_tag is not None:
-            body["c2c_data"]["partner_tag"] = validate_fields('c2c_data_partner_tag', c2c_data_partner_tag, str)
-
         if referral_source is not None:
             body["referral_source"] = validate_fields('referral_source', referral_source, str)
 
@@ -626,9 +609,6 @@ class YCAPI:
                                due=item.get("due", None),
                                shipping_document=item.get("shipping_document", None),
                                comment=item.get("comment", None),
-                               c2c_data_payment_method_id=item.get("c2c_data", {}).get("payment_method_id", None),
-                               c2c_data_payment_type=item.get("c2c_data", {}).get("payment_type", None),
-                               c2c_data_partner_tag=item.get("c2c_data", {}).get("partner_tag", None),
                                revision=item.get("revision", None),
                                )
 
@@ -654,9 +634,6 @@ class YCAPI:
                    comment: str = None,
                    requirements_strict_requirements: List['ClaimRequirement'] = None,
                    requirements_soft_requirements: List['ClaimRequirement'] = None,
-                   c2c_data_payment_method_id: str = None,
-                   c2c_data_payment_type: str = None,
-                   c2c_data_partner_tag: str = None,
                    referral_source: str = None,
                    ) -> SearchedClaimMP:
         """
@@ -676,7 +653,7 @@ class YCAPI:
         :param Optional[str] client_requirements_cargo_type: Тип грузовика (lcv_m)
         :param Optional[int] client_requirements_cargo_loaders: Требуемое число грузчиков
         :param Optional[List['str']] client_requirements_cargo_options: Дополнительные опции тарифа
-        :param str callback_properties_callback_url: URL, который будет вызываться при смене статусов по заявке.Данный механизм устарел, вместо него следует использовать операцию v1/claims/journal. *(Обязательный параметр)* (https://www.example.com)
+        :param str callback_properties_callback_url: URL, который будет вызываться при смене статусов по заявке.  Данный механизм устарел, вместо него следует использовать операцию v1/claims/journal.  *(Обязательный параметр)* (https://www.example.com)
         :param Optional[bool] skip_door_to_door: Отказ от доставки до двери. В случае true — курьер доставит заказ только на улицу, до подъезда
         :param Optional[bool] skip_client_notify: Не отправлять получателю нотификации, когда к нему направится курьер
         :param Optional[bool] skip_emergency_notify: Не отправлять нотификации emergency контакту
@@ -686,9 +663,6 @@ class YCAPI:
         :param Optional[str] comment: Общий комментарий к заказу (Ресторан)
         :param Optional[List['ClaimRequirement']] requirements_strict_requirements: Список дополнительных требований к заявке
         :param Optional[List['ClaimRequirement']] requirements_soft_requirements: Список дополнительных требований к заявке
-        :param Optional[str] c2c_data_payment_method_id: ??? (payment_method_id)
-        :param str c2c_data_payment_type: ??? *(Обязательный параметр)* (card)
-        :param Optional[str] c2c_data_partner_tag: ??? (some_tag)
         :param Optional[str] referral_source: Источник заявки (bitrix)
 
         `Официальная документация /b2b/cargo/integration/v2/claims/edit <https://yandex.ru/dev/taxi/doc/cargo-api/ref/v2/claims/IntegrationV2ClaimsEdit-docpage/>`_
@@ -781,17 +755,6 @@ class YCAPI:
         if requirements_soft_requirements is not None:
             body["requirements"]["soft_requirements"] = validate_fields('requirements_soft_requirements', requirements_soft_requirements, List['ClaimRequirement'])
 
-        if c2c_data_payment_method_id is not None:
-            body["c2c_data"]["payment_method_id"] = validate_fields('c2c_data_payment_method_id', c2c_data_payment_method_id, str)
-
-        if c2c_data_payment_type is not None:
-            body["c2c_data"]["payment_type"] = validate_fields('c2c_data_payment_type', c2c_data_payment_type, str)
-        if c2c_data_payment_type is None:
-            raise InputParamError("<c2c_data_payment_type> (c2c_data=>payment_type) of <claim_edit> is a required parameter")
-
-        if c2c_data_partner_tag is not None:
-            body["c2c_data"]["partner_tag"] = validate_fields('c2c_data_partner_tag', c2c_data_partner_tag, str)
-
         if referral_source is not None:
             body["referral_source"] = validate_fields('referral_source', referral_source, str)
 
@@ -842,9 +805,6 @@ class YCAPI:
                                due=item.get("due", None),
                                shipping_document=item.get("shipping_document", None),
                                comment=item.get("comment", None),
-                               c2c_data_payment_method_id=item.get("c2c_data", {}).get("payment_method_id", None),
-                               c2c_data_payment_type=item.get("c2c_data", {}).get("payment_type", None),
-                               c2c_data_partner_tag=item.get("c2c_data", {}).get("partner_tag", None),
                                revision=item.get("revision", None),
                                )
 
@@ -916,9 +876,6 @@ class YCAPI:
                                due=item.get("due", None),
                                shipping_document=item.get("shipping_document", None),
                                comment=item.get("comment", None),
-                               c2c_data_payment_method_id=item.get("c2c_data", {}).get("payment_method_id", None),
-                               c2c_data_payment_type=item.get("c2c_data", {}).get("payment_type", None),
-                               c2c_data_partner_tag=item.get("c2c_data", {}).get("partner_tag", None),
                                revision=item.get("revision", None),
                                )
 
