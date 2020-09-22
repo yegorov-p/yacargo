@@ -123,12 +123,12 @@ class YCAPI:
         if claim_id is not None:
             params["claim_id"] = validate_fields('claim_id', claim_id, str)
         if claim_id is None:
-            raise InputParamError("<claim_id> (=>claim_id) of <claim_accept> is a required parameter")
+            raise InputParamError("<claim_id> (=>claim_id) of <claim_accept> is a required parameter of <str> type")
 
         if version is not None:
             body["version"] = validate_fields('version', version, int)
         if version is None:
-            raise InputParamError("<version> (=>version) of <claim_accept> is a required parameter")
+            raise InputParamError("<version> (=>version) of <claim_accept> is a required parameter of <int> type")
 
         item = self._request(resource="/b2b/cargo/integration/v1/claims/accept", params=params, body=body, method="post")
         return CutClaimResponse(id=item.get("id", None),
@@ -164,17 +164,17 @@ class YCAPI:
         if claim_id is not None:
             params["claim_id"] = validate_fields('claim_id', claim_id, str)
         if claim_id is None:
-            raise InputParamError("<claim_id> (=>claim_id) of <claim_cancel> is a required parameter")
+            raise InputParamError("<claim_id> (=>claim_id) of <claim_cancel> is a required parameter of <str> type")
 
         if version is not None:
             body["version"] = validate_fields('version', version, int)
         if version is None:
-            raise InputParamError("<version> (=>version) of <claim_cancel> is a required parameter")
+            raise InputParamError("<version> (=>version) of <claim_cancel> is a required parameter of <int> type")
 
         if cancel_state is not None:
             body["cancel_state"] = validate_fields('cancel_state', cancel_state, str)
         if cancel_state is None:
-            raise InputParamError("<cancel_state> (=>cancel_state) of <claim_cancel> is a required parameter")
+            raise InputParamError("<cancel_state> (=>cancel_state) of <claim_cancel> is a required parameter of <str> type")
 
         if cancel_state not in ['free', 'paid']:
             raise InputParamError("<cancel_state> of <claim_cancel> should be in ['free', 'paid']")
@@ -214,12 +214,12 @@ class YCAPI:
         if claim_id is not None:
             params["claim_id"] = validate_fields('claim_id', claim_id, str)
         if claim_id is None:
-            raise InputParamError("<claim_id> (=>claim_id) of <claim_document> is a required parameter")
+            raise InputParamError("<claim_id> (=>claim_id) of <claim_document> is a required parameter of <str> type")
 
         if document_type is not None:
             params["document_type"] = validate_fields('document_type', document_type, str)
         if document_type is None:
-            raise InputParamError("<document_type> (=>document_type) of <claim_document> is a required parameter")
+            raise InputParamError("<document_type> (=>document_type) of <claim_document> is a required parameter of <str> type")
 
         if document_type not in ['act']:
             raise InputParamError("<document_type> of <claim_document> should be in ['act']")
@@ -227,12 +227,12 @@ class YCAPI:
         if version is not None:
             params["version"] = validate_fields('version', version, int)
         if version is None:
-            raise InputParamError("<version> (=>version) of <claim_document> is a required parameter")
+            raise InputParamError("<version> (=>version) of <claim_document> is a required parameter of <int> type")
 
         if status is not None:
             params["status"] = validate_fields('status', status, str)
         if status is None:
-            raise InputParamError("<status> (=>status) of <claim_document> is a required parameter")
+            raise InputParamError("<status> (=>status) of <claim_document> is a required parameter of <str> type")
 
         return self._request(resource="/b2b/cargo/integration/v1/claims/document", params=params, body=body, method="get")
 
@@ -279,7 +279,7 @@ class YCAPI:
         if claim_id is not None:
             body["claim_id"] = validate_fields('claim_id', claim_id, str)
         if claim_id is None:
-            raise InputParamError("<claim_id> (=>claim_id) of <voiceforwarding> is a required parameter")
+            raise InputParamError("<claim_id> (=>claim_id) of <voiceforwarding> is a required parameter of <str> type")
 
         item = self._request(resource="/b2b/cargo/integration/v1/driver-voiceforwarding", params=params, body=body, method="post")
         return VoiceforwardingResponse(phone=item.get("phone", None),
@@ -306,7 +306,7 @@ class YCAPI:
         if claim_id is not None:
             params["claim_id"] = validate_fields('claim_id', claim_id, str)
         if claim_id is None:
-            raise InputParamError("<claim_id> (=>claim_id) of <performer_position> is a required parameter")
+            raise InputParamError("<claim_id> (=>claim_id) of <performer_position> is a required parameter of <str> type")
 
         item = self._request(resource="/b2b/cargo/integration/v1/claims/performer-position", params=params, body=body, method="get")
         return PerformerPositionResponse(position_lat=item.get("position", {}).get("lat", None),
@@ -336,7 +336,7 @@ class YCAPI:
         :param Optional[str] department_id: ID отдела (значение игнорируется). Поле нужно для совместимости с API КК
         :param str idempotency_token: Уникальный для данного клиента токен идемпотентности *(Обязательный параметр)* (f9b4825f45f64914affaeb07fbae9757)
 
-        `Официальная документация /api/integration/v1/order-report/generate <https://yandex.ru/dev/taxi/doc/cargo-api/ref/v1/reports/IntegrationV1OrderReportGenerate-docpage/>`_
+        `Официальная документация /b2b/cargo/integration/v1/order-report/generate <https://yandex.ru/dev/taxi/doc/cargo-api/ref/v1/reports/IntegrationV1OrderReportGenerate-docpage/>`_
         """
         params = {}
         body = collections.defaultdict(dict)
@@ -344,12 +344,12 @@ class YCAPI:
         if since_date is not None:
             body["since_date"] = validate_fields('since_date', since_date, str)
         if since_date is None:
-            raise InputParamError("<since_date> (=>since_date) of <report_generate> is a required parameter")
+            raise InputParamError("<since_date> (=>since_date) of <report_generate> is a required parameter of <str> type")
 
         if till_date is not None:
             body["till_date"] = validate_fields('till_date', till_date, str)
         if till_date is None:
-            raise InputParamError("<till_date> (=>till_date) of <report_generate> is a required parameter")
+            raise InputParamError("<till_date> (=>till_date) of <report_generate> is a required parameter of <str> type")
 
         if lang is not None:
             body["lang"] = validate_fields('lang', lang, str)
@@ -360,7 +360,7 @@ class YCAPI:
         if idempotency_token is not None:
             body["idempotency_token"] = validate_fields('idempotency_token', idempotency_token, str)
         if idempotency_token is None:
-            raise InputParamError("<idempotency_token> (=>idempotency_token) of <report_generate> is a required parameter")
+            raise InputParamError("<idempotency_token> (=>idempotency_token) of <report_generate> is a required parameter of <str> type")
 
         item = self._request(resource="/b2b/cargo/integration/v1/order-report/generate", params=params, body=body, method="post")
         return ClaimsReportGenerateResponse(task_id=item.get("task_id", None),
@@ -377,7 +377,7 @@ class YCAPI:
 
         :param str task_id: ID, полученный в результате успешного выполнения операции v1/order-report/generate *(Обязательный параметр)* (f9b4825f45f4914affaeb07fbae9757)
 
-        `Официальная документация /api/integration/v1/order-report/status <https://yandex.ru/dev/taxi/doc/cargo-api/ref/v1/reports/IntegrationV1OrderReportStatus-docpage/>`_
+        `Официальная документация /b2b/cargo/integration/v1/order-report/status <https://yandex.ru/dev/taxi/doc/cargo-api/ref/v1/reports/IntegrationV1OrderReportStatus-docpage/>`_
         """
         params = {}
         body = collections.defaultdict(dict)
@@ -385,7 +385,7 @@ class YCAPI:
         if task_id is not None:
             body["task_id"] = validate_fields('task_id', task_id, str)
         if task_id is None:
-            raise InputParamError("<task_id> (=>task_id) of <report_status> is a required parameter")
+            raise InputParamError("<task_id> (=>task_id) of <report_status> is a required parameter of <str> type")
 
         item = self._request(resource="/b2b/cargo/integration/v1/order-report/status", params=params, body=body, method="post")
         return ClaimsReportStatusResponse(task_id=item.get("task_id", None),
@@ -411,7 +411,7 @@ class YCAPI:
 
         :param str report_id: Идентификатор отчета *(Обязательный параметр)*
 
-        `Официальная документация /api/integration/v1/order-report/report <https://yandex.ru/dev/taxi/doc/cargo-api/ref/v1/reports/IntegrationV1OrderReportReport-docpage/>`_
+        `Официальная документация /b2b/cargo/integration/v1/order-report/report <https://yandex.ru/dev/taxi/doc/cargo-api/ref/v1/reports/IntegrationV1OrderReportReport-docpage/>`_
         """
         params = {}
         body = collections.defaultdict(dict)
@@ -419,7 +419,7 @@ class YCAPI:
         if report_id is not None:
             params["report_id"] = validate_fields('report_id', report_id, str)
         if report_id is None:
-            raise InputParamError("<report_id> (=>report_id) of <report_download> is a required parameter")
+            raise InputParamError("<report_id> (=>report_id) of <report_download> is a required parameter of <str> type")
 
         return self._request(resource="/b2b/cargo/integration/v1/order-report/report", params=params, body=body, method="get")
 
@@ -482,7 +482,7 @@ class YCAPI:
         if request_id is not None:
             params["request_id"] = validate_fields('request_id', request_id, str)
         if request_id is None:
-            raise InputParamError("<request_id> (=>request_id) of <claim_create> is a required parameter")
+            raise InputParamError("<request_id> (=>request_id) of <claim_create> is a required parameter of <str> type")
 
         if shipping_document is not None:
             body["shipping_document"] = validate_fields('shipping_document', shipping_document, str)
@@ -490,31 +490,31 @@ class YCAPI:
         if items is not None:
             body["items"] = validate_fields('items', items, List['CargoItemMP'])
         if items is None:
-            raise InputParamError("<items> (=>items) of <claim_create> is a required parameter")
+            raise InputParamError("<items> (=>items) of <claim_create> is a required parameter of <List['CargoItemMP']> type")
         if items and len(items) < 1:
             raise InputParamError("<items> of <claim_create> should contain at least 1 element")
 
         if route_points is not None:
             body["route_points"] = validate_fields('route_points', route_points, List['CargoPointMP'])
         if route_points is None:
-            raise InputParamError("<route_points> (=>route_points) of <claim_create> is a required parameter")
+            raise InputParamError("<route_points> (=>route_points) of <claim_create> is a required parameter of <List['CargoPointMP']> type")
         if route_points and len(route_points) < 2:
             raise InputParamError("<route_points> of <claim_create> should contain at least 2 element")
 
         if emergency_contact_name is not None:
             body["emergency_contact"]["name"] = validate_fields('emergency_contact_name', emergency_contact_name, str)
         if emergency_contact_name is None:
-            raise InputParamError("<emergency_contact_name> (emergency_contact=>name) of <claim_create> is a required parameter")
+            raise InputParamError("<emergency_contact_name> (emergency_contact=>name) of <claim_create> is a required parameter of <str> type")
 
         if emergency_contact_phone is not None:
             body["emergency_contact"]["phone"] = validate_fields('emergency_contact_phone', emergency_contact_phone, str)
         if emergency_contact_phone is None:
-            raise InputParamError("<emergency_contact_phone> (emergency_contact=>phone) of <claim_create> is a required parameter")
+            raise InputParamError("<emergency_contact_phone> (emergency_contact=>phone) of <claim_create> is a required parameter of <str> type")
 
         if client_requirements_taxi_class is not None:
             body["client_requirements"]["taxi_class"] = validate_fields('client_requirements_taxi_class', client_requirements_taxi_class, str)
         if client_requirements_taxi_class is None:
-            raise InputParamError("<client_requirements_taxi_class> (client_requirements=>taxi_class) of <claim_create> is a required parameter")
+            raise InputParamError("<client_requirements_taxi_class> (client_requirements=>taxi_class) of <claim_create> is a required parameter of <str> type")
 
         if client_requirements_cargo_type is not None:
             body["client_requirements"]["cargo_type"] = validate_fields('client_requirements_cargo_type', client_requirements_cargo_type, str)
@@ -530,7 +530,7 @@ class YCAPI:
         if callback_properties_callback_url is not None:
             body["callback_properties"]["callback_url"] = validate_fields('callback_properties_callback_url', callback_properties_callback_url, str)
         if callback_properties_callback_url is None:
-            raise InputParamError("<callback_properties_callback_url> (callback_properties=>callback_url) of <claim_create> is a required parameter")
+            raise InputParamError("<callback_properties_callback_url> (callback_properties=>callback_url) of <claim_create> is a required parameter of <str> type")
 
         if skip_door_to_door is not None:
             body["skip_door_to_door"] = validate_fields('skip_door_to_door', skip_door_to_door, bool)
@@ -673,12 +673,12 @@ class YCAPI:
         if claim_id is not None:
             params["claim_id"] = validate_fields('claim_id', claim_id, str)
         if claim_id is None:
-            raise InputParamError("<claim_id> (=>claim_id) of <claim_edit> is a required parameter")
+            raise InputParamError("<claim_id> (=>claim_id) of <claim_edit> is a required parameter of <str> type")
 
         if version is not None:
             params["version"] = validate_fields('version', version, int)
         if version is None:
-            raise InputParamError("<version> (=>version) of <claim_edit> is a required parameter")
+            raise InputParamError("<version> (=>version) of <claim_edit> is a required parameter of <int> type")
 
         if shipping_document is not None:
             body["shipping_document"] = validate_fields('shipping_document', shipping_document, str)
@@ -686,31 +686,31 @@ class YCAPI:
         if items is not None:
             body["items"] = validate_fields('items', items, List['CargoItemMP'])
         if items is None:
-            raise InputParamError("<items> (=>items) of <claim_edit> is a required parameter")
+            raise InputParamError("<items> (=>items) of <claim_edit> is a required parameter of <List['CargoItemMP']> type")
         if items and len(items) < 1:
             raise InputParamError("<items> of <claim_edit> should contain at least 1 element")
 
         if route_points is not None:
             body["route_points"] = validate_fields('route_points', route_points, List['CargoPointMP'])
         if route_points is None:
-            raise InputParamError("<route_points> (=>route_points) of <claim_edit> is a required parameter")
+            raise InputParamError("<route_points> (=>route_points) of <claim_edit> is a required parameter of <List['CargoPointMP']> type")
         if route_points and len(route_points) < 2:
             raise InputParamError("<route_points> of <claim_edit> should contain at least 2 element")
 
         if emergency_contact_name is not None:
             body["emergency_contact"]["name"] = validate_fields('emergency_contact_name', emergency_contact_name, str)
         if emergency_contact_name is None:
-            raise InputParamError("<emergency_contact_name> (emergency_contact=>name) of <claim_edit> is a required parameter")
+            raise InputParamError("<emergency_contact_name> (emergency_contact=>name) of <claim_edit> is a required parameter of <str> type")
 
         if emergency_contact_phone is not None:
             body["emergency_contact"]["phone"] = validate_fields('emergency_contact_phone', emergency_contact_phone, str)
         if emergency_contact_phone is None:
-            raise InputParamError("<emergency_contact_phone> (emergency_contact=>phone) of <claim_edit> is a required parameter")
+            raise InputParamError("<emergency_contact_phone> (emergency_contact=>phone) of <claim_edit> is a required parameter of <str> type")
 
         if client_requirements_taxi_class is not None:
             body["client_requirements"]["taxi_class"] = validate_fields('client_requirements_taxi_class', client_requirements_taxi_class, str)
         if client_requirements_taxi_class is None:
-            raise InputParamError("<client_requirements_taxi_class> (client_requirements=>taxi_class) of <claim_edit> is a required parameter")
+            raise InputParamError("<client_requirements_taxi_class> (client_requirements=>taxi_class) of <claim_edit> is a required parameter of <str> type")
 
         if client_requirements_cargo_type is not None:
             body["client_requirements"]["cargo_type"] = validate_fields('client_requirements_cargo_type', client_requirements_cargo_type, str)
@@ -726,7 +726,7 @@ class YCAPI:
         if callback_properties_callback_url is not None:
             body["callback_properties"]["callback_url"] = validate_fields('callback_properties_callback_url', callback_properties_callback_url, str)
         if callback_properties_callback_url is None:
-            raise InputParamError("<callback_properties_callback_url> (callback_properties=>callback_url) of <claim_edit> is a required parameter")
+            raise InputParamError("<callback_properties_callback_url> (callback_properties=>callback_url) of <claim_edit> is a required parameter of <str> type")
 
         if skip_door_to_door is not None:
             body["skip_door_to_door"] = validate_fields('skip_door_to_door', skip_door_to_door, bool)
@@ -827,7 +827,7 @@ class YCAPI:
         if claim_id is not None:
             params["claim_id"] = validate_fields('claim_id', claim_id, str)
         if claim_id is None:
-            raise InputParamError("<claim_id> (=>claim_id) of <claim_info> is a required parameter")
+            raise InputParamError("<claim_id> (=>claim_id) of <claim_info> is a required parameter of <str> type")
 
         item = self._request(resource="/b2b/cargo/integration/v2/claims/info", params=params, body=body, method="post")
         return SearchedClaimMP(id=item.get("id", None),
@@ -950,14 +950,14 @@ class YCAPI:
         if offset is not None:
             body["offset"] = validate_fields('offset', offset, int)
         if offset is None:
-            raise InputParamError("<offset> (=>offset) of <claim_search> is a required parameter")
+            raise InputParamError("<offset> (=>offset) of <claim_search> is a required parameter of <int> type")
         if offset and offset < 0:
             raise InputParamError("<offset> of <claim_search> should be more than 0")
 
         if limit is not None:
             body["limit"] = validate_fields('limit', limit, int)
         if limit is None:
-            raise InputParamError("<limit> (=>limit) of <claim_search> is a required parameter")
+            raise InputParamError("<limit> (=>limit) of <claim_search> is a required parameter of <int> type")
         if limit and limit < 0:
             raise InputParamError("<limit> of <claim_search> should be more than 0")
         if limit and limit > 1000:
@@ -966,7 +966,7 @@ class YCAPI:
         if claim_id is not None:
             body["claim_id"] = validate_fields('claim_id', claim_id, str)
         if claim_id is None:
-            raise InputParamError("<claim_id> (=>claim_id) of <claim_search> is a required parameter")
+            raise InputParamError("<claim_id> (=>claim_id) of <claim_search> is a required parameter of <str> type")
 
         if phone is not None:
             body["phone"] = validate_fields('phone', phone, str)
@@ -974,7 +974,7 @@ class YCAPI:
         if status is not None:
             body["status"] = validate_fields('status', status, str)
         if status is None:
-            raise InputParamError("<status> (=>status) of <claim_search> is a required parameter")
+            raise InputParamError("<status> (=>status) of <claim_search> is a required parameter of <str> type")
 
         if status not in ['new', 'estimating', 'estimating_failed', 'ready_for_approval', 'accepted', 'performer_lookup', 'performer_draft', 'performer_found', 'performer_not_found', 'pickup_arrived',
                           'ready_for_pickup_confirmation', 'pickuped', 'delivery_arrived', 'ready_for_delivery_confirmation', 'pay_waiting', 'delivered', 'delivered_finish', 'returning',
@@ -1029,14 +1029,14 @@ class YCAPI:
         if offset is not None:
             body["offset"] = validate_fields('offset', offset, int)
         if offset is None:
-            raise InputParamError("<offset> (=>offset) of <search_active> is a required parameter")
+            raise InputParamError("<offset> (=>offset) of <search_active> is a required parameter of <int> type")
         if offset and offset < 0:
             raise InputParamError("<offset> of <search_active> should be more than 0")
 
         if limit is not None:
             body["limit"] = validate_fields('limit', limit, int)
         if limit is None:
-            raise InputParamError("<limit> (=>limit) of <search_active> is a required parameter")
+            raise InputParamError("<limit> (=>limit) of <search_active> is a required parameter of <int> type")
         if limit and limit < 0:
             raise InputParamError("<limit> of <search_active> should be more than 0")
         if limit and limit > 1000:
@@ -1065,7 +1065,7 @@ class YCAPI:
         if claim_id is not None:
             body["claim_id"] = validate_fields('claim_id', claim_id, str)
         if claim_id is None:
-            raise InputParamError("<claim_id> (=>claim_id) of <claim_confirmation_code> is a required parameter")
+            raise InputParamError("<claim_id> (=>claim_id) of <claim_confirmation_code> is a required parameter of <str> type")
 
         item = self._request(resource="/b2b/cargo/integration/v2/claims/confirmation_code", params=params, body=body, method="post")
         return ConfirmationCodeResponse(code=item.get("code", None),
@@ -1091,7 +1091,7 @@ class YCAPI:
         if claim_ids is not None:
             body["claim_ids"] = validate_fields('claim_ids', claim_ids, List['str'])
         if claim_ids is None:
-            raise InputParamError("<claim_ids> (=>claim_ids) of <claim_bulk> is a required parameter")
+            raise InputParamError("<claim_ids> (=>claim_ids) of <claim_bulk> is a required parameter of <List['str']> type")
         if claim_ids and len(claim_ids) < 1:
             raise InputParamError("<claim_ids> of <claim_bulk> should contain at least 1 element")
         if claim_ids and len(claim_ids) > 1000:

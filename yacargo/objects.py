@@ -142,32 +142,32 @@ class CargoItemMP(YCBase):
         if pickup_point is not None:
             self.body["pickup_point"] = validate_fields('pickup_point', pickup_point, int)
         if pickup_point is None:
-            raise InputParamError("<pickup_point> (=>pickup_point) of <CargoItemMP> is a required parameter")
+            raise InputParamError("<pickup_point> (=>pickup_point) of <CargoItemMP> is a required parameter of <int> type")
 
         if droppof_point is not None:
             self.body["droppof_point"] = validate_fields('droppof_point', droppof_point, int)
         if droppof_point is None:
-            raise InputParamError("<droppof_point> (=>droppof_point) of <CargoItemMP> is a required parameter")
+            raise InputParamError("<droppof_point> (=>droppof_point) of <CargoItemMP> is a required parameter of <int> type")
 
         if title is not None:
             self.body["title"] = validate_fields('title', title, str)
         if title is None:
-            raise InputParamError("<title> (=>title) of <CargoItemMP> is a required parameter")
+            raise InputParamError("<title> (=>title) of <CargoItemMP> is a required parameter of <str> type")
 
         if size_length is not None:
             self.body["size"]["length"] = validate_fields('size_length', size_length, float)
         if size_length is None:
-            raise InputParamError("<size_length> (size=>length) of <CargoItemMP> is a required parameter")
+            raise InputParamError("<size_length> (size=>length) of <CargoItemMP> is a required parameter of <float> type")
 
         if size_width is not None:
             self.body["size"]["width"] = validate_fields('size_width', size_width, float)
         if size_width is None:
-            raise InputParamError("<size_width> (size=>width) of <CargoItemMP> is a required parameter")
+            raise InputParamError("<size_width> (size=>width) of <CargoItemMP> is a required parameter of <float> type")
 
         if size_height is not None:
             self.body["size"]["height"] = validate_fields('size_height', size_height, float)
         if size_height is None:
-            raise InputParamError("<size_height> (size=>height) of <CargoItemMP> is a required parameter")
+            raise InputParamError("<size_height> (size=>height) of <CargoItemMP> is a required parameter of <float> type")
 
         if weight is not None:
             self.body["weight"] = validate_fields('weight', weight, float)
@@ -175,7 +175,7 @@ class CargoItemMP(YCBase):
         if cost_value is not None:
             self.body["cost_value"] = validate_fields('cost_value', cost_value, str)
         if cost_value is None:
-            raise InputParamError("<cost_value> (=>cost_value) of <CargoItemMP> is a required parameter")
+            raise InputParamError("<cost_value> (=>cost_value) of <CargoItemMP> is a required parameter of <str> type")
 
         if cost_currency is not None:
             self.body["cost_currency"] = validate_fields('cost_currency', cost_currency, str)
@@ -184,14 +184,14 @@ class CargoItemMP(YCBase):
         if cost_currency and len(cost_currency) > 3:
             raise InputParamError("<cost_currency> of <CargoItemMP> should not contain more than 3 element")
         if cost_currency is None:
-            raise InputParamError("<cost_currency> (=>cost_currency) of <CargoItemMP> is a required parameter")
+            raise InputParamError("<cost_currency> (=>cost_currency) of <CargoItemMP> is a required parameter of <str> type")
 
         if quantity is not None:
             self.body["quantity"] = validate_fields('quantity', quantity, int)
         if quantity and quantity < 1:
             raise InputParamError("<quantity> of <CargoItemMP> should be more than 1")
         if quantity is None:
-            raise InputParamError("<quantity> (=>quantity) of <CargoItemMP> is a required parameter")
+            raise InputParamError("<quantity> (=>quantity) of <CargoItemMP> is a required parameter of <int> type")
 
         if fiscalization_vat_code is not None:
             self.body["fiscalization"]["vat_code"] = validate_fields('fiscalization_vat_code', fiscalization_vat_code, int)
@@ -200,17 +200,17 @@ class CargoItemMP(YCBase):
         if fiscalization_vat_code and fiscalization_vat_code > 6:
             raise InputParamError("<fiscalization_vat_code> of <CargoItemMP> should be less than 6")
         if fiscalization_vat_code is None:
-            raise InputParamError("<fiscalization_vat_code> (fiscalization=>vat_code) of <CargoItemMP> is a required parameter")
+            raise InputParamError("<fiscalization_vat_code> (fiscalization=>vat_code) of <CargoItemMP> is a required parameter of <int> type")
 
         if fiscalization_payment_subject is not None:
             self.body["fiscalization"]["payment_subject"] = validate_fields('fiscalization_payment_subject', fiscalization_payment_subject, str)
         if fiscalization_payment_subject is None:
-            raise InputParamError("<fiscalization_payment_subject> (fiscalization=>payment_subject) of <CargoItemMP> is a required parameter")
+            raise InputParamError("<fiscalization_payment_subject> (fiscalization=>payment_subject) of <CargoItemMP> is a required parameter of <str> type")
 
         if fiscalization_payment_mode is not None:
             self.body["fiscalization"]["payment_mode"] = validate_fields('fiscalization_payment_mode', fiscalization_payment_mode, str)
         if fiscalization_payment_mode is None:
-            raise InputParamError("<fiscalization_payment_mode> (fiscalization=>payment_mode) of <CargoItemMP> is a required parameter")
+            raise InputParamError("<fiscalization_payment_mode> (fiscalization=>payment_mode) of <CargoItemMP> is a required parameter of <str> type")
 
         if fiscalization_product_code is not None:
             self.body["fiscalization"]["product_code"] = validate_fields('fiscalization_product_code', fiscalization_product_code, str)
@@ -228,7 +228,7 @@ class CargoItemMP(YCBase):
         if fiscalization_excise is not None:
             self.body["fiscalization"]["excise"] = validate_fields('fiscalization_excise', fiscalization_excise, str)
         if fiscalization_excise is None:
-            raise InputParamError("<fiscalization_excise> (fiscalization=>excise) of <CargoItemMP> is a required parameter")
+            raise InputParamError("<fiscalization_excise> (fiscalization=>excise) of <CargoItemMP> is a required parameter of <str> type")
 
     def __repr__(self):
         return "<CargoItemMP>"
@@ -526,22 +526,22 @@ class CargoPointMP(YCBase):
         if point_id is not None:
             self.body["point_id"] = validate_fields('point_id', point_id, int)
         if point_id is None:
-            raise InputParamError("<point_id> (=>point_id) of <CargoPointMP> is a required parameter")
+            raise InputParamError("<point_id> (=>point_id) of <CargoPointMP> is a required parameter of <int> type")
 
         if visit_order is not None:
             self.body["visit_order"] = validate_fields('visit_order', visit_order, int)
         if visit_order is None:
-            raise InputParamError("<visit_order> (=>visit_order) of <CargoPointMP> is a required parameter")
+            raise InputParamError("<visit_order> (=>visit_order) of <CargoPointMP> is a required parameter of <int> type")
 
         if contact_name is not None:
             self.body["contact"]["name"] = validate_fields('contact_name', contact_name, str)
         if contact_name is None:
-            raise InputParamError("<contact_name> (contact=>name) of <CargoPointMP> is a required parameter")
+            raise InputParamError("<contact_name> (contact=>name) of <CargoPointMP> is a required parameter of <str> type")
 
         if contact_phone is not None:
             self.body["contact"]["phone"] = validate_fields('contact_phone', contact_phone, str)
         if contact_phone is None:
-            raise InputParamError("<contact_phone> (contact=>phone) of <CargoPointMP> is a required parameter")
+            raise InputParamError("<contact_phone> (contact=>phone) of <CargoPointMP> is a required parameter of <str> type")
 
         if contact_email is not None:
             self.body["contact"]["email"] = validate_fields('contact_email', contact_email, str)
@@ -549,7 +549,7 @@ class CargoPointMP(YCBase):
         if address_fullname is not None:
             self.body["address"]["fullname"] = validate_fields('address_fullname', address_fullname, str)
         if address_fullname is None:
-            raise InputParamError("<address_fullname> (address=>fullname) of <CargoPointMP> is a required parameter")
+            raise InputParamError("<address_fullname> (address=>fullname) of <CargoPointMP> is a required parameter of <str> type")
 
         if address_shortname is not None:
             self.body["address"]["shortname"] = validate_fields('address_shortname', address_shortname, str)
@@ -561,7 +561,7 @@ class CargoPointMP(YCBase):
         if address_coordinates and len(address_coordinates) > 2:
             raise InputParamError("<address_coordinates> of <CargoPointMP> should not contain more than 2 element")
         if address_coordinates is None:
-            raise InputParamError("<address_coordinates> (address=>coordinates) of <CargoPointMP> is a required parameter")
+            raise InputParamError("<address_coordinates> (address=>coordinates) of <CargoPointMP> is a required parameter of <List['float']> type")
 
         if address_country is not None:
             self.body["address"]["country"] = validate_fields('address_country', address_country, str)
@@ -605,7 +605,7 @@ class CargoPointMP(YCBase):
         if type is not None:
             self.body["type"] = validate_fields('type', type, str)
         if type is None:
-            raise InputParamError("<type> (=>type) of <CargoPointMP> is a required parameter")
+            raise InputParamError("<type> (=>type) of <CargoPointMP> is a required parameter of <str> type")
 
         if type not in ['source', 'destination', 'return']:
             raise InputParamError("<type> of <CargoPointMP> should be in ['source', 'destination', 'return']")
@@ -613,12 +613,12 @@ class CargoPointMP(YCBase):
         if payment_on_delivery_client_order_id is not None:
             self.body["payment_on_delivery"]["client_order_id"] = validate_fields('payment_on_delivery_client_order_id', payment_on_delivery_client_order_id, str)
         if payment_on_delivery_client_order_id is None:
-            raise InputParamError("<payment_on_delivery_client_order_id> (payment_on_delivery=>client_order_id) of <CargoPointMP> is a required parameter")
+            raise InputParamError("<payment_on_delivery_client_order_id> (payment_on_delivery=>client_order_id) of <CargoPointMP> is a required parameter of <str> type")
 
         if payment_on_delivery_cost is not None:
             self.body["payment_on_delivery"]["cost"] = validate_fields('payment_on_delivery_cost', payment_on_delivery_cost, str)
         if payment_on_delivery_cost is None:
-            raise InputParamError("<payment_on_delivery_cost> (payment_on_delivery=>cost) of <CargoPointMP> is a required parameter")
+            raise InputParamError("<payment_on_delivery_cost> (payment_on_delivery=>cost) of <CargoPointMP> is a required parameter of <str> type")
 
         if payment_on_delivery_customer_full_name is not None:
             self.body["payment_on_delivery"]["customer"]["full_name"] = validate_fields('payment_on_delivery_customer_full_name', payment_on_delivery_customer_full_name, str)
@@ -992,12 +992,12 @@ class ClaimRequirement(YCBase):
         if type is not None:
             self.body["type"] = validate_fields('type', type, str)
         if type is None:
-            raise InputParamError("<type> (=>type) of <ClaimRequirement> is a required parameter")
+            raise InputParamError("<type> (=>type) of <ClaimRequirement> is a required parameter of <str> type")
 
         if logistic_group is not None:
             self.body["logistic_group"] = validate_fields('logistic_group', logistic_group, str)
         if logistic_group is None:
-            raise InputParamError("<logistic_group> (=>logistic_group) of <ClaimRequirement> is a required parameter")
+            raise InputParamError("<logistic_group> (=>logistic_group) of <ClaimRequirement> is a required parameter of <str> type")
 
         if meta_group is not None:
             self.body["meta_group"] = validate_fields('meta_group', meta_group, str)
@@ -1061,7 +1061,7 @@ class ClaimWarning(YCBase):
         if source is not None:
             self.body["source"] = validate_fields('source', source, str)
         if source is None:
-            raise InputParamError("<source> (=>source) of <ClaimWarning> is a required parameter")
+            raise InputParamError("<source> (=>source) of <ClaimWarning> is a required parameter of <str> type")
 
         if source not in ['client_requirements', 'taxi_requirements']:
             raise InputParamError("<source> of <ClaimWarning> should be in ['client_requirements', 'taxi_requirements']")
@@ -1069,7 +1069,7 @@ class ClaimWarning(YCBase):
         if code is not None:
             self.body["code"] = validate_fields('code', code, str)
         if code is None:
-            raise InputParamError("<code> (=>code) of <ClaimWarning> is a required parameter")
+            raise InputParamError("<code> (=>code) of <ClaimWarning> is a required parameter of <str> type")
 
         if code not in ['not_fit_in_car', 'requirement_unavailable']:
             raise InputParamError("<code> of <ClaimWarning> should be in ['not_fit_in_car', 'requirement_unavailable']")
@@ -1134,12 +1134,12 @@ class ClaimsJournalResponse(YCBase):
         if cursor is not None:
             self.body["cursor"] = validate_fields('cursor', cursor, str)
         if cursor is None:
-            raise InputParamError("<cursor> (=>cursor) of <ClaimsJournalResponse> is a required parameter")
+            raise InputParamError("<cursor> (=>cursor) of <ClaimsJournalResponse> is a required parameter of <str> type")
 
         if events is not None:
             self.body["events"] = validate_fields('events', events, List['Event'])
         if events is None:
-            raise InputParamError("<events> (=>events) of <ClaimsJournalResponse> is a required parameter")
+            raise InputParamError("<events> (=>events) of <ClaimsJournalResponse> is a required parameter of <List['Event']> type")
 
     def __repr__(self):
         return "<ClaimsJournalResponse>"
@@ -1189,7 +1189,7 @@ class ClaimsReportGenerateResponse(YCBase):
         if task_id is not None:
             self.body["task_id"] = validate_fields('task_id', task_id, str)
         if task_id is None:
-            raise InputParamError("<task_id> (=>task_id) of <ClaimsReportGenerateResponse> is a required parameter")
+            raise InputParamError("<task_id> (=>task_id) of <ClaimsReportGenerateResponse> is a required parameter of <str> type")
 
     def __repr__(self):
         return "<ClaimsReportGenerateResponse>"
@@ -1244,12 +1244,12 @@ class ClaimsReportStatusResponse(YCBase):
         if task_id is not None:
             self.body["task_id"] = validate_fields('task_id', task_id, str)
         if task_id is None:
-            raise InputParamError("<task_id> (=>task_id) of <ClaimsReportStatusResponse> is a required parameter")
+            raise InputParamError("<task_id> (=>task_id) of <ClaimsReportStatusResponse> is a required parameter of <str> type")
 
         if status is not None:
             self.body["status"] = validate_fields('status', status, str)
         if status is None:
-            raise InputParamError("<status> (=>status) of <ClaimsReportStatusResponse> is a required parameter")
+            raise InputParamError("<status> (=>status) of <ClaimsReportStatusResponse> is a required parameter of <str> type")
 
         if status not in ['in_progress', 'retry', 'complete', 'failed']:
             raise InputParamError("<status> of <ClaimsReportStatusResponse> should be in ['in_progress', 'retry', 'complete', 'failed']")
@@ -1257,22 +1257,22 @@ class ClaimsReportStatusResponse(YCBase):
         if author is not None:
             self.body["author"] = validate_fields('author', author, str)
         if author is None:
-            raise InputParamError("<author> (=>author) of <ClaimsReportStatusResponse> is a required parameter")
+            raise InputParamError("<author> (=>author) of <ClaimsReportStatusResponse> is a required parameter of <str> type")
 
         if created_at is not None:
             self.body["created_at"] = validate_fields('created_at', created_at, str)
         if created_at is None:
-            raise InputParamError("<created_at> (=>created_at) of <ClaimsReportStatusResponse> is a required parameter")
+            raise InputParamError("<created_at> (=>created_at) of <ClaimsReportStatusResponse> is a required parameter of <str> type")
 
         if request_since_date is not None:
             self.body["request"]["since_date"] = validate_fields('request_since_date', request_since_date, str)
         if request_since_date is None:
-            raise InputParamError("<request_since_date> (request=>since_date) of <ClaimsReportStatusResponse> is a required parameter")
+            raise InputParamError("<request_since_date> (request=>since_date) of <ClaimsReportStatusResponse> is a required parameter of <str> type")
 
         if request_till_date is not None:
             self.body["request"]["till_date"] = validate_fields('request_till_date', request_till_date, str)
         if request_till_date is None:
-            raise InputParamError("<request_till_date> (request=>till_date) of <ClaimsReportStatusResponse> is a required parameter")
+            raise InputParamError("<request_till_date> (request=>till_date) of <ClaimsReportStatusResponse> is a required parameter of <str> type")
 
         if request_lang is not None:
             self.body["request"]["lang"] = validate_fields('request_lang', request_lang, str)
@@ -1283,7 +1283,7 @@ class ClaimsReportStatusResponse(YCBase):
         if request_idempotency_token is not None:
             self.body["request"]["idempotency_token"] = validate_fields('request_idempotency_token', request_idempotency_token, str)
         if request_idempotency_token is None:
-            raise InputParamError("<request_idempotency_token> (request=>idempotency_token) of <ClaimsReportStatusResponse> is a required parameter")
+            raise InputParamError("<request_idempotency_token> (request=>idempotency_token) of <ClaimsReportStatusResponse> is a required parameter of <str> type")
 
         if url is not None:
             self.body["url"] = validate_fields('url', url, str)
@@ -1406,12 +1406,12 @@ class ConfirmationCodeResponse(YCBase):
         if code is not None:
             self.body["code"] = validate_fields('code', code, str)
         if code is None:
-            raise InputParamError("<code> (=>code) of <ConfirmationCodeResponse> is a required parameter")
+            raise InputParamError("<code> (=>code) of <ConfirmationCodeResponse> is a required parameter of <str> type")
 
         if attempts is not None:
             self.body["attempts"] = validate_fields('attempts', attempts, int)
         if attempts is None:
-            raise InputParamError("<attempts> (=>attempts) of <ConfirmationCodeResponse> is a required parameter")
+            raise InputParamError("<attempts> (=>attempts) of <ConfirmationCodeResponse> is a required parameter of <int> type")
 
     def __repr__(self):
         return "<ConfirmationCodeResponse>"
@@ -1486,12 +1486,12 @@ class CutClaimResponse(YCBase):
         if id is not None:
             self.body["id"] = validate_fields('id', id, str)
         if id is None:
-            raise InputParamError("<id> (=>id) of <CutClaimResponse> is a required parameter")
+            raise InputParamError("<id> (=>id) of <CutClaimResponse> is a required parameter of <str> type")
 
         if status is not None:
             self.body["status"] = validate_fields('status', status, str)
         if status is None:
-            raise InputParamError("<status> (=>status) of <CutClaimResponse> is a required parameter")
+            raise InputParamError("<status> (=>status) of <CutClaimResponse> is a required parameter of <str> type")
 
         if status not in ['new', 'estimating', 'estimating_failed', 'ready_for_approval', 'accepted', 'performer_lookup', 'performer_draft', 'performer_found', 'performer_not_found', 'pickup_arrived',
                           'ready_for_pickup_confirmation', 'pickuped', 'delivery_arrived', 'ready_for_delivery_confirmation', 'pay_waiting', 'delivered', 'delivered_finish', 'returning',
@@ -1503,7 +1503,7 @@ class CutClaimResponse(YCBase):
         if version is not None:
             self.body["version"] = validate_fields('version', version, int)
         if version is None:
-            raise InputParamError("<version> (=>version) of <CutClaimResponse> is a required parameter")
+            raise InputParamError("<version> (=>version) of <CutClaimResponse> is a required parameter of <int> type")
 
         if taxi_order_id is not None:
             self.body["taxi_order_id"] = validate_fields('taxi_order_id', taxi_order_id, str)
@@ -1644,27 +1644,27 @@ class Event(YCBase):
         if operation_id is not None:
             self.body["operation_id"] = validate_fields('operation_id', operation_id, int)
         if operation_id is None:
-            raise InputParamError("<operation_id> (=>operation_id) of <Event> is a required parameter")
+            raise InputParamError("<operation_id> (=>operation_id) of <Event> is a required parameter of <int> type")
 
         if claim_id is not None:
             self.body["claim_id"] = validate_fields('claim_id', claim_id, str)
         if claim_id is None:
-            raise InputParamError("<claim_id> (=>claim_id) of <Event> is a required parameter")
+            raise InputParamError("<claim_id> (=>claim_id) of <Event> is a required parameter of <str> type")
 
         if change_type is not None:
             self.body["change_type"] = validate_fields('change_type', change_type, str)
         if change_type is None:
-            raise InputParamError("<change_type> (=>change_type) of <Event> is a required parameter")
+            raise InputParamError("<change_type> (=>change_type) of <Event> is a required parameter of <str> type")
 
         if updated_ts is not None:
             self.body["updated_ts"] = validate_fields('updated_ts', updated_ts, str)
         if updated_ts is None:
-            raise InputParamError("<updated_ts> (=>updated_ts) of <Event> is a required parameter")
+            raise InputParamError("<updated_ts> (=>updated_ts) of <Event> is a required parameter of <str> type")
 
         if new_status is not None:
             self.body["new_status"] = validate_fields('new_status', new_status, str)
         if new_status is None:
-            raise InputParamError("<new_status> (=>new_status) of <Event> is a required parameter")
+            raise InputParamError("<new_status> (=>new_status) of <Event> is a required parameter of <str> type")
 
         if new_status not in ['new', 'estimating', 'estimating_failed', 'ready_for_approval', 'accepted', 'performer_lookup', 'performer_draft', 'performer_found', 'performer_not_found',
                               'pickup_arrived', 'ready_for_pickup_confirmation', 'pickuped', 'delivery_arrived', 'ready_for_delivery_confirmation', 'pay_waiting', 'delivered', 'delivered_finish',
@@ -1688,7 +1688,7 @@ class Event(YCBase):
         if revision is not None:
             self.body["revision"] = validate_fields('revision', revision, int)
         if revision is None:
-            raise InputParamError("<revision> (=>revision) of <Event> is a required parameter")
+            raise InputParamError("<revision> (=>revision) of <Event> is a required parameter of <int> type")
 
         if client_id is not None:
             self.body["client_id"] = validate_fields('client_id', client_id, str)
@@ -1838,12 +1838,12 @@ class HumanErrorMessage(YCBase):
         if code is not None:
             self.body["code"] = validate_fields('code', code, str)
         if code is None:
-            raise InputParamError("<code> (=>code) of <HumanErrorMessage> is a required parameter")
+            raise InputParamError("<code> (=>code) of <HumanErrorMessage> is a required parameter of <str> type")
 
         if message is not None:
             self.body["message"] = validate_fields('message', message, str)
         if message is None:
-            raise InputParamError("<message> (=>message) of <HumanErrorMessage> is a required parameter")
+            raise InputParamError("<message> (=>message) of <HumanErrorMessage> is a required parameter of <str> type")
 
     def __repr__(self):
         return "<HumanErrorMessage>"
@@ -1893,7 +1893,7 @@ class MatchedCar(YCBase):
         if taxi_class is not None:
             self.body["taxi_class"] = validate_fields('taxi_class', taxi_class, str)
         if taxi_class is None:
-            raise InputParamError("<taxi_class> (=>taxi_class) of <MatchedCar> is a required parameter")
+            raise InputParamError("<taxi_class> (=>taxi_class) of <MatchedCar> is a required parameter of <str> type")
 
         if client_taxi_class is not None:
             self.body["client_taxi_class"] = validate_fields('client_taxi_class', client_taxi_class, str)
@@ -2000,7 +2000,7 @@ class PerformerPositionResponse(YCBase):
         if position_lat and position_lat > 90:
             raise InputParamError("<position_lat> of <PerformerPositionResponse> should be less than 90")
         if position_lat is None:
-            raise InputParamError("<position_lat> (position=>lat) of <PerformerPositionResponse> is a required parameter")
+            raise InputParamError("<position_lat> (position=>lat) of <PerformerPositionResponse> is a required parameter of <float> type")
 
         if position_lon is not None:
             self.body["position"]["lon"] = validate_fields('position_lon', position_lon, float)
@@ -2009,12 +2009,12 @@ class PerformerPositionResponse(YCBase):
         if position_lon and position_lon > 180:
             raise InputParamError("<position_lon> of <PerformerPositionResponse> should be less than 180")
         if position_lon is None:
-            raise InputParamError("<position_lon> (position=>lon) of <PerformerPositionResponse> is a required parameter")
+            raise InputParamError("<position_lon> (position=>lon) of <PerformerPositionResponse> is a required parameter of <float> type")
 
         if position_timestamp is not None:
             self.body["position"]["timestamp"] = validate_fields('position_timestamp', position_timestamp, int)
         if position_timestamp is None:
-            raise InputParamError("<position_timestamp> (position=>timestamp) of <PerformerPositionResponse> is a required parameter")
+            raise InputParamError("<position_timestamp> (position=>timestamp) of <PerformerPositionResponse> is a required parameter of <int> type")
 
         if position_accuracy is not None:
             self.body["position"]["accuracy"] = validate_fields('position_accuracy', position_accuracy, float)
@@ -2182,17 +2182,17 @@ class ResponseCargoPointMP(YCBase):
         if id is not None:
             self.body["id"] = validate_fields('id', id, int)
         if id is None:
-            raise InputParamError("<id> (=>id) of <ResponseCargoPointMP> is a required parameter")
+            raise InputParamError("<id> (=>id) of <ResponseCargoPointMP> is a required parameter of <int> type")
 
         if contact_name is not None:
             self.body["contact"]["name"] = validate_fields('contact_name', contact_name, str)
         if contact_name is None:
-            raise InputParamError("<contact_name> (contact=>name) of <ResponseCargoPointMP> is a required parameter")
+            raise InputParamError("<contact_name> (contact=>name) of <ResponseCargoPointMP> is a required parameter of <str> type")
 
         if contact_phone is not None:
             self.body["contact"]["phone"] = validate_fields('contact_phone', contact_phone, str)
         if contact_phone is None:
-            raise InputParamError("<contact_phone> (contact=>phone) of <ResponseCargoPointMP> is a required parameter")
+            raise InputParamError("<contact_phone> (contact=>phone) of <ResponseCargoPointMP> is a required parameter of <str> type")
 
         if contact_email is not None:
             self.body["contact"]["email"] = validate_fields('contact_email', contact_email, str)
@@ -2200,7 +2200,7 @@ class ResponseCargoPointMP(YCBase):
         if address_fullname is not None:
             self.body["address"]["fullname"] = validate_fields('address_fullname', address_fullname, str)
         if address_fullname is None:
-            raise InputParamError("<address_fullname> (address=>fullname) of <ResponseCargoPointMP> is a required parameter")
+            raise InputParamError("<address_fullname> (address=>fullname) of <ResponseCargoPointMP> is a required parameter of <str> type")
 
         if address_shortname is not None:
             self.body["address"]["shortname"] = validate_fields('address_shortname', address_shortname, str)
@@ -2212,7 +2212,7 @@ class ResponseCargoPointMP(YCBase):
         if address_coordinates and len(address_coordinates) > 2:
             raise InputParamError("<address_coordinates> of <ResponseCargoPointMP> should not contain more than 2 element")
         if address_coordinates is None:
-            raise InputParamError("<address_coordinates> (address=>coordinates) of <ResponseCargoPointMP> is a required parameter")
+            raise InputParamError("<address_coordinates> (address=>coordinates) of <ResponseCargoPointMP> is a required parameter of <List['float']> type")
 
         if address_country is not None:
             self.body["address"]["country"] = validate_fields('address_country', address_country, str)
@@ -2253,7 +2253,7 @@ class ResponseCargoPointMP(YCBase):
         if type is not None:
             self.body["type"] = validate_fields('type', type, str)
         if type is None:
-            raise InputParamError("<type> (=>type) of <ResponseCargoPointMP> is a required parameter")
+            raise InputParamError("<type> (=>type) of <ResponseCargoPointMP> is a required parameter of <str> type")
 
         if type not in ['source', 'destination', 'return']:
             raise InputParamError("<type> of <ResponseCargoPointMP> should be in ['source', 'destination', 'return']")
@@ -2261,12 +2261,12 @@ class ResponseCargoPointMP(YCBase):
         if visit_order is not None:
             self.body["visit_order"] = validate_fields('visit_order', visit_order, int)
         if visit_order is None:
-            raise InputParamError("<visit_order> (=>visit_order) of <ResponseCargoPointMP> is a required parameter")
+            raise InputParamError("<visit_order> (=>visit_order) of <ResponseCargoPointMP> is a required parameter of <int> type")
 
         if visit_status is not None:
             self.body["visit_status"] = validate_fields('visit_status', visit_status, str)
         if visit_status is None:
-            raise InputParamError("<visit_status> (=>visit_status) of <ResponseCargoPointMP> is a required parameter")
+            raise InputParamError("<visit_status> (=>visit_status) of <ResponseCargoPointMP> is a required parameter of <str> type")
 
         if visit_status not in ['pending', 'arrived', 'visited', 'skipped']:
             raise InputParamError("<visit_status> of <ResponseCargoPointMP> should be in ['pending', 'arrived', 'visited', 'skipped']")
@@ -2277,17 +2277,17 @@ class ResponseCargoPointMP(YCBase):
         if payment_on_delivery_client_order_id is not None:
             self.body["payment_on_delivery"]["client_order_id"] = validate_fields('payment_on_delivery_client_order_id', payment_on_delivery_client_order_id, str)
         if payment_on_delivery_client_order_id is None:
-            raise InputParamError("<payment_on_delivery_client_order_id> (payment_on_delivery=>client_order_id) of <ResponseCargoPointMP> is a required parameter")
+            raise InputParamError("<payment_on_delivery_client_order_id> (payment_on_delivery=>client_order_id) of <ResponseCargoPointMP> is a required parameter of <str> type")
 
         if payment_on_delivery_is_paid is not None:
             self.body["payment_on_delivery"]["is_paid"] = validate_fields('payment_on_delivery_is_paid', payment_on_delivery_is_paid, bool)
         if payment_on_delivery_is_paid is None:
-            raise InputParamError("<payment_on_delivery_is_paid> (payment_on_delivery=>is_paid) of <ResponseCargoPointMP> is a required parameter")
+            raise InputParamError("<payment_on_delivery_is_paid> (payment_on_delivery=>is_paid) of <ResponseCargoPointMP> is a required parameter of <bool> type")
 
         if payment_on_delivery_cost is not None:
             self.body["payment_on_delivery"]["cost"] = validate_fields('payment_on_delivery_cost', payment_on_delivery_cost, str)
         if payment_on_delivery_cost is None:
-            raise InputParamError("<payment_on_delivery_cost> (payment_on_delivery=>cost) of <ResponseCargoPointMP> is a required parameter")
+            raise InputParamError("<payment_on_delivery_cost> (payment_on_delivery=>cost) of <ResponseCargoPointMP> is a required parameter of <str> type")
 
         if payment_on_delivery_customer_full_name is not None:
             self.body["payment_on_delivery"]["customer"]["full_name"] = validate_fields('payment_on_delivery_customer_full_name', payment_on_delivery_customer_full_name, str)
@@ -2650,7 +2650,7 @@ class SearchClaimsResponseMP(YCBase):
         if claims is not None:
             self.body["claims"] = validate_fields('claims', claims, List['SearchedClaimMP'])
         if claims is None:
-            raise InputParamError("<claims> (=>claims) of <SearchClaimsResponseMP> is a required parameter")
+            raise InputParamError("<claims> (=>claims) of <SearchClaimsResponseMP> is a required parameter of <List['SearchedClaimMP']> type")
 
     def __repr__(self):
         return "<SearchClaimsResponseMP>"
@@ -2853,7 +2853,7 @@ class SearchedClaimMP(YCBase):
         if id is not None:
             self.body["id"] = validate_fields('id', id, str)
         if id is None:
-            raise InputParamError("<id> (=>id) of <SearchedClaimMP> is a required parameter")
+            raise InputParamError("<id> (=>id) of <SearchedClaimMP> is a required parameter of <str> type")
 
         if corp_client_id is not None:
             self.body["corp_client_id"] = validate_fields('corp_client_id', corp_client_id, str)
@@ -2870,24 +2870,24 @@ class SearchedClaimMP(YCBase):
         if items and len(items) < 1:
             raise InputParamError("<items> of <SearchedClaimMP> should contain at least 1 element")
         if items is None:
-            raise InputParamError("<items> (=>items) of <SearchedClaimMP> is a required parameter")
+            raise InputParamError("<items> (=>items) of <SearchedClaimMP> is a required parameter of <List['CargoItemMP']> type")
 
         if route_points is not None:
             self.body["route_points"] = validate_fields('route_points', route_points, List['ResponseCargoPointMP'])
         if route_points and len(route_points) < 2:
             raise InputParamError("<route_points> of <SearchedClaimMP> should contain at least 2 element")
         if route_points is None:
-            raise InputParamError("<route_points> (=>route_points) of <SearchedClaimMP> is a required parameter")
+            raise InputParamError("<route_points> (=>route_points) of <SearchedClaimMP> is a required parameter of <List['ResponseCargoPointMP']> type")
 
         if current_point_id is not None:
             self.body["current_point_id"] = validate_fields('current_point_id', current_point_id, int)
         if current_point_id is None:
-            raise InputParamError("<current_point_id> (=>current_point_id) of <SearchedClaimMP> is a required parameter")
+            raise InputParamError("<current_point_id> (=>current_point_id) of <SearchedClaimMP> is a required parameter of <int> type")
 
         if status is not None:
             self.body["status"] = validate_fields('status', status, str)
         if status is None:
-            raise InputParamError("<status> (=>status) of <SearchedClaimMP> is a required parameter")
+            raise InputParamError("<status> (=>status) of <SearchedClaimMP> is a required parameter of <str> type")
 
         if status not in ['new', 'estimating', 'estimating_failed', 'ready_for_approval', 'accepted', 'performer_lookup', 'performer_draft', 'performer_found', 'performer_not_found', 'pickup_arrived',
                           'ready_for_pickup_confirmation', 'pickuped', 'delivery_arrived', 'ready_for_delivery_confirmation', 'pay_waiting', 'delivered', 'delivered_finish', 'returning',
@@ -2899,7 +2899,7 @@ class SearchedClaimMP(YCBase):
         if version is not None:
             self.body["version"] = validate_fields('version', version, int)
         if version is None:
-            raise InputParamError("<version> (=>version) of <SearchedClaimMP> is a required parameter")
+            raise InputParamError("<version> (=>version) of <SearchedClaimMP> is a required parameter of <int> type")
 
         if error_messages is not None:
             self.body["error_messages"] = validate_fields('error_messages', error_messages, List['HumanErrorMessage'])
@@ -2907,12 +2907,12 @@ class SearchedClaimMP(YCBase):
         if emergency_contact_name is not None:
             self.body["emergency_contact"]["name"] = validate_fields('emergency_contact_name', emergency_contact_name, str)
         if emergency_contact_name is None:
-            raise InputParamError("<emergency_contact_name> (emergency_contact=>name) of <SearchedClaimMP> is a required parameter")
+            raise InputParamError("<emergency_contact_name> (emergency_contact=>name) of <SearchedClaimMP> is a required parameter of <str> type")
 
         if emergency_contact_phone is not None:
             self.body["emergency_contact"]["phone"] = validate_fields('emergency_contact_phone', emergency_contact_phone, str)
         if emergency_contact_phone is None:
-            raise InputParamError("<emergency_contact_phone> (emergency_contact=>phone) of <SearchedClaimMP> is a required parameter")
+            raise InputParamError("<emergency_contact_phone> (emergency_contact=>phone) of <SearchedClaimMP> is a required parameter of <str> type")
 
         if skip_door_to_door is not None:
             self.body["skip_door_to_door"] = validate_fields('skip_door_to_door', skip_door_to_door, bool)
@@ -2935,42 +2935,42 @@ class SearchedClaimMP(YCBase):
         if created_ts is not None:
             self.body["created_ts"] = validate_fields('created_ts', created_ts, str)
         if created_ts is None:
-            raise InputParamError("<created_ts> (=>created_ts) of <SearchedClaimMP> is a required parameter")
+            raise InputParamError("<created_ts> (=>created_ts) of <SearchedClaimMP> is a required parameter of <str> type")
 
         if updated_ts is not None:
             self.body["updated_ts"] = validate_fields('updated_ts', updated_ts, str)
         if updated_ts is None:
-            raise InputParamError("<updated_ts> (=>updated_ts) of <SearchedClaimMP> is a required parameter")
+            raise InputParamError("<updated_ts> (=>updated_ts) of <SearchedClaimMP> is a required parameter of <str> type")
 
         if taxi_offer_offer_id is not None:
             self.body["taxi_offer"]["offer_id"] = validate_fields('taxi_offer_offer_id', taxi_offer_offer_id, str)
         if taxi_offer_offer_id is None:
-            raise InputParamError("<taxi_offer_offer_id> (taxi_offer=>offer_id) of <SearchedClaimMP> is a required parameter")
+            raise InputParamError("<taxi_offer_offer_id> (taxi_offer=>offer_id) of <SearchedClaimMP> is a required parameter of <str> type")
 
         if taxi_offer_price_raw is not None:
             self.body["taxi_offer"]["price_raw"] = validate_fields('taxi_offer_price_raw', taxi_offer_price_raw, int)
         if taxi_offer_price_raw is None:
-            raise InputParamError("<taxi_offer_price_raw> (taxi_offer=>price_raw) of <SearchedClaimMP> is a required parameter")
+            raise InputParamError("<taxi_offer_price_raw> (taxi_offer=>price_raw) of <SearchedClaimMP> is a required parameter of <int> type")
 
         if taxi_offer_price is not None:
             self.body["taxi_offer"]["price"] = validate_fields('taxi_offer_price', taxi_offer_price, str)
         if taxi_offer_price is None:
-            raise InputParamError("<taxi_offer_price> (taxi_offer=>price) of <SearchedClaimMP> is a required parameter")
+            raise InputParamError("<taxi_offer_price> (taxi_offer=>price) of <SearchedClaimMP> is a required parameter of <str> type")
 
         if pricing_offer_offer_id is not None:
             self.body["pricing"]["offer"]["offer_id"] = validate_fields('pricing_offer_offer_id', pricing_offer_offer_id, str)
         if pricing_offer_offer_id is None:
-            raise InputParamError("<pricing_offer_offer_id> (pricing=>offer=>offer_id) of <SearchedClaimMP> is a required parameter")
+            raise InputParamError("<pricing_offer_offer_id> (pricing=>offer=>offer_id) of <SearchedClaimMP> is a required parameter of <str> type")
 
         if pricing_offer_price_raw is not None:
             self.body["pricing"]["offer"]["price_raw"] = validate_fields('pricing_offer_price_raw', pricing_offer_price_raw, int)
         if pricing_offer_price_raw is None:
-            raise InputParamError("<pricing_offer_price_raw> (pricing=>offer=>price_raw) of <SearchedClaimMP> is a required parameter")
+            raise InputParamError("<pricing_offer_price_raw> (pricing=>offer=>price_raw) of <SearchedClaimMP> is a required parameter of <int> type")
 
         if pricing_offer_price is not None:
             self.body["pricing"]["offer"]["price"] = validate_fields('pricing_offer_price', pricing_offer_price, str)
         if pricing_offer_price is None:
-            raise InputParamError("<pricing_offer_price> (pricing=>offer=>price) of <SearchedClaimMP> is a required parameter")
+            raise InputParamError("<pricing_offer_price> (pricing=>offer=>price) of <SearchedClaimMP> is a required parameter of <str> type")
 
         if pricing_currency is not None:
             self.body["pricing"]["currency"] = validate_fields('pricing_currency', pricing_currency, str)
@@ -2978,17 +2978,17 @@ class SearchedClaimMP(YCBase):
         if pricing_currency_rules_code is not None:
             self.body["pricing"]["currency_rules"]["code"] = validate_fields('pricing_currency_rules_code', pricing_currency_rules_code, str)
         if pricing_currency_rules_code is None:
-            raise InputParamError("<pricing_currency_rules_code> (pricing=>currency_rules=>code) of <SearchedClaimMP> is a required parameter")
+            raise InputParamError("<pricing_currency_rules_code> (pricing=>currency_rules=>code) of <SearchedClaimMP> is a required parameter of <str> type")
 
         if pricing_currency_rules_text is not None:
             self.body["pricing"]["currency_rules"]["text"] = validate_fields('pricing_currency_rules_text', pricing_currency_rules_text, str)
         if pricing_currency_rules_text is None:
-            raise InputParamError("<pricing_currency_rules_text> (pricing=>currency_rules=>text) of <SearchedClaimMP> is a required parameter")
+            raise InputParamError("<pricing_currency_rules_text> (pricing=>currency_rules=>text) of <SearchedClaimMP> is a required parameter of <str> type")
 
         if pricing_currency_rules_template is not None:
             self.body["pricing"]["currency_rules"]["template"] = validate_fields('pricing_currency_rules_template', pricing_currency_rules_template, str)
         if pricing_currency_rules_template is None:
-            raise InputParamError("<pricing_currency_rules_template> (pricing=>currency_rules=>template) of <SearchedClaimMP> is a required parameter")
+            raise InputParamError("<pricing_currency_rules_template> (pricing=>currency_rules=>template) of <SearchedClaimMP> is a required parameter of <str> type")
 
         if pricing_currency_rules_sign is not None:
             self.body["pricing"]["currency_rules"]["sign"] = validate_fields('pricing_currency_rules_sign', pricing_currency_rules_sign, str)
@@ -2996,7 +2996,7 @@ class SearchedClaimMP(YCBase):
         if pricing_final_price is not None:
             self.body["pricing"]["final_price"] = validate_fields('pricing_final_price', pricing_final_price, str)
         if pricing_final_price is None:
-            raise InputParamError("<pricing_final_price> (pricing=>final_price) of <SearchedClaimMP> is a required parameter")
+            raise InputParamError("<pricing_final_price> (pricing=>final_price) of <SearchedClaimMP> is a required parameter of <str> type")
 
         if available_cancel_state is not None:
             self.body["available_cancel_state"] = validate_fields('available_cancel_state', available_cancel_state, str)
@@ -3007,7 +3007,7 @@ class SearchedClaimMP(YCBase):
         if client_requirements_taxi_class is not None:
             self.body["client_requirements"]["taxi_class"] = validate_fields('client_requirements_taxi_class', client_requirements_taxi_class, str)
         if client_requirements_taxi_class is None:
-            raise InputParamError("<client_requirements_taxi_class> (client_requirements=>taxi_class) of <SearchedClaimMP> is a required parameter")
+            raise InputParamError("<client_requirements_taxi_class> (client_requirements=>taxi_class) of <SearchedClaimMP> is a required parameter of <str> type")
 
         if client_requirements_cargo_type is not None:
             self.body["client_requirements"]["cargo_type"] = validate_fields('client_requirements_cargo_type', client_requirements_cargo_type, str)
@@ -3029,12 +3029,12 @@ class SearchedClaimMP(YCBase):
         if performer_info_courier_name is not None:
             self.body["performer_info"]["courier_name"] = validate_fields('performer_info_courier_name', performer_info_courier_name, str)
         if performer_info_courier_name is None:
-            raise InputParamError("<performer_info_courier_name> (performer_info=>courier_name) of <SearchedClaimMP> is a required parameter")
+            raise InputParamError("<performer_info_courier_name> (performer_info=>courier_name) of <SearchedClaimMP> is a required parameter of <str> type")
 
         if performer_info_legal_name is not None:
             self.body["performer_info"]["legal_name"] = validate_fields('performer_info_legal_name', performer_info_legal_name, str)
         if performer_info_legal_name is None:
-            raise InputParamError("<performer_info_legal_name> (performer_info=>legal_name) of <SearchedClaimMP> is a required parameter")
+            raise InputParamError("<performer_info_legal_name> (performer_info=>legal_name) of <SearchedClaimMP> is a required parameter of <str> type")
 
         if performer_info_car_model is not None:
             self.body["performer_info"]["car_model"] = validate_fields('performer_info_car_model', performer_info_car_model, str)
@@ -3045,7 +3045,7 @@ class SearchedClaimMP(YCBase):
         if callback_properties_callback_url is not None:
             self.body["callback_properties"]["callback_url"] = validate_fields('callback_properties_callback_url', callback_properties_callback_url, str)
         if callback_properties_callback_url is None:
-            raise InputParamError("<callback_properties_callback_url> (callback_properties=>callback_url) of <SearchedClaimMP> is a required parameter")
+            raise InputParamError("<callback_properties_callback_url> (callback_properties=>callback_url) of <SearchedClaimMP> is a required parameter of <str> type")
 
         if due is not None:
             self.body["due"] = validate_fields('due', due, str)
@@ -3059,7 +3059,7 @@ class SearchedClaimMP(YCBase):
         if revision is not None:
             self.body["revision"] = validate_fields('revision', revision, int)
         if revision is None:
-            raise InputParamError("<revision> (=>revision) of <SearchedClaimMP> is a required parameter")
+            raise InputParamError("<revision> (=>revision) of <SearchedClaimMP> is a required parameter of <int> type")
 
     def __repr__(self):
         return "<SearchedClaimMP>"
@@ -3607,7 +3607,7 @@ class TimeInterval(YCBase):
         if type is not None:
             self.body["type"] = validate_fields('type', type, str)
         if type is None:
-            raise InputParamError("<type> (=>type) of <TimeInterval> is a required parameter")
+            raise InputParamError("<type> (=>type) of <TimeInterval> is a required parameter of <str> type")
 
         if type not in ['strict_match', 'perfect_match']:
             raise InputParamError("<type> of <TimeInterval> should be in ['strict_match', 'perfect_match']")
@@ -3615,12 +3615,12 @@ class TimeInterval(YCBase):
         if _from is not None:
             self.body["from"] = validate_fields('_from', _from, str)
         if _from is None:
-            raise InputParamError("<_from> (=>from) of <TimeInterval> is a required parameter")
+            raise InputParamError("<_from> (=>from) of <TimeInterval> is a required parameter of <str> type")
 
         if to is not None:
             self.body["to"] = validate_fields('to', to, str)
         if to is None:
-            raise InputParamError("<to> (=>to) of <TimeInterval> is a required parameter")
+            raise InputParamError("<to> (=>to) of <TimeInterval> is a required parameter of <str> type")
 
     def __repr__(self):
         return "<TimeInterval>"
@@ -3677,19 +3677,19 @@ class VoiceforwardingResponse(YCBase):
         if phone is not None:
             self.body["phone"] = validate_fields('phone', phone, str)
         if phone is None:
-            raise InputParamError("<phone> (=>phone) of <VoiceforwardingResponse> is a required parameter")
+            raise InputParamError("<phone> (=>phone) of <VoiceforwardingResponse> is a required parameter of <str> type")
 
         if ext is not None:
             self.body["ext"] = validate_fields('ext', ext, str)
         if ext is None:
-            raise InputParamError("<ext> (=>ext) of <VoiceforwardingResponse> is a required parameter")
+            raise InputParamError("<ext> (=>ext) of <VoiceforwardingResponse> is a required parameter of <str> type")
 
         if ttl_seconds is not None:
             self.body["ttl_seconds"] = validate_fields('ttl_seconds', ttl_seconds, int)
         if ttl_seconds and ttl_seconds < 2088:
             raise InputParamError("<ttl_seconds> of <VoiceforwardingResponse> should be more than 2088")
         if ttl_seconds is None:
-            raise InputParamError("<ttl_seconds> (=>ttl_seconds) of <VoiceforwardingResponse> is a required parameter")
+            raise InputParamError("<ttl_seconds> (=>ttl_seconds) of <VoiceforwardingResponse> is a required parameter of <int> type")
 
     def __repr__(self):
         return "<VoiceforwardingResponse>"
